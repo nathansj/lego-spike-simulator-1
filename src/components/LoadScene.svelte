@@ -11,9 +11,17 @@
     import { sceneStore, type SceneStore, type SceneObject } from '$lib/spike/scene';
     import { EditOutline, TrashBinOutline } from 'flowbite-svelte-icons';
     import ScenePreview from '$components/ScenePreview.svelte';
+    import ObjectPhysicsEditor from '$components/ObjectPhysicsEditor.svelte';
     import Menu from '$components/Menu.svelte';
     import { type MenuAction, type MenuEntry } from '$components/Menu.svelte';
     import JSZip from 'jszip';
+    import { parseSceneDefinition } from '$lib/spike/scene-schema';
+    import { WebGLCompiler } from '$lib/ldraw/gl';
+    import {
+        createModelPhysicsArticulation,
+        findBundledModelPhysics,
+        parseModelPhysicsSidecar
+    } from '$lib/physics/articulation-presets';
 
     export let modalOpen = false;
     let numberOfLoads = 0;
@@ -34,6 +42,43 @@
     $: menu = prepareMenu(rotate, tilt, camera, select, $sceneStore);
     $: setRobotModel($componentStore.robotModel);
     $: updateObjectsFromLibrary($componentStore.unresolved);
+
+    function editorKey(object: SceneObject): string {
+        return object.editorGroup ?? object.name;
+    }
+
+    function editorLabel(object: SceneObject): string {
+        return object.editorName ?? object.name;
+    }
+
+    function editorObjects(scene: SceneStore): SceneObject[] {
+        const seen = new Set<string>();
+        return scene.objects.filter((object) => {
+            const key = editorKey(object);
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+    }
+
+    function selectedObjects(): SceneObject[] {
+        if (!select || select.startsWith('#')) return selectedObject ? [selectedObject] : [];
+        return $sceneStore.objects.filter((object) => editorKey(object) === select);
+    }
+
+    function uniqueObjectId(scene: SceneStore, name: string): string {
+        const base =
+            name
+                .toLowerCase()
+                .replace(/\.[^.]+$/, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '') || 'object';
+        const used = new Set(scene.objects.map((object) => object.id));
+        let id = base;
+        let suffix = 2;
+        while (used.has(id)) id = `${base}-${suffix++}`;
+        return id;
+    }
 
     function toggleRotate() {
         rotate = !rotate;
@@ -68,31 +113,37 @@
         });
     }
 
-    function removeObject(name: string) {
-        if (name === select) {
+    function removeObject(key: string) {
+        if (key === select) {
             select = undefined;
             selectedText = undefined;
             selectedObject = undefined;
         }
         sceneStore.update((old) => {
-            const objects = old.objects.filter((x) => x.name !== name);
+            const objects = old.objects.filter((object) => editorKey(object) !== key);
+            const removedIds = new Set(
+                old.objects.filter((object) => editorKey(object) === key).map((object) => object.id)
+            );
             return {
                 ...old,
-                objects: objects
+                objects: objects,
+                joints: old.joints?.filter(
+                    (joint) => !removedIds.has(joint.childId) && !removedIds.has(joint.parentId)
+                )
             };
         });
     }
 
-    function setSelected(name: string) {
-        select = name;
-        if (name.startsWith('#')) {
-            if (name == '#map') {
+    function setSelected(key: string) {
+        select = key;
+        if (key.startsWith('#')) {
+            if (key == '#map') {
                 selectedText = `Mat (${$sceneStore.mapWidth}mm x ${$sceneStore.mapHeight}mm)`;
                 selectedObject = undefined;
-            } else if (name == '#robot') {
+            } else if (key == '#robot') {
                 selectedText = 'Spike robot';
                 selectedObject = $sceneStore.robot;
-            } else if (name == '#all') {
+            } else if (key == '#all') {
                 selectedText = '';
                 selectedObject = undefined;
             } else {
@@ -100,8 +151,8 @@
                 selectedObject = undefined;
             }
         } else {
-            selectedText = `Object: ${name}`;
-            selectedObject = $sceneStore.objects.find((x) => x.name === name);
+            selectedObject = $sceneStore.objects.find((object) => editorKey(object) === key);
+            selectedText = selectedObject ? `Object: ${editorLabel(selectedObject)}` : undefined;
         }
     }
 
@@ -150,11 +201,18 @@
 
     function doRenameObject() {
         if (renameObject) {
-            const oldName = renameObject.name;
-            renameObject.name = newName;
+            const oldKey = editorKey(renameObject);
+            if (renameObject.editorGroup) {
+                for (const object of $sceneStore.objects) {
+                    if (object.editorGroup === renameObject.editorGroup)
+                        object.editorName = newName;
+                }
+            } else {
+                renameObject.name = newName;
+            }
             renameObject = undefined;
             menu = prepareMenu(rotate, tilt, camera, select, $sceneStore);
-            if (select == oldName) {
+            if (select == oldKey) {
                 selectedText = `Object: ${newName}`;
             }
         }
@@ -297,13 +355,14 @@
             },
             radio: select == '#robot'
         });
-        for (const obj of scene.objects) {
+        for (const obj of editorObjects(scene)) {
+            const key = editorKey(obj);
             selectMenu.push({
-                name: obj.name,
+                name: editorLabel(obj),
                 action: () => {
-                    setSelected(obj.name);
+                    setSelected(key);
                 },
-                radio: select == obj.name
+                radio: select == key
             });
         }
         menu.push({
@@ -312,11 +371,12 @@
         });
 
         let remove: MenuAction[] = [];
-        for (const obj of scene.objects) {
+        for (const obj of editorObjects(scene)) {
+            const key = editorKey(obj);
             remove.push({
-                name: obj.name,
+                name: editorLabel(obj),
                 action: () => {
-                    removeObject(obj.name);
+                    removeObject(key);
                 },
                 icon: TrashBinOutline
             });
@@ -327,9 +387,9 @@
         });
 
         let rename: MenuAction[] = [];
-        for (const obj of scene.objects) {
+        for (const obj of editorObjects(scene)) {
             rename.push({
-                name: obj.name,
+                name: editorLabel(obj),
                 action: () => {
                     setRenameObject(obj);
                 },
@@ -400,7 +460,7 @@
                     return;
                 }
                 const sceneDefContents = await jsonFile.async('string');
-                const scene = JSON.parse(sceneDefContents);
+                const scene = parseSceneDefinition(JSON.parse(sceneDefContents));
                 const objects: SceneObject[] = [];
 
                 const mapFile = zipFile.file('mat.jpg');
@@ -409,11 +469,17 @@
                 }
 
                 const robot = {
+                    id: scene.robot.id,
                     anchored: scene.robot.anchored,
                     position: scene.robot.position,
                     rotation: scene.robot.rotation,
                     name: scene.robot.name,
-                    bricks: $componentStore.robotModel
+                    bricks: $componentStore.robotModel,
+                    physics: scene.robot.physics,
+                    drive: scene.robot.drive,
+                    hinge: scene.robot.hinge,
+                    rotationQuaternion: scene.robot.rotationQuaternion,
+                    preserveOrigin: scene.robot.preserveOrigin
                 };
                 for (const obj of scene.objects) {
                     const objFile = zipFile.file(`bricks-${obj.name}`);
@@ -422,18 +488,32 @@
                         const model = loadModel(obj.name, content);
                         updateUnresolvedParts();
                         objects.push({
+                            id: obj.id,
                             anchored: obj.anchored,
                             position: obj.position,
                             rotation: obj.rotation,
                             name: obj.name,
-                            bricks: model
+                            bricks: model,
+                            physics: obj.physics,
+                            hinge: obj.hinge,
+                            rotationQuaternion: obj.rotationQuaternion,
+                            preserveOrigin: obj.preserveOrigin,
+                            editorGroup: obj.editorGroup,
+                            editorName: obj.editorName
                         });
                     } else {
                         objects.push({
+                            id: obj.id,
                             anchored: obj.anchored,
                             position: obj.position,
                             rotation: obj.rotation,
-                            name: obj.name
+                            name: obj.name,
+                            physics: obj.physics,
+                            hinge: obj.hinge,
+                            rotationQuaternion: obj.rotationQuaternion,
+                            preserveOrigin: obj.preserveOrigin,
+                            editorGroup: obj.editorGroup,
+                            editorName: obj.editorName
                         });
                     }
                 }
@@ -443,8 +523,10 @@
                         robot: robot,
                         objects: objects,
                         map: map,
-                        mapWidth: scene.matWidth,
-                        mapHeight: scene.matHeight
+                        mapWidth: scene.mapWidth,
+                        mapHeight: scene.mapHeight,
+                        physicsWorld: scene.physicsWorld,
+                        joints: scene.joints
                     };
                 });
             }
@@ -457,7 +539,9 @@
             const fileElement = element as HTMLInputElement;
             if (fileElement.files) {
                 if (fileElement.files.length > 0) {
-                    const first = fileElement.files[0];
+                    const files = Array.from(fileElement.files);
+                    const first = files.find((file) => !file.name.endsWith('.physics.json'));
+                    if (!first) return;
                     if (first.name.toLowerCase().endsWith('.io')) {
                         const zip = new JSZip();
                         const zipFile = await zip.loadAsync(first);
@@ -473,6 +557,7 @@
                                         ...old,
                                         objects: old.objects.concat([
                                             {
+                                                id: uniqueObjectId(old, first.name),
                                                 bricks: model,
                                                 anchored: true,
                                                 name: first.name
@@ -488,19 +573,54 @@
                     } else {
                         const model = loadModel(first.name, await first.text());
                         updateUnresolvedParts();
-                        sceneStore.update((old) => {
-                            return {
+                        const sidecarName = first.name.replace(/\.[^.]+$/, '.physics.json');
+                        const sidecarFile = files.find(
+                            (file) => file.name.toLowerCase() === sidecarName.toLowerCase()
+                        );
+                        const sidecar = sidecarFile
+                            ? parseModelPhysicsSidecar(JSON.parse(await sidecarFile.text()))
+                            : findBundledModelPhysics(first.name);
+                        if (sidecar && sidecar.model.toLowerCase() !== first.name.toLowerCase()) {
+                            throw new Error(
+                                `Physics sidecar targets ${sidecar.model}, not ${first.name}`
+                            );
+                        }
+                        if (sidecar) {
+                            const compiled = new WebGLCompiler().compileModel(model, {
+                                rescale: false,
+                                recenter: false
+                            });
+                            const initialY = Number.isFinite(compiled.bbox.min.y)
+                                ? -compiled.bbox.min.y
+                                : 0;
+                            const preset = createModelPhysicsArticulation(
+                                model,
+                                { x: 0, y: initialY, z: 0 },
+                                sidecar
+                            );
+                            sceneStore.update((old) => ({
                                 ...old,
-                                objects: old.objects.concat([
-                                    {
-                                        bricks: model,
-                                        anchored: true,
-                                        name: first.name
-                                    }
-                                ])
-                            };
-                        });
-                        setSelected(first.name);
+                                objects: old.objects.concat(preset.objects),
+                                joints: [...(old.joints ?? []), ...preset.joints]
+                            }));
+                            const editable = preset.objects.find((object) => !object.anchored);
+                            setSelected(editable ? editorKey(editable) : first.name);
+                        } else {
+                            sceneStore.update((old) => {
+                                return {
+                                    ...old,
+                                    objects: old.objects.concat([
+                                        {
+                                            id: uniqueObjectId(old, first.name),
+                                            bricks: model,
+                                            anchored: true,
+                                            name: first.name
+                                        }
+                                    ])
+                                };
+                            });
+                            setSelected(first.name);
+                        }
                     }
                     numberOfLoads++;
                 }
@@ -515,9 +635,7 @@
         if (!selectedObject) {
             return;
         }
-        if (selectedObject.position) {
-            selectedObject.position.x -= 10.0;
-        }
+        for (const object of selectedObjects()) if (object.position) object.position.x -= 10.0;
     }
 
     function moveObjectRight() {
@@ -527,9 +645,7 @@
         if (!selectedObject) {
             return;
         }
-        if (selectedObject.position) {
-            selectedObject.position.x += 10.0;
-        }
+        for (const object of selectedObjects()) if (object.position) object.position.x += 10.0;
     }
 
     function moveObjectUp() {
@@ -539,9 +655,7 @@
         if (!selectedObject) {
             return;
         }
-        if (selectedObject.position) {
-            selectedObject.position.z -= 10.0;
-        }
+        for (const object of selectedObjects()) if (object.position) object.position.z -= 10.0;
     }
 
     function moveObjectDown() {
@@ -551,9 +665,7 @@
         if (!selectedObject) {
             return;
         }
-        if (selectedObject.position) {
-            selectedObject.position.z += 10.0;
-        }
+        for (const object of selectedObjects()) if (object.position) object.position.z += 10.0;
     }
 
     function rotateObjectClockwise() {
@@ -563,10 +675,10 @@
         if (!selectedObject) {
             return;
         }
-        if (selectedObject.rotation === undefined) {
-            selectedObject.rotation = 0.0;
+        for (const object of selectedObjects()) {
+            object.rotation = (object.rotation ?? 0) - 10.0;
+            object.rotationQuaternion = undefined;
         }
-        selectedObject.rotation -= 10.0;
     }
 
     function rotateObjectAntiClockwise() {
@@ -576,10 +688,20 @@
         if (!selectedObject) {
             return;
         }
-        if (selectedObject.rotation === undefined) {
-            selectedObject.rotation = 0.0;
+        for (const object of selectedObjects()) {
+            object.rotation = (object.rotation ?? 0) + 10.0;
+            object.rotationQuaternion = undefined;
         }
-        selectedObject.rotation += 10.0;
+    }
+
+    function updateObjectPhysics(
+        event: CustomEvent<{ joints: NonNullable<SceneStore['joints']> }>
+    ) {
+        sceneStore.update((scene) => ({
+            ...scene,
+            objects: [...scene.objects],
+            joints: event.detail.joints
+        }));
     }
 
     function moveObjectWithKey(event: KeyboardEvent) {
@@ -621,7 +743,8 @@
         type="file"
         id="load_object_file"
         class="hidden"
-        accept=".ldr,.mpd,.io"
+        accept=".ldr,.mpd,.io,.json"
+        multiple
         on:change={loadObjectFromFile}
     />
     <input
@@ -737,6 +860,16 @@
                             src="icons/FieldCw.svg"
                         />
                     </button>
+                {/if}
+                {#if selectedObject && select !== '#robot' && !selectedObject.editorGroup}
+                    <div class="absolute left-2 bottom-2 z-40">
+                        <ObjectPhysicsEditor
+                            object={selectedObject}
+                            objects={$sceneStore.objects}
+                            joints={$sceneStore.joints ?? []}
+                            on:change={updateObjectPhysics}
+                        />
+                    </div>
                 {/if}
                 <div class="h-full w-full overflow-hidden">
                     <ScenePreview

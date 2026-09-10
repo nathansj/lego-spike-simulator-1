@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "model": "45832_09.mpd",
+    "mission": "Research Platform",
+    "mechanics": ["slider","latch","release","trigger"],
+    "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
+    "segments": [
+        {
+            "id": "45832-09-model",
+            "name": "45832_09 mission model",
+            "selection": {},
+            "includeRootGeometry": true,
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
+        }
+    ],
+    "joints": []
+}

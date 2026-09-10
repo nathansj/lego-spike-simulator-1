@@ -11,6 +11,7 @@
     import { allPorts, Hub } from '$lib/spike/vm';
     import { sceneStore } from '$lib/spike/scene';
     import JSZip from 'jszip';
+    import { serializeSceneDefinition } from '$lib/spike/scene-schema';
 
     export let modalOpen = false;
     export let hub: Hub;
@@ -47,23 +48,7 @@
                 zip.file(`bricks-${obj.name}`, content);
             }
         }
-        const json = {
-            version: 1,
-            robot: {
-                anchored: scene.robot.anchored,
-                position: scene.robot.position,
-                rotation: scene.robot.rotation,
-                name: '#robot'
-            },
-            matWidth: scene.mapWidth,
-            matHeight: scene.mapHeight,
-            objects: scene.objects.map((o) => ({
-                anchored: o.anchored,
-                position: o.position,
-                rotation: o.rotation,
-                name: o.name
-            }))
-        };
+        const json = serializeSceneDefinition(scene);
         zip.file('scene.json', JSON.stringify(json));
         const sceneZip = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
         FileSaver.saveAs(sceneZip, 'scene.spk');

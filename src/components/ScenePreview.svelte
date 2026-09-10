@@ -2,7 +2,7 @@
     import { boundaryStore } from '$lib/spike/scene';
     import { onDestroy, onMount } from 'svelte';
     import { WebGL, type MapTexture } from '$lib/ldraw/gl';
-    import { brickColour, type Quad } from '$lib/ldraw/components';
+    import { brickColour, type Line, type Quad } from '$lib/ldraw/components';
     import { type SceneStore, type SceneObject } from '$lib/spike/scene';
     import * as m4 from '$lib/ldraw/m4';
 
@@ -16,6 +16,7 @@
     export let rotate = false;
     export let unresolved: string[] = [];
     export let dimMap = false;
+    export let gridScale = 0;
 
     let canRender = false;
     let gl: WebGL | undefined;
@@ -23,8 +24,98 @@
     let lastFrame: number = 0;
     let angle = 0;
     let mapTexture: MapTexture | null = null;
+    let canvasElement: HTMLCanvasElement | undefined;
+    let sceneDistance = 30;
+    let robotFocusDistance = 3;
     let brown = brickColour('86');
     let red = brickColour('4');
+    const gridColour = {
+        code: 'grid',
+        inheritSurface: false,
+        inheritEdge: false,
+        surface: { r: 0.5, g: 0.56, b: 0.58, a: 1.0 },
+        edge: { r: 0.5, g: 0.56, b: 0.58, a: 1.0 }
+    };
+    const physicsDebugColour = brickColour('4');
+
+    function debugBoxLines(x: number, y: number, z: number): Line[] {
+        const hx = x / 2;
+        const hy = y / 2;
+        const hz = z / 2;
+        const points = [
+            { x: -hx, y: -hy, z: -hz },
+            { x: hx, y: -hy, z: -hz },
+            { x: hx, y: hy, z: -hz },
+            { x: -hx, y: hy, z: -hz },
+            { x: -hx, y: -hy, z: hz },
+            { x: hx, y: -hy, z: hz },
+            { x: hx, y: hy, z: hz },
+            { x: -hx, y: hy, z: hz }
+        ];
+        const edges = [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 0],
+            [4, 5],
+            [5, 6],
+            [6, 7],
+            [7, 4],
+            [0, 4],
+            [1, 5],
+            [2, 6],
+            [3, 7]
+        ];
+        return edges.map(([a, b]) => ({
+            colour: physicsDebugColour,
+            p1: points[a],
+            p2: points[b]
+        }));
+    }
+
+    function drawPhysicsDebug(object: SceneObject) {
+        if (!gl || !$boundaryStore.debugPhysics) return;
+        for (const collider of object.physics?.colliders ?? []) {
+            const size =
+                collider.shape === 'box'
+                    ? collider.sizeMm
+                    : collider.shape === 'cylinder'
+                      ? { x: collider.radiusMm * 2, y: collider.heightMm, z: collider.radiusMm * 2 }
+                      : {
+                            x: collider.radiusMm * 2,
+                            y: collider.heightMm + collider.radiusMm * 2,
+                            z: collider.radiusMm * 2
+                        };
+            gl.pushMatrix();
+            if (collider.positionMm)
+                gl.translate(collider.positionMm.x, collider.positionMm.y, collider.positionMm.z);
+            if (collider.rotation) gl.rotateQuaternion(collider.rotation);
+            gl.drawLines(debugBoxLines(size.x, size.y, size.z));
+            gl.popMatrix();
+        }
+        for (const joint of scene.joints ?? []) {
+            if (joint.childId !== object.id) continue;
+            const anchor = joint.childAnchorMm;
+            const radius = 12;
+            gl.drawLines([
+                {
+                    colour: physicsDebugColour,
+                    p1: { x: anchor.x - radius, y: anchor.y, z: anchor.z },
+                    p2: { x: anchor.x + radius, y: anchor.y, z: anchor.z }
+                },
+                {
+                    colour: physicsDebugColour,
+                    p1: { x: anchor.x, y: anchor.y - radius, z: anchor.z },
+                    p2: { x: anchor.x, y: anchor.y + radius, z: anchor.z }
+                },
+                {
+                    colour: physicsDebugColour,
+                    p1: { x: anchor.x, y: anchor.y, z: anchor.z - radius },
+                    p2: { x: anchor.x, y: anchor.y, z: anchor.z + radius }
+                }
+            ]);
+        }
+    }
 
     function doRender(timestamp: number) {
         const frameTime = timestamp - lastFrame;
@@ -54,7 +145,6 @@
         if (!gl) {
             return;
         }
-
         let leftBarrierHit = false;
         let rightBarrierHit = false;
         let bottomBarrierHit = false;
@@ -64,9 +154,9 @@
         gl.clearColour(0.0, 0.0, 0.0);
         gl.clear();
         if (robotFocus) {
-            gl.translate(0, 0, -3);
+            gl.translate(0, 0, -robotFocusDistance);
         } else {
-            gl.translate(0, 0, -30);
+            gl.translate(0, 0, -sceneDistance);
         }
         // Make unit meters
         gl.scale(0.01);
@@ -157,7 +247,9 @@
         if (robotFocus) {
             if (scene.robot) {
                 const obj = scene.robot;
-                if (obj.rotation) {
+                if (obj.rotationQuaternion) {
+                    gl.rotateQuaternion(obj.rotationQuaternion, true);
+                } else if (obj.rotation) {
                     gl.rotate(-obj.rotation, 0.0, 1.0, 0.0);
                 }
                 if (obj.position) {
@@ -226,9 +318,10 @@
             }
             gl.setBrightness(1.0);
         }
+        drawGrid();
         gl.translate(0, 0, 0);
         for (const obj of scene.objects) {
-            if (select === obj.name || select === '#all') {
+            if (select === (obj.editorGroup ?? obj.name) || select === '#all') {
                 gl.setBrightness(1.0);
             } else {
                 gl.setBrightness(0.3);
@@ -237,7 +330,9 @@
             if (obj.position) {
                 gl.translate(obj.position.x, obj.position.y, obj.position.z);
             }
-            if (obj.rotation) {
+            if (obj.rotationQuaternion) {
+                gl.rotateQuaternion(obj.rotationQuaternion);
+            } else if (obj.rotation) {
                 gl.rotate(obj.rotation, 0.0, 1.0, 0.0);
             }
             if (obj.compiled) {
@@ -245,6 +340,7 @@
             } else {
                 gl.drawBox(100, 100, 100);
             }
+            drawPhysicsDebug(obj);
             gl.popMatrix();
             gl.setBrightness(1.0);
         }
@@ -260,7 +356,9 @@
             if (obj.position) {
                 gl.translate(obj.position.x, obj.position.y, obj.position.z);
             }
-            if (obj.rotation) {
+            if (obj.rotationQuaternion) {
+                gl.rotateQuaternion(obj.rotationQuaternion);
+            } else if (obj.rotation) {
                 gl.rotate(obj.rotation, 0.0, 1.0, 0.0);
             }
             if (obj.compiled) {
@@ -268,6 +366,7 @@
             } else {
                 gl.drawBox(100, 100, 100);
             }
+            drawPhysicsDebug(obj);
             gl.popMatrix();
             gl.setBrightness(1.0);
         }
@@ -287,6 +386,55 @@
         if (enabled) {
             queueRender();
         }
+    }
+
+    function clamp(value: number, min: number, max: number) {
+        return Math.min(max, Math.max(min, value));
+    }
+
+    function handleWheel(event: WheelEvent) {
+        event.preventDefault();
+        const factor = Math.exp(event.deltaY * 0.001);
+        if (robotFocus) {
+            robotFocusDistance = clamp(robotFocusDistance * factor, 0.6, 20);
+        } else {
+            sceneDistance = clamp(sceneDistance * factor, 4, 120);
+        }
+        queueRender();
+    }
+
+    function drawGrid() {
+        if (!gl || gridScale <= 0) {
+            return;
+        }
+        const width = mapTexture?.width ?? scene.mapWidth ?? 2000;
+        const height = mapTexture?.height ?? scene.mapHeight ?? 1200;
+        const halfWidth = Math.max(width / 2, gridScale * 4);
+        const halfHeight = Math.max(height / 2, gridScale * 4);
+        const startX = Math.ceil(-halfWidth / gridScale) * gridScale;
+        const endX = Math.floor(halfWidth / gridScale) * gridScale;
+        const startZ = Math.ceil(-halfHeight / gridScale) * gridScale;
+        const endZ = Math.floor(halfHeight / gridScale) * gridScale;
+        const lines: Line[] = [];
+
+        for (let x = startX; x <= endX; x += gridScale) {
+            lines.push({
+                colour: gridColour,
+                p1: { x, y: 1.0, z: -halfHeight },
+                p2: { x, y: 1.0, z: halfHeight }
+            });
+        }
+        for (let z = startZ; z <= endZ; z += gridScale) {
+            lines.push({
+                colour: gridColour,
+                p1: { x: -halfWidth, y: 1.0, z },
+                p2: { x: halfWidth, y: 1.0, z }
+            });
+        }
+
+        gl.setBrightness(dimMap ? 0.8 : 0.45);
+        gl.drawLines(lines);
+        gl.setBrightness(1.0);
     }
 
     async function loadMapTexture(map: Blob | undefined) {
@@ -322,7 +470,10 @@
         const obj = robot;
         if (obj.bricks) {
             if (!obj.compiled || forceCompile) {
-                obj.compiled = gl.compileModel(obj.bricks, { rescale: false });
+                obj.compiled = gl.compileModel(obj.bricks, {
+                    rescale: false,
+                    recenter: !obj.preserveOrigin
+                });
             }
         }
         if (!obj.position && obj.compiled) {
@@ -344,7 +495,10 @@
         for (const obj of objects) {
             if (obj.bricks) {
                 if (!obj.compiled || forceCompile) {
-                    obj.compiled = gl.compileModel(obj.bricks, { rescale: false });
+                    obj.compiled = gl.compileModel(obj.bricks, {
+                        rescale: false,
+                        recenter: !obj.preserveOrigin
+                    });
                 }
             }
             if (!obj.position && obj.compiled) {
@@ -356,7 +510,9 @@
     onMount(() => {
         const canvas = document.getElementById(id);
         if (canvas) {
-            gl = WebGL.create(canvas as HTMLCanvasElement);
+            canvasElement = canvas as HTMLCanvasElement;
+            canvasElement.addEventListener('wheel', handleWheel, { passive: false });
+            gl = WebGL.create(canvasElement);
             if (gl) {
                 loadSceneItems(scene.objects, false, unresolved);
                 loadRobot(scene.robot, false, unresolved);
@@ -371,6 +527,7 @@
 
     onDestroy(() => {
         canRender = false;
+        canvasElement?.removeEventListener('wheel', handleWheel);
         if (mapTexture && gl) {
             gl.deleteTexture(mapTexture.texture);
             mapTexture = null;

@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "model": "45832_06.mpd",
+    "mission": "Leafcutter Frenzy",
+    "mechanics": ["dynamic-pieces","containment","trigger"],
+    "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
+    "segments": [
+        {
+            "id": "45832-06-model",
+            "name": "45832_06 mission model",
+            "selection": {},
+            "includeRootGeometry": true,
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
+        }
+    ],
+    "joints": []
+}

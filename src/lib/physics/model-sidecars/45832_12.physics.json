@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "model": "45832_12.mpd",
+    "mission": "Forest Elder",
+    "mechanics": ["hinge","support-trigger","returnable"],
+    "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
+    "segments": [
+        {
+            "id": "45832-12-model",
+            "name": "45832_12 mission model",
+            "selection": {},
+            "includeRootGeometry": true,
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
+        }
+    ],
+    "joints": []
+}

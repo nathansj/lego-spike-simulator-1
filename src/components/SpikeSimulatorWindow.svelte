@@ -40,6 +40,7 @@
     let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive' = 'adaptive';
     let robotFocus = false;
     let tilt = true;
+    let gridScale = 0;
 
     let cameraMenu = buildCameraMenu();
 
@@ -116,6 +117,47 @@
                     cameraMenu = buildCameraMenu();
                 },
                 toggle: robotFocus
+            },
+            {
+                name: 'Grid scale',
+                action: () => {},
+                submenu: {
+                    name: 'Grid scale',
+                    actions: [
+                        {
+                            name: 'Off',
+                            action: () => {
+                                gridScale = 0;
+                                cameraMenu = buildCameraMenu();
+                            },
+                            radio: gridScale == 0
+                        },
+                        {
+                            name: '100 mm',
+                            action: () => {
+                                gridScale = 100;
+                                cameraMenu = buildCameraMenu();
+                            },
+                            radio: gridScale == 100
+                        },
+                        {
+                            name: '250 mm',
+                            action: () => {
+                                gridScale = 250;
+                                cameraMenu = buildCameraMenu();
+                            },
+                            radio: gridScale == 250
+                        },
+                        {
+                            name: '500 mm',
+                            action: () => {
+                                gridScale = 500;
+                                cameraMenu = buildCameraMenu();
+                            },
+                            radio: gridScale == 500
+                        }
+                    ]
+                }
             }
         ];
     }
@@ -316,6 +358,7 @@
                         {camera}
                         {tilt}
                         {robotFocus}
+                        {gridScale}
                     />
                 </div>
             {/key}

@@ -1,0 +1,738 @@
+{
+    "version": 2,
+    "world": {
+        "gravityMps2": {
+            "x": 0,
+            "y": -9.81,
+            "z": 0
+        },
+        "fixedTimeStep": 0.008333333333333333,
+        "encoderMode": "command"
+    },
+    "robot": {
+        "id": "#robot",
+        "anchored": false,
+        "position": {
+            "x": -830,
+            "y": 57.57033729553223,
+            "z": 420
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0,
+            "w": 1
+        },
+        "name": "#robot",
+        "physics": {
+            "bodyType": "dynamic",
+            "autoCollider": false,
+            "massKg": 0.95,
+            "friction": 0.7,
+            "restitution": 0,
+            "linearDamping": 0,
+            "angularDamping": 0,
+            "additionalSolverIterations": 0,
+            "enabledRotations": {
+                "x": false,
+                "y": true,
+                "z": false
+            },
+            "continuousCollisionDetection": false,
+            "colliders": [
+                {
+                    "collisionEnabled": true,
+                    "shape": "box",
+                    "sizeMm": {
+                        "x": 140,
+                        "y": 65,
+                        "z": 170
+                    }
+                }
+            ]
+        },
+        "preserveOrigin": false,
+        "compiled": {
+            "bbox": {
+                "min": {
+                    "x": -88.0003833770752,
+                    "y": -57.57033729553223,
+                    "z": -92.00008010864258
+                },
+                "max": {
+                    "x": 88.0003833770752,
+                    "y": 57.57033729553223,
+                    "z": 92.00008010864258
+                },
+                "radius": 18270.175965798397
+            }
+        },
+        "wheels": [
+            {
+                "port": "B",
+                "radius": 44,
+                "gearing": -1,
+                "position": {
+                    "x": -28.000219345092773,
+                    "y": -71.2348403930664,
+                    "z": -62.344024658203125
+                },
+                "direction": {
+                    "x": 1,
+                    "y": 0,
+                    "z": 0
+                }
+            },
+            {
+                "port": "A",
+                "radius": 44,
+                "gearing": 1,
+                "position": {
+                    "x": -27.998180389404297,
+                    "y": -71.2348403930664,
+                    "z": 64.00176239013672
+                },
+                "direction": {
+                    "x": 1,
+                    "y": 0,
+                    "z": 0
+                }
+            }
+        ]
+    },
+    "matWidth": 2360,
+    "matHeight": 1140,
+    "objects": [
+        {
+            "id": "object-2",
+            "anchored": false,
+            "position": {
+                "x": -310,
+                "y": 79.81675723195076,
+                "z": 10
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+            },
+            "name": "45832_02.mpd",
+            "physics": {
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.1,
+                "friction": 0.7,
+                "restitution": 0,
+                "linearDamping": 0,
+                "angularDamping": 0,
+                "additionalSolverIterations": 0,
+                "continuousCollisionDetection": false,
+                "colliders": [
+                    {
+                        "collisionEnabled": true,
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 100,
+                            "y": 100,
+                            "z": 100
+                        }
+                    }
+                ]
+            },
+            "preserveOrigin": false,
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": -96.90029525756836,
+                        "y": -79.81675723195076,
+                        "z": -52.81393814086914
+                    },
+                    "max": {
+                        "x": 96.90029525756836,
+                        "y": 79.81675723195076,
+                        "z": 52.81393814086914
+                    },
+                    "radius": 12773.833143742455
+                }
+            }
+        },
+        {
+            "id": "object-3",
+            "anchored": false,
+            "position": {
+                "x": -820,
+                "y": 43.40737533569336,
+                "z": -90
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0.7071067811865475,
+                "z": 0,
+                "w": 0.7071067811865476
+            },
+            "name": "45832_03.mpd",
+            "physics": {
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.1,
+                "friction": 0.7,
+                "restitution": 0,
+                "linearDamping": 0,
+                "angularDamping": 0,
+                "additionalSolverIterations": 0,
+                "continuousCollisionDetection": false,
+                "colliders": [
+                    {
+                        "collisionEnabled": true,
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 100,
+                            "y": 100,
+                            "z": 100
+                        }
+                    }
+                ]
+            },
+            "preserveOrigin": false,
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": -60.00024890899658,
+                        "y": -43.40737533569336,
+                        "z": -41.63457202911377
+                    },
+                    "max": {
+                        "x": 60.00024890899658,
+                        "y": 43.40737533569336,
+                        "z": 41.63457202911377
+                    },
+                    "radius": 6628.987396293947
+                }
+            }
+        },
+        {
+            "id": "object-4",
+            "anchored": false,
+            "position": {
+                "x": -790,
+                "y": 50.80340349674225,
+                "z": -430
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0.6427876096865394,
+                "z": 0,
+                "w": 0.7660444431189781
+            },
+            "name": "45832_04.mpd",
+            "physics": {
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.1,
+                "friction": 0.7,
+                "restitution": 0,
+                "linearDamping": 0,
+                "angularDamping": 0,
+                "additionalSolverIterations": 0,
+                "continuousCollisionDetection": false,
+                "colliders": [
+                    {
+                        "collisionEnabled": true,
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 100,
+                            "y": 100,
+                            "z": 100
+                        }
+                    }
+                ]
+            },
+            "preserveOrigin": false,
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": -171.23867416381836,
+                        "y": -50.80340349674225,
+                        "z": -51.62222099304199
+                    },
+                    "max": {
+                        "x": 171.23867416381836,
+                        "y": 50.80340349674225,
+                        "z": 51.62222099304199
+                    },
+                    "radius": 32332.677353523723
+                }
+            }
+        },
+        {
+            "id": "45832-01-fixed-scenery",
+            "anchored": true,
+            "position": {
+                "x": -110,
+                "y": 29.40920066833496,
+                "z": 300
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0.25881904510252074,
+                "z": 0,
+                "w": 0.9659258262890683
+            },
+            "name": "45832_01 fixed scenery",
+        "physics": {
+            "bodyType": "fixed",
+            "autoCollider": false,
+            "friction": 0.7,
+            "restitution": 0,
+            "colliders": [
+                {
+                    "shape": "box",
+                    "sizeMm": {
+                        "x": 123.91608428955078,
+                        "y": 45.18193054199219,
+                        "z": 76.38652038574219
+                    },
+                    "positionMm": {
+                        "x": 87.93622970581055,
+                        "y": -0.5962009429931641,
+                        "z": 119.43572235107422
+                    }
+                }
+            ]
+        },
+            "preserveOrigin": true,
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": 25.978187561035156,
+                        "y": -23.187166213989258,
+                        "z": 81.24246215820312
+                    },
+                    "max": {
+                        "x": 149.89427185058594,
+                        "y": 21.99476432800293,
+                        "z": 157.6289825439453
+                    },
+                    "radius": 4710.44068795587
+                }
+            }
+        },
+        {
+            "id": "45832-01-base",
+            "anchored": true,
+            "position": {
+                "x": -380,
+                "y": 29.40920066833496,
+                "z": 460
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+            },
+            "name": "45832_01 fixed white base",
+            "physics": {
+                "bodyType": "fixed",
+                "autoCollider": false,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": [
+                    {
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 30,
+                            "y": 60,
+                            "z": 110
+                        },
+                        "positionMm": {
+                            "x": 550,
+                            "y": -28,
+                            "z": 0
+                        }
+                    },
+                    {
+                        "shape": "cylinder",
+                        "radiusMm": 17,
+                        "heightMm": 10,
+                        "positionMm": {
+                            "x": 528.63,
+                            "y": -24.4,
+                            "z": 0
+                        }
+                    }
+                ]
+            },
+            "preserveOrigin": true,
+            "editorGroup": "45832-01-mechanism",
+            "editorName": "45832_01 hinged mechanism",
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": 486.9954833984375,
+                        "y": -29.40920066833496,
+                        "z": -31.999780654907227
+                    },
+                    "max": {
+                        "x": 550.9954833984375,
+                        "y": 33.482906341552734,
+                        "z": 32.000221252441406
+                    },
+                    "radius": 2012.97178945401
+                }
+            }
+        },
+        {
+            "id": "45832-01-red-base",
+            "anchored": false,
+            "position": {
+                "x": -350,
+                "y": 29.40920066833496,
+                "z": 460
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+            },
+            "name": "45832_01 moving red base",
+            "physics": {
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.1,
+                "friction": 0.6,
+                "restitution": 0,
+                "linearDamping": 0.5,
+                "angularDamping": 1.2,
+                "additionalSolverIterations": 8,
+                "motionMode": "planarPush",
+                "motionReleaseFrames": 1,
+                "externalMotionOnly": true,
+                "enabledTranslations": {
+                    "x": true,
+                    "y": false,
+                    "z": true
+                },
+                "enabledRotations": {
+                    "x": false,
+                    "y": false,
+                    "z": false
+                },
+                "colliders": [
+                    {
+                        "shape": "cylinder",
+                        "radiusMm": 60,
+                        "heightMm": 6,
+                        "positionMm": {
+                            "x": 0,
+                            "y": -26,
+                            "z": 0
+                        }
+                    }
+                ]
+            },
+            "preserveOrigin": true,
+            "editorGroup": "45832-01-mechanism",
+            "editorName": "45832_01 hinged mechanism",
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": -30.99540901184082,
+                        "y": -26.20909881591797,
+                        "z": -24
+                    },
+                    "max": {
+                        "x": 17.004600524902344,
+                        "y": 2.5909037590026855,
+                        "z": 24
+                    },
+                    "radius": 1039.3585264597323
+                }
+            }
+        },
+        {
+            "id": "45832-01-link-a",
+            "anchored": false,
+            "position": {
+                "x": -350,
+                "y": 29.40920066833496,
+                "z": 460
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+            },
+            "name": "45832_01 red-side link",
+            "physics": {
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.015,
+                "friction": 0.6,
+                "restitution": 0,
+                "linearDamping": 0.5,
+                "angularDamping": 1.2,
+                "additionalSolverIterations": 8,
+                "colliders": [
+                    {
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 250,
+                            "y": 12,
+                            "z": 80
+                        },
+                        "positionMm": {
+                            "x": 126.6,
+                            "y": -20.75,
+                            "z": 0
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0.004413,
+                            "w": 0.99999
+                        },
+                        "collisionEnabled": false
+                    }
+                ]
+            },
+            "preserveOrigin": true,
+            "editorGroup": "45832-01-mechanism",
+            "editorName": "45832_01 hinged mechanism",
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": -10.581741333007812,
+                        "y": -17.795440673828125,
+                        "z": -24.000001907348633
+                    },
+                    "max": {
+                        "x": 259.5863342285156,
+                        "y": 12.386347770690918,
+                        "z": 24.00010108947754
+                    },
+                    "radius": 18963.373229417895
+                }
+            }
+        },
+        {
+            "id": "45832-01-drone",
+            "anchored": false,
+            "position": {
+                "x": -350,
+                "y": 29.40920066833496,
+                "z": 460
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+            },
+            "name": "45832_01 central drone",
+            "physics": {
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.03,
+                "friction": 0.5,
+                "restitution": 0,
+                "linearDamping": 0.5,
+                "angularDamping": 1.2,
+                "additionalSolverIterations": 8,
+                "enabledRotations": {
+                    "x": false,
+                    "y": false,
+                    "z": false
+                },
+                "colliders": [
+                    {
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 40,
+                            "y": 30,
+                            "z": 160
+                        },
+                        "positionMm": {
+                            "x": 256.88,
+                            "y": -13,
+                            "z": 0
+                        }
+                    }
+                ]
+            },
+            "preserveOrigin": true,
+            "editorGroup": "45832-01-mechanism",
+            "editorName": "45832_01 hinged mechanism",
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": 231.9998016357422,
+                        "y": -25.600000381469727,
+                        "z": -31.99990463256836
+                    },
+                    "max": {
+                        "x": 280.0002136230469,
+                        "y": 19.200000762939453,
+                        "z": 32.0001220703125
+                    },
+                    "radius": 1237.1608656313401
+                }
+            }
+        },
+        {
+            "id": "45832-01-link-b",
+            "anchored": false,
+            "position": {
+                "x": -350,
+                "y": 29.40920066833496,
+                "z": 460
+            },
+            "rotation": {
+                "x": 0,
+                "y": 0,
+                "z": 0,
+                "w": 1
+            },
+            "name": "45832_01 white-side link",
+            "physics": {
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.015,
+                "friction": 0.6,
+                "restitution": 0,
+                "linearDamping": 0.5,
+                "angularDamping": 1.2,
+                "additionalSolverIterations": 8,
+                "colliders": [
+                    {
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 260,
+                            "y": 12,
+                            "z": 80
+                        },
+                        "positionMm": {
+                            "x": 392.75,
+                            "y": -21.5,
+                            "z": 0
+                        },
+                        "rotation": {
+                            "x": 0,
+                            "y": 0,
+                            "z": -0.006993,
+                            "w": 0.999976
+                        },
+                        "collisionEnabled": false
+                    }
+                ]
+            },
+            "preserveOrigin": true,
+            "editorGroup": "45832-01-mechanism",
+            "editorName": "45832_01 hinged mechanism",
+            "compiled": {
+                "bbox": {
+                    "min": {
+                        "x": 252.41366577148438,
+                        "y": -17.79547119140625,
+                        "z": -31.999897003173828
+                    },
+                    "max": {
+                        "x": 522.581787109375,
+                        "y": 12.386326789855957,
+                        "z": 32.00023651123047
+                    },
+                    "radius": 19411.381082181357
+                }
+            }
+        }
+    ],
+    "joints": [
+        {
+            "id": "45832-01-red-hinge",
+            "type": "ball",
+            "parentId": "45832-01-link-a",
+            "childId": "45832-01-red-base",
+            "parentAnchorMm": {
+                "x": -3.68,
+                "y": -27.9,
+                "z": 0
+            },
+            "childAnchorMm": {
+                "x": -3.68,
+                "y": -27.9,
+                "z": 0
+            },
+            "axis": "z",
+            "limitsRadians": {
+                "min": -1.6,
+                "max": 1.6
+            }
+        },
+        {
+            "id": "45832-01-white-hinge",
+            "type": "hinge",
+            "parentId": "45832-01-base",
+            "childId": "45832-01-link-b",
+            "parentAnchorMm": {
+                "x": 528.63,
+                "y": -29.4,
+                "z": 0
+            },
+            "childAnchorMm": {
+                "x": 528.63,
+                "y": -29.4,
+                "z": 0
+            },
+            "axis": "z",
+            "limitsRadians": {
+                "min": -1.35,
+                "max": -0.03
+            }
+        },
+        {
+            "id": "45832-01-white-drone-hinge",
+            "type": "ball",
+            "parentId": "45832-01-link-b",
+            "childId": "45832-01-drone",
+            "parentAnchorMm": {
+                "x": 256.88,
+                "y": -25.6,
+                "z": 0
+            },
+            "childAnchorMm": {
+                "x": 256.88,
+                "y": -25.6,
+                "z": 0
+            },
+            "axis": "z",
+            "limitsRadians": {
+                "min": -1.6,
+                "max": 1.6
+            }
+        },
+        {
+            "id": "45832-01-red-drone-hinge",
+            "type": "ball",
+            "parentId": "45832-01-drone",
+            "childId": "45832-01-link-a",
+            "parentAnchorMm": {
+                "x": 256.88,
+                "y": -25.6,
+                "z": 0
+            },
+            "childAnchorMm": {
+                "x": 256.88,
+                "y": -25.6,
+                "z": 0
+            },
+            "axis": "z",
+            "limitsRadians": {
+                "min": -1.6,
+                "max": 1.6
+            }
+        }
+    ]
+}

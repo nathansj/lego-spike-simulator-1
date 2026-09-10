@@ -27,6 +27,9 @@
     } from '$lib/spike/vm';
     import { genId } from '$lib/blockly/genid';
     import { copyScene, sceneStore } from '$lib/spike/scene';
+    import { boundaryStore } from '$lib/spike/scene';
+    import { Simulation, type PhysicsSensorPose } from '$lib/spike/simulation';
+    import { createExplicitModelPhysics } from '$lib/physics/articulation-presets';
     import HubWidget from '$components/HubWidget.svelte';
     import RobotPreview from '$components/RobotPreview.svelte';
     import ScenePreview from '$components/ScenePreview.svelte';
@@ -35,6 +38,7 @@
     import ForceCheckSensor from '$components/ForceCheckSensor.svelte';
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
+    import { onDestroy } from 'svelte';
 
     export let runSimulation: boolean = false;
     export let workspace: Blockly.WorkspaceSvg | undefined;
@@ -45,6 +49,7 @@
     export let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive' = 'adaptive';
     export let robotFocus = false;
     export let tilt = true;
+    export let gridScale = 0;
 
     let compiler = new WebGLCompiler();
 
@@ -56,6 +61,8 @@
 
     let numberOfLoads = 0;
     let vm: VM | undefined;
+    let simulation: Simulation | undefined;
+    let simulationGeneration = 0;
     let hubImage = '0000000000000000000000000';
     let hubCentreButtonColour = '#ffffff';
     let compiledRobot: CompiledModel | undefined = $componentStore.robotModel
@@ -155,6 +162,53 @@
         }
     }
 
+    function sensorPose(id: number | 'none'): PhysicsSensorPose | undefined {
+        if (id === 'none' || !$componentStore.robotModel) return undefined;
+        const result = findPartTransform($componentStore.robotModel, id);
+        if (!result) return undefined;
+        let matrix = m4.identity();
+        if (compiledRobot) {
+            matrix = m4.translate(matrix, 0, compiledRobot.bbox.min.y, 0);
+            matrix = m4.translate(
+                matrix,
+                compiledRobot.recenter.x,
+                compiledRobot.recenter.y,
+                compiledRobot.recenter.z
+            );
+        }
+        matrix = m4.axisRotate(matrix, [1, 0, 0], Math.PI);
+        matrix = m4.scale(matrix, 0.4, 0.4, 0.4);
+        matrix = m4.multiply(matrix, result.forward);
+        const position = m4.transformVector(matrix, [0, 0, 0, 1]);
+        const direction = m4.normalize(m4.transformVector(matrix, [0, 0, -1, 0]));
+        return {
+            positionMm: { x: position[0], y: position[1], z: position[2] },
+            direction: { x: direction[0], y: direction[1], z: direction[2] }
+        };
+    }
+
+    function updateSceneRobot(robot: Model, compiled: CompiledModel | undefined) {
+        sceneStore.update((old) => {
+            return {
+                ...old,
+                robot: {
+                    ...old.robot,
+                    bricks: robot,
+                    compiled,
+                    physics:
+                        old.robot.physics ??
+                        createExplicitModelPhysics(robot, {
+                            bodyType: 'dynamic',
+                            massKg: 0.95,
+                            friction: 0.7,
+                            restitution: 0,
+                            enabledRotations: { x: false, y: true, z: false }
+                        })
+                }
+            };
+        });
+    }
+
     async function loadRobot() {
         const element = document.getElementById('load_robot');
         if (element) {
@@ -173,6 +227,7 @@
                                 setStudioMode(true);
                                 const robot = setRobotFromContent(content);
                                 compiledRobot = compiler.compileModel(robot, { rescale: false });
+                                updateSceneRobot(robot, compiledRobot);
                                 hub.reload();
                                 hub = hub;
                             } finally {
@@ -182,6 +237,7 @@
                     } else {
                         const robot = await setRobotFromFile(first);
                         compiledRobot = compiler.compileModel(robot, { rescale: false });
+                        updateSceneRobot(robot, compiledRobot);
                         hub.reload();
                         connectPorts(hub, robot);
                         connectWheels(hub, robot);
@@ -226,13 +282,12 @@
         const frameTime = timestamp - lastFrame;
         if (vm.state == 'running') {
             if (lastFrame > 0) {
-                let seconds = frameTime / 1000.0;
-                if (seconds > 2.0) {
-                    // Browser must have paused us
-                    // don't do more than 2 seconds
-                    seconds = 2.0;
+                const seconds = frameTime / 1000.0;
+                if (simulation) {
+                    simulation.advance(seconds);
+                } else {
+                    vm.step(Math.min(seconds, 0.1), scene);
                 }
-                vm.step(seconds, scene);
             } else {
                 vm.step(0.0, scene);
             }
@@ -241,8 +296,11 @@
         lastFrame = timestamp;
     }
 
-    function startOrPauseSimulation(start: boolean) {
+    async function startOrPauseSimulation(start: boolean) {
+        const generation = ++simulationGeneration;
         if (start) {
+            simulation?.dispose();
+            simulation = undefined;
             if (vm) {
                 vm.stop();
                 hubImage = '0000000000000000000000000';
@@ -291,11 +349,39 @@
             }
             hub = hub;
             scene = copyScene($sceneStore);
+            for (const object of [scene.robot, ...scene.objects]) {
+                if (object.bricks && !object.compiled) {
+                    object.compiled = compiler.compileModel(object.bricks, {
+                        rescale: false,
+                        recenter: !object.preserveOrigin
+                    });
+                }
+            }
             vm = new VM(id, hub, globals, $codeStore.events, $codeStore.procedures, workspace);
             vm.start();
+            const newSimulation = await Simulation.create(
+                scene,
+                vm,
+                hub,
+                $boundaryStore.collisions
+            );
+            if (generation !== simulationGeneration || !runSimulation) {
+                newSimulation.dispose();
+                return;
+            }
+            simulation = newSimulation;
+            newSimulation.setPhysicsSensors(
+                sensorList.flatMap((sensor) => {
+                    if (sensor.type !== 'distance' && sensor.type !== 'force') return [];
+                    const pose = sensorPose(sensor.id);
+                    return pose ? [{ port: sensor.port, type: sensor.type, pose }] : [];
+                })
+            );
             lastFrame = 0;
             requestAnimationFrame(stepVM);
         } else {
+            simulation?.dispose();
+            simulation = undefined;
             if (vm) {
                 vm.stop();
                 hubImage = '0000000000000000000000000';
@@ -329,6 +415,12 @@
     }
 
     $: startOrPauseSimulation(runSimulation);
+
+    onDestroy(() => {
+        simulationGeneration++;
+        simulation?.dispose();
+        simulation = undefined;
+    });
 </script>
 
 <div class="flex flex-col h-full p-2 overflow-y-scroll relative">
@@ -414,6 +506,8 @@
                                 forceSensorId={sensor.id}
                                 {hub}
                                 port={sensor.port}
+                                physicsEnabled={simulation !== undefined}
+                                {simulation}
                             />
                         {:else if sensor.type == 'distance'}
                             <span class="text-sm mt-2">
@@ -427,6 +521,7 @@
                                 distanceSensorId={sensor.id}
                                 {hub}
                                 port={sensor.port}
+                                physicsEnabled={simulation !== undefined}
                             />
                         {/if}
                     {/each}
@@ -443,6 +538,7 @@
                         {camera}
                         {robotFocus}
                         {tilt}
+                        {gridScale}
                         select="#all"
                         dimMap={true}
                         {hub}
@@ -462,6 +558,7 @@
                             robotModel={$componentStore.robotModel}
                             {compiledRobot}
                             enabled={!connectorOpen && !sceneOpen && !wheelsOpen}
+                            {gridScale}
                         />
                     </div>
                 {/if}

@@ -101,7 +101,8 @@ type ResolverCallback = (part: PartDetail) => void;
 export let robotModel: Model | undefined;
 export const components = new Map<string, Model>();
 export const unresolved = new Map<string, ResolverCallback[]>();
-let canFetchComponents = (window?.location?.href ?? 'file://').startsWith('http');
+let canFetchComponents =
+    typeof window !== 'undefined' && (window.location?.href ?? 'file://').startsWith('http');
 let subpartId = 0;
 
 function nextSubpartId() {
@@ -268,6 +269,11 @@ interface MPDFile {
     content: string;
 }
 
+function normalizePartName(part: string) {
+    part = part.toLowerCase();
+    return substituteParts[part] ?? part;
+}
+
 export function loadMPD(content: string): Model {
     const files: MPDFile[] = [];
     const lines = content.split('\n');
@@ -292,13 +298,16 @@ export function loadMPD(content: string): Model {
         files.push({ name: lastFile, content: lastContents.join('\n') });
     }
     lastContents = [];
+
+    for (const mpdPart of files) {
+        const part = normalizePartName(mpdPart.name);
+        components.delete(part);
+        unresolved.delete(part);
+    }
+
     const models: Model[] = [];
     for (const mpdPart of files) {
-        let part = mpdPart.name.toLowerCase();
-        const replacement = substituteParts[part];
-        if (replacement) {
-            part = replacement;
-        }
+        const part = normalizePartName(mpdPart.name);
         const content = mpdPart.content;
         const model = loadModel(part, content);
         models.push(model);
@@ -595,12 +604,17 @@ export async function resolveFromZip(f: Blob) {
     while (unresolvedParts.length > 0) {
         for (const part of unresolvedParts) {
             const unixPart = part.replace('\\', '/');
-            let file = zipFile.file(`ldraw/parts/${unixPart}`);
+            const archivePaths = [
+                `ldraw/parts/${unixPart}`,
+                `ldraw/p/${unixPart}`,
+                `ldraw-library/parts/${unixPart}`,
+                `ldraw-library/p/${unixPart}`,
+                `parts/${unixPart}`,
+                `p/${unixPart}`
+            ];
+            const file = archivePaths.map((path) => zipFile.file(path)).find(Boolean);
             if (!file) {
-                file = zipFile.file(`ldraw/p/${unixPart}`);
-            }
-            if (!file) {
-                console.log(`Missing ldraw/parts/${unixPart} in part library`);
+                console.log(`Missing ${unixPart} in part library`);
                 failedParts.push(part);
                 continue;
             }

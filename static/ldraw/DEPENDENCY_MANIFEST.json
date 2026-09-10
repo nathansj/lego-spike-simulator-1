@@ -1,0 +1,4260 @@
+{
+  "summary": {
+    "mpds": [
+      "45832_01.mpd",
+      "45832_02.mpd",
+      "45832_03.mpd",
+      "45832_04.mpd",
+      "45832_05.mpd",
+      "45832_06.mpd",
+      "45832_07.mpd",
+      "45832_08.mpd",
+      "45832_09.mpd",
+      "45832_10.mpd",
+      "45832_11.mpd",
+      "45832_12.mpd",
+      "45832_13.mpd"
+    ],
+    "direct_external_references": 297,
+    "bundled_dependency_files": 859,
+    "by_source": {
+      "official_parts": 232,
+      "unofficial_parts": 77,
+      "relative": 190,
+      "studio_lego_parts": 1,
+      "official_primitives": 321,
+      "unofficial_primitives": 24
+    },
+    "unresolved": [],
+    "collisions": [],
+    "verified_files": 853,
+    "portable_high_resolution_aliases": 7
+  },
+  "files": {
+    "parts/32013.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32013.dat",
+      "path": "parts/32013.dat",
+      "kind": "official_parts"
+    },
+    "parts/50450.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/50450.dat",
+      "path": "parts/50450.dat",
+      "kind": "official_parts"
+    },
+    "parts/3020.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3020.dat",
+      "path": "parts/3020.dat",
+      "kind": "official_parts"
+    },
+    "parts/1750.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/1750.dat",
+      "path": "parts/1750.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/80431.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/80431.dat",
+      "path": "parts/80431.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3003.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3003.dat",
+      "path": "parts/3003.dat",
+      "kind": "official_parts"
+    },
+    "parts/89678.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/89678.dat",
+      "path": "parts/89678.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/98138.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/98138.dat",
+      "path": "parts/98138.dat",
+      "kind": "official_parts"
+    },
+    "parts/3795.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3795.dat",
+      "path": "parts/3795.dat",
+      "kind": "official_parts"
+    },
+    "parts/3700.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3700.dat",
+      "path": "parts/3700.dat",
+      "kind": "official_parts"
+    },
+    "parts/32556b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/32556b.dat",
+      "path": "parts/32556b.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/68568.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/68568.dat",
+      "path": "parts/68568.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/15535.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15535.dat",
+      "path": "parts/15535.dat",
+      "kind": "official_parts"
+    },
+    "parts/61485.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/61485.dat",
+      "path": "parts/61485.dat",
+      "kind": "official_parts"
+    },
+    "parts/74611.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/74611.dat",
+      "path": "parts/74611.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/4740.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4740.dat",
+      "path": "parts/4740.dat",
+      "kind": "official_parts"
+    },
+    "parts/88072.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/88072.dat",
+      "path": "parts/88072.dat",
+      "kind": "official_parts"
+    },
+    "parts/64644.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/64644.dat",
+      "path": "parts/64644.dat",
+      "kind": "official_parts"
+    },
+    "parts/85861.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/85861.dat",
+      "path": "parts/85861.dat",
+      "kind": "official_parts"
+    },
+    "parts/3032.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3032.dat",
+      "path": "parts/3032.dat",
+      "kind": "official_parts"
+    },
+    "parts/3039.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3039.dat",
+      "path": "parts/3039.dat",
+      "kind": "official_parts"
+    },
+    "parts/3673.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3673.dat",
+      "path": "parts/3673.dat",
+      "kind": "official_parts"
+    },
+    "parts/3001.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3001.dat",
+      "path": "parts/3001.dat",
+      "kind": "official_parts"
+    },
+    "parts/3010.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3010.dat",
+      "path": "parts/3010.dat",
+      "kind": "official_parts"
+    },
+    "parts/87079.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/87079.dat",
+      "path": "parts/87079.dat",
+      "kind": "relative"
+    },
+    "parts/2654.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2654.dat",
+      "path": "parts/2654.dat",
+      "kind": "official_parts"
+    },
+    "parts/bl_973pb6136c01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb6136c01.dat",
+      "path": "parts/bl_973pb6136c01.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3626cp8r.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3626cp8r.dat",
+      "path": "parts/3626cp8r.dat",
+      "kind": "official_parts"
+    },
+    "parts/30124b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/30124b.dat",
+      "path": "parts/30124b.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/2447b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/2447b.dat",
+      "path": "parts/2447b.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/53118.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/53118.dat",
+      "path": "parts/53118.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/11213.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/11213.dat",
+      "path": "parts/11213.dat",
+      "kind": "official_parts"
+    },
+    "parts/3023b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3023b.dat",
+      "path": "parts/3023b.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/4032a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4032a.dat",
+      "path": "parts/4032a.dat",
+      "kind": "official_parts"
+    },
+    "parts/18674.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/18674.dat",
+      "path": "parts/18674.dat",
+      "kind": "official_parts"
+    },
+    "parts/15068.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15068.dat",
+      "path": "parts/15068.dat",
+      "kind": "official_parts"
+    },
+    "parts/4079.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4079.dat",
+      "path": "parts/4079.dat",
+      "kind": "official_parts"
+    },
+    "parts/87618.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/87618.dat",
+      "path": "parts/87618.dat",
+      "kind": "official_parts"
+    },
+    "parts/43898.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/43898.dat",
+      "path": "parts/43898.dat",
+      "kind": "official_parts"
+    },
+    "parts/3710.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3710.dat",
+      "path": "parts/3710.dat",
+      "kind": "relative"
+    },
+    "parts/2431.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2431.dat",
+      "path": "parts/2431.dat",
+      "kind": "official_parts"
+    },
+    "parts/32531.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32531.dat",
+      "path": "parts/32531.dat",
+      "kind": "official_parts"
+    },
+    "parts/18980.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/18980.dat",
+      "path": "parts/18980.dat",
+      "kind": "official_parts"
+    },
+    "parts/35480.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/35480.dat",
+      "path": "parts/35480.dat",
+      "kind": "official_parts"
+    },
+    "parts/77850.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/77850.dat",
+      "path": "parts/77850.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3068b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3068b.dat",
+      "path": "parts/3068b.dat",
+      "kind": "relative"
+    },
+    "parts/3749.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3749.dat",
+      "path": "parts/3749.dat",
+      "kind": "official_parts"
+    },
+    "parts/62462.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/62462.dat",
+      "path": "parts/62462.dat",
+      "kind": "official_parts"
+    },
+    "parts/bl_970c00pb1581_hip.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_970c00pb1581_hip.dat",
+      "path": "parts/bl_970c00pb1581_hip.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/bl_970c00pb1581_lleg.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_970c00pb1581_lleg.dat",
+      "path": "parts/bl_970c00pb1581_lleg.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/bl_970c00pb1581_rleg.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_970c00pb1581_rleg.dat",
+      "path": "parts/bl_970c00pb1581_rleg.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/32555.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32555.dat",
+      "path": "parts/32555.dat",
+      "kind": "official_parts"
+    },
+    "parts/4304.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/4304.dat",
+      "path": "parts/4304.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/2780.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2780.dat",
+      "path": "parts/2780.dat",
+      "kind": "official_parts"
+    },
+    "parts/43093.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/43093.dat",
+      "path": "parts/43093.dat",
+      "kind": "official_parts"
+    },
+    "parts/32348.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32348.dat",
+      "path": "parts/32348.dat",
+      "kind": "official_parts"
+    },
+    "parts/64179.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/64179.dat",
+      "path": "parts/64179.dat",
+      "kind": "official_parts"
+    },
+    "parts/6558.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6558.dat",
+      "path": "parts/6558.dat",
+      "kind": "official_parts"
+    },
+    "parts/32316.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32316.dat",
+      "path": "parts/32316.dat",
+      "kind": "official_parts"
+    },
+    "parts/60484.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/60484.dat",
+      "path": "parts/60484.dat",
+      "kind": "official_parts"
+    },
+    "parts/32525.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32525.dat",
+      "path": "parts/32525.dat",
+      "kind": "official_parts"
+    },
+    "parts/32271.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32271.dat",
+      "path": "parts/32271.dat",
+      "kind": "official_parts"
+    },
+    "parts/32524.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32524.dat",
+      "path": "parts/32524.dat",
+      "kind": "official_parts"
+    },
+    "parts/63965.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/63965.dat",
+      "path": "parts/63965.dat",
+      "kind": "official_parts"
+    },
+    "parts/bl_80674.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_80674.dat",
+      "path": "parts/bl_80674.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/33183.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/33183.dat",
+      "path": "parts/33183.dat",
+      "kind": "official_parts"
+    },
+    "parts/32607.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32607.dat",
+      "path": "parts/32607.dat",
+      "kind": "official_parts"
+    },
+    "parts/32015.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32015.dat",
+      "path": "parts/32015.dat",
+      "kind": "official_parts"
+    },
+    "parts/32062.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32062.dat",
+      "path": "parts/32062.dat",
+      "kind": "official_parts"
+    },
+    "parts/32016.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32016.dat",
+      "path": "parts/32016.dat",
+      "kind": "official_parts"
+    },
+    "parts/4519.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4519.dat",
+      "path": "parts/4519.dat",
+      "kind": "official_parts"
+    },
+    "parts/87994.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/87994.dat",
+      "path": "parts/87994.dat",
+      "kind": "official_parts"
+    },
+    "parts/32039.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32039.dat",
+      "path": "parts/32039.dat",
+      "kind": "official_parts"
+    },
+    "parts/15395.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15395.dat",
+      "path": "parts/15395.dat",
+      "kind": "official_parts"
+    },
+    "parts/bl_5256.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_5256.dat",
+      "path": "parts/bl_5256.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3713.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3713.dat",
+      "path": "parts/3713.dat",
+      "kind": "official_parts"
+    },
+    "parts/30340.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30340.dat",
+      "path": "parts/30340.dat",
+      "kind": "official_parts"
+    },
+    "parts/78258.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/78258.dat",
+      "path": "parts/78258.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/57539k01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/57539k01.dat",
+      "path": "parts/57539k01.dat",
+      "kind": "official_parts"
+    },
+    "parts/57539k02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/57539k02.dat",
+      "path": "parts/57539k02.dat",
+      "kind": "official_parts"
+    },
+    "parts/39794.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/39794.dat",
+      "path": "parts/39794.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/64782.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/64782.dat",
+      "path": "parts/64782.dat",
+      "kind": "official_parts"
+    },
+    "parts/32184.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32184.dat",
+      "path": "parts/32184.dat",
+      "kind": "official_parts"
+    },
+    "parts/32140.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32140.dat",
+      "path": "parts/32140.dat",
+      "kind": "official_parts"
+    },
+    "parts/18654.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/18654.dat",
+      "path": "parts/18654.dat",
+      "kind": "official_parts"
+    },
+    "parts/39793.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/39793.dat",
+      "path": "parts/39793.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/32054.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32054.dat",
+      "path": "parts/32054.dat",
+      "kind": "official_parts"
+    },
+    "parts/2391.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/2391.dat",
+      "path": "parts/2391.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/2393.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/2393.dat",
+      "path": "parts/2393.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/24866.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/24866.dat",
+      "path": "parts/24866.dat",
+      "kind": "official_parts"
+    },
+    "parts/99781.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/99781.dat",
+      "path": "parts/99781.dat",
+      "kind": "official_parts"
+    },
+    "parts/11477.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/11477.dat",
+      "path": "parts/11477.dat",
+      "kind": "official_parts"
+    },
+    "parts/3021.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3021.dat",
+      "path": "parts/3021.dat",
+      "kind": "official_parts"
+    },
+    "parts/3623.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3623.dat",
+      "path": "parts/3623.dat",
+      "kind": "official_parts"
+    },
+    "parts/6629.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6629.dat",
+      "path": "parts/6629.dat",
+      "kind": "official_parts"
+    },
+    "parts/3035.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3035.dat",
+      "path": "parts/3035.dat",
+      "kind": "official_parts"
+    },
+    "parts/3069b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3069b.dat",
+      "path": "parts/3069b.dat",
+      "kind": "official_parts"
+    },
+    "parts/28192.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/28192.dat",
+      "path": "parts/28192.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3665.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3665.dat",
+      "path": "parts/3665.dat",
+      "kind": "official_parts"
+    },
+    "parts/3298.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3298.dat",
+      "path": "parts/3298.dat",
+      "kind": "official_parts"
+    },
+    "parts/3046.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3046.dat",
+      "path": "parts/3046.dat",
+      "kind": "official_parts"
+    },
+    "parts/14719.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/14719.dat",
+      "path": "parts/14719.dat",
+      "kind": "official_parts"
+    },
+    "parts/30363.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30363.dat",
+      "path": "parts/30363.dat",
+      "kind": "official_parts"
+    },
+    "parts/4286.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4286.dat",
+      "path": "parts/4286.dat",
+      "kind": "official_parts"
+    },
+    "parts/3022.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3022.dat",
+      "path": "parts/3022.dat",
+      "kind": "official_parts"
+    },
+    "parts/3460.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3460.dat",
+      "path": "parts/3460.dat",
+      "kind": "official_parts"
+    },
+    "parts/3045.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3045.dat",
+      "path": "parts/3045.dat",
+      "kind": "official_parts"
+    },
+    "parts/3675.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3675.dat",
+      "path": "parts/3675.dat",
+      "kind": "official_parts"
+    },
+    "parts/59900.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/59900.dat",
+      "path": "parts/59900.dat",
+      "kind": "official_parts"
+    },
+    "parts/33320.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/33320.dat",
+      "path": "parts/33320.dat",
+      "kind": "official_parts"
+    },
+    "parts/15571.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15571.dat",
+      "path": "parts/15571.dat",
+      "kind": "official_parts"
+    },
+    "parts/3040b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3040b.dat",
+      "path": "parts/3040b.dat",
+      "kind": "official_parts"
+    },
+    "parts/29111.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/29111.dat",
+      "path": "parts/29111.dat",
+      "kind": "official_parts"
+    },
+    "parts/48729b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/48729b.dat",
+      "path": "parts/48729b.dat",
+      "kind": "official_parts"
+    },
+    "parts/73507.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/73507.dat",
+      "path": "parts/73507.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/65826.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/65826.dat",
+      "path": "parts/65826.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3666.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3666.dat",
+      "path": "parts/3666.dat",
+      "kind": "official_parts"
+    },
+    "parts/15706.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15706.dat",
+      "path": "parts/15706.dat",
+      "kind": "official_parts"
+    },
+    "parts/3004.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3004.dat",
+      "path": "parts/3004.dat",
+      "kind": "relative"
+    },
+    "parts/3009.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3009.dat",
+      "path": "parts/3009.dat",
+      "kind": "official_parts"
+    },
+    "parts/2540.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2540.dat",
+      "path": "parts/2540.dat",
+      "kind": "official_parts"
+    },
+    "parts/65509.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/65509.dat",
+      "path": "parts/65509.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/77845.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/77845.dat",
+      "path": "parts/77845.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/57906.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/57906.dat",
+      "path": "parts/57906.dat",
+      "kind": "official_parts"
+    },
+    "parts/44567b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/44567b.dat",
+      "path": "parts/44567b.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/87580.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/87580.dat",
+      "path": "parts/87580.dat",
+      "kind": "official_parts"
+    },
+    "parts/4697b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4697b.dat",
+      "path": "parts/4697b.dat",
+      "kind": "official_parts"
+    },
+    "parts/2630k01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/2630k01.dat",
+      "path": "parts/2630k01.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/60483.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/60483.dat",
+      "path": "parts/60483.dat",
+      "kind": "official_parts"
+    },
+    "parts/26287.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/26287.dat",
+      "path": "parts/26287.dat",
+      "kind": "official_parts"
+    },
+    "parts/3705.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3705.dat",
+      "path": "parts/3705.dat",
+      "kind": "official_parts"
+    },
+    "parts/32474.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32474.dat",
+      "path": "parts/32474.dat",
+      "kind": "official_parts"
+    },
+    "parts/65249.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/65249.dat",
+      "path": "parts/65249.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/11212.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/11212.dat",
+      "path": "parts/11212.dat",
+      "kind": "official_parts"
+    },
+    "parts/3002.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3002.dat",
+      "path": "parts/3002.dat",
+      "kind": "official_parts"
+    },
+    "parts/3573.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3573.dat",
+      "path": "parts/3573.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/30099.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30099.dat",
+      "path": "parts/30099.dat",
+      "kind": "official_parts"
+    },
+    "parts/85984.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/85984.dat",
+      "path": "parts/85984.dat",
+      "kind": "official_parts"
+    },
+    "parts/54200.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/54200.dat",
+      "path": "parts/54200.dat",
+      "kind": "official_parts"
+    },
+    "parts/11214.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/11214.dat",
+      "path": "parts/11214.dat",
+      "kind": "official_parts"
+    },
+    "parts/32291.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32291.dat",
+      "path": "parts/32291.dat",
+      "kind": "official_parts"
+    },
+    "parts/25214.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/25214.dat",
+      "path": "parts/25214.dat",
+      "kind": "official_parts"
+    },
+    "parts/53451.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/53451.dat",
+      "path": "parts/53451.dat",
+      "kind": "official_parts"
+    },
+    "parts/3037.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3037.dat",
+      "path": "parts/3037.dat",
+      "kind": "official_parts"
+    },
+    "parts/3028.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3028.dat",
+      "path": "parts/3028.dat",
+      "kind": "official_parts"
+    },
+    "parts/3008.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3008.dat",
+      "path": "parts/3008.dat",
+      "kind": "official_parts"
+    },
+    "parts/2653.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2653.dat",
+      "path": "parts/2653.dat",
+      "kind": "official_parts"
+    },
+    "parts/33909.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/33909.dat",
+      "path": "parts/33909.dat",
+      "kind": "official_parts"
+    },
+    "parts/78329.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/78329.dat",
+      "path": "parts/78329.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/60479.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/60479.dat",
+      "path": "parts/60479.dat",
+      "kind": "official_parts"
+    },
+    "parts/15070.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15070.dat",
+      "path": "parts/15070.dat",
+      "kind": "official_parts"
+    },
+    "parts/41740.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/41740.dat",
+      "path": "parts/41740.dat",
+      "kind": "official_parts"
+    },
+    "parts/7302.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/7302.dat",
+      "path": "parts/7302.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/6112.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6112.dat",
+      "path": "parts/6112.dat",
+      "kind": "official_parts"
+    },
+    "parts/6541.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6541.dat",
+      "path": "parts/6541.dat",
+      "kind": "official_parts"
+    },
+    "parts/32000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32000.dat",
+      "path": "parts/32000.dat",
+      "kind": "official_parts"
+    },
+    "parts/5907.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/5907.dat",
+      "path": "parts/5907.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/6111.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6111.dat",
+      "path": "parts/6111.dat",
+      "kind": "official_parts"
+    },
+    "parts/15462.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15462.dat",
+      "path": "parts/15462.dat",
+      "kind": "official_parts"
+    },
+    "parts/32269.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32269.dat",
+      "path": "parts/32269.dat",
+      "kind": "official_parts"
+    },
+    "parts/46372.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/46372.dat",
+      "path": "parts/46372.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3031.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3031.dat",
+      "path": "parts/3031.dat",
+      "kind": "official_parts"
+    },
+    "parts/30592.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30592.dat",
+      "path": "parts/30592.dat",
+      "kind": "official_parts"
+    },
+    "parts/32028.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32028.dat",
+      "path": "parts/32028.dat",
+      "kind": "official_parts"
+    },
+    "parts/4510.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4510.dat",
+      "path": "parts/4510.dat",
+      "kind": "official_parts"
+    },
+    "parts/91988.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/91988.dat",
+      "path": "parts/91988.dat",
+      "kind": "official_parts"
+    },
+    "parts/3743.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3743.dat",
+      "path": "parts/3743.dat",
+      "kind": "official_parts"
+    },
+    "parts/59443.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/59443.dat",
+      "path": "parts/59443.dat",
+      "kind": "official_parts"
+    },
+    "parts/3706.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3706.dat",
+      "path": "parts/3706.dat",
+      "kind": "official_parts"
+    },
+    "parts/32073.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32073.dat",
+      "path": "parts/32073.dat",
+      "kind": "official_parts"
+    },
+    "parts/6575.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6575.dat",
+      "path": "parts/6575.dat",
+      "kind": "official_parts"
+    },
+    "parts/32123a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32123a.dat",
+      "path": "parts/32123a.dat",
+      "kind": "official_parts"
+    },
+    "parts/32270.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32270.dat",
+      "path": "parts/32270.dat",
+      "kind": "official_parts"
+    },
+    "parts/32828.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32828.dat",
+      "path": "parts/32828.dat",
+      "kind": "official_parts"
+    },
+    "parts/6141.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6141.dat",
+      "path": "parts/6141.dat",
+      "kind": "official_parts"
+    },
+    "parts/3565.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3565.dat",
+      "path": "parts/3565.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/16577.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/16577.dat",
+      "path": "parts/16577.dat",
+      "kind": "official_parts"
+    },
+    "parts/3832.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3832.dat",
+      "path": "parts/3832.dat",
+      "kind": "official_parts"
+    },
+    "parts/63864.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/63864.dat",
+      "path": "parts/63864.dat",
+      "kind": "official_parts"
+    },
+    "parts/30367c.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30367c.dat",
+      "path": "parts/30367c.dat",
+      "kind": "official_parts"
+    },
+    "parts/32523.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32523.dat",
+      "path": "parts/32523.dat",
+      "kind": "relative"
+    },
+    "parts/2477.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/2477.dat",
+      "path": "parts/2477.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/32278.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32278.dat",
+      "path": "parts/32278.dat",
+      "kind": "official_parts"
+    },
+    "parts/572a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/572a.dat",
+      "path": "parts/572a.dat",
+      "kind": "official_parts"
+    },
+    "parts/73230.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/73230.dat",
+      "path": "parts/73230.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/30162.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30162.dat",
+      "path": "parts/30162.dat",
+      "kind": "official_parts"
+    },
+    "parts/73200b-f1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/73200b-f1.dat",
+      "path": "parts/73200b-f1.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/bl_973pb5956c02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb5956c02.dat",
+      "path": "parts/bl_973pb5956c02.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/30381.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30381.dat",
+      "path": "parts/30381.dat",
+      "kind": "official_parts"
+    },
+    "parts/bl_3626pb3515.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_3626pb3515.dat",
+      "path": "parts/bl_3626pb3515.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/bl_973pb6345c01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb6345c01.dat",
+      "path": "parts/bl_973pb6345c01.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/bl_2514.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_2514.dat",
+      "path": "parts/bl_2514.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/30089b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30089b.dat",
+      "path": "parts/30089b.dat",
+      "kind": "official_parts"
+    },
+    "parts/3626cpb1567.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3626cpb1567.dat",
+      "path": "parts/3626cpb1567.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3626cp7k.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3626cp7k.dat",
+      "path": "parts/3626cp7k.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/bl_973pb4947c01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb4947c01.dat",
+      "path": "parts/bl_973pb4947c01.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/38648c01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/38648c01.dat",
+      "path": "parts/38648c01.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/61506.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/61506.dat",
+      "path": "parts/61506.dat",
+      "kind": "official_parts"
+    },
+    "parts/71709.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/71709.dat",
+      "path": "parts/71709.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/40490.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/40490.dat",
+      "path": "parts/40490.dat",
+      "kind": "official_parts"
+    },
+    "parts/2417.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2417.dat",
+      "path": "parts/2417.dat",
+      "kind": "official_parts"
+    },
+    "parts/4733.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4733.dat",
+      "path": "parts/4733.dat",
+      "kind": "official_parts"
+    },
+    "parts/49668.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/49668.dat",
+      "path": "parts/49668.dat",
+      "kind": "official_parts"
+    },
+    "parts/15712.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15712.dat",
+      "path": "parts/15712.dat",
+      "kind": "official_parts"
+    },
+    "parts/39262.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/39262.dat",
+      "path": "parts/39262.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/41835.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/41835.dat",
+      "path": "parts/41835.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/68211.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/68211.dat",
+      "path": "parts/68211.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/24324.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/24324.dat",
+      "path": "parts/24324.dat",
+      "kind": "official_parts"
+    },
+    "parts/24093.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/24093.dat",
+      "path": "parts/24093.dat",
+      "kind": "official_parts"
+    },
+    "parts/32526.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32526.dat",
+      "path": "parts/32526.dat",
+      "kind": "official_parts"
+    },
+    "parts/42003.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/42003.dat",
+      "path": "parts/42003.dat",
+      "kind": "official_parts"
+    },
+    "parts/3895.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3895.dat",
+      "path": "parts/3895.dat",
+      "kind": "official_parts"
+    },
+    "parts/15573.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15573.dat",
+      "path": "parts/15573.dat",
+      "kind": "official_parts"
+    },
+    "parts/49307.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/49307.dat",
+      "path": "parts/49307.dat",
+      "kind": "official_parts"
+    },
+    "parts/22667.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/22667.dat",
+      "path": "parts/22667.dat",
+      "kind": "official_parts"
+    },
+    "parts/4477.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4477.dat",
+      "path": "parts/4477.dat",
+      "kind": "official_parts"
+    },
+    "parts/3456.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3456.dat",
+      "path": "parts/3456.dat",
+      "kind": "official_parts"
+    },
+    "parts/3633.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3633.dat",
+      "path": "parts/3633.dat",
+      "kind": "official_parts"
+    },
+    "parts/11954.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/11954.dat",
+      "path": "parts/11954.dat",
+      "kind": "official_parts"
+    },
+    "parts/48989.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/48989.dat",
+      "path": "parts/48989.dat",
+      "kind": "official_parts"
+    },
+    "parts/43857.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/43857.dat",
+      "path": "parts/43857.dat",
+      "kind": "official_parts"
+    },
+    "parts/32952.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32952.dat",
+      "path": "parts/32952.dat",
+      "kind": "official_parts"
+    },
+    "parts/22885.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/22885.dat",
+      "path": "parts/22885.dat",
+      "kind": "official_parts"
+    },
+    "parts/3941.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3941.dat",
+      "path": "parts/3941.dat",
+      "kind": "official_parts"
+    },
+    "parts/60474.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/60474.dat",
+      "path": "parts/60474.dat",
+      "kind": "official_parts"
+    },
+    "parts/6190.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6190.dat",
+      "path": "parts/6190.dat",
+      "kind": "official_parts"
+    },
+    "parts/6553.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6553.dat",
+      "path": "parts/6553.dat",
+      "kind": "official_parts"
+    },
+    "parts/63869.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/63869.dat",
+      "path": "parts/63869.dat",
+      "kind": "official_parts"
+    },
+    "parts/5904.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/5904.dat",
+      "path": "parts/5904.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/41677.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/41677.dat",
+      "path": "parts/41677.dat",
+      "kind": "official_parts"
+    },
+    "parts/30374.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30374.dat",
+      "path": "parts/30374.dat",
+      "kind": "official_parts"
+    },
+    "parts/3033.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3033.dat",
+      "path": "parts/3033.dat",
+      "kind": "official_parts"
+    },
+    "parts/5264.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/5264.dat",
+      "path": "parts/5264.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3837.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3837.dat",
+      "path": "parts/3837.dat",
+      "kind": "official_parts"
+    },
+    "parts/47847.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/47847.dat",
+      "path": "parts/47847.dat",
+      "kind": "official_parts"
+    },
+    "parts/3065.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3065.dat",
+      "path": "parts/3065.dat",
+      "kind": "official_parts"
+    },
+    "parts/3005.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3005.dat",
+      "path": "parts/3005.dat",
+      "kind": "official_parts"
+    },
+    "parts/32064c.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/32064c.dat",
+      "path": "parts/32064c.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3738.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3738.dat",
+      "path": "parts/3738.dat",
+      "kind": "official_parts"
+    },
+    "parts/3942c.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3942c.dat",
+      "path": "parts/3942c.dat",
+      "kind": "official_parts"
+    },
+    "parts/bl_24855.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_24855.dat",
+      "path": "parts/bl_24855.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/2420.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2420.dat",
+      "path": "parts/2420.dat",
+      "kind": "official_parts"
+    },
+    "parts/14769.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/14769.dat",
+      "path": "parts/14769.dat",
+      "kind": "official_parts"
+    },
+    "parts/98284.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/98284.dat",
+      "path": "parts/98284.dat",
+      "kind": "official_parts"
+    },
+    "parts/14769p83.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/14769p83.dat",
+      "path": "parts/14769p83.dat",
+      "kind": "official_parts"
+    },
+    "parts/bl_7905.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_7905.dat",
+      "path": "parts/bl_7905.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/5151.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/5151.dat",
+      "path": "parts/5151.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/15279.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15279.dat",
+      "path": "parts/15279.dat",
+      "kind": "official_parts"
+    },
+    "parts/80497.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/80497.dat",
+      "path": "parts/80497.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/4042.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/4042.dat",
+      "path": "parts/4042.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/43056.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/43056.dat",
+      "path": "parts/43056.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/43045.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/43045.dat",
+      "path": "parts/43045.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/7324.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/7324.dat",
+      "path": "parts/7324.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/19119.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/19119.dat",
+      "path": "parts/19119.dat",
+      "kind": "official_parts"
+    },
+    "parts/49309.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/49309.dat",
+      "path": "parts/49309.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/30093.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30093.dat",
+      "path": "parts/30093.dat",
+      "kind": "official_parts"
+    },
+    "parts/15469.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/15469.dat",
+      "path": "parts/15469.dat",
+      "kind": "official_parts"
+    },
+    "parts/22388.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/22388.dat",
+      "path": "parts/22388.dat",
+      "kind": "official_parts"
+    },
+    "parts/4865b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/4865b.dat",
+      "path": "parts/4865b.dat",
+      "kind": "official_parts"
+    },
+    "parts/6222.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6222.dat",
+      "path": "parts/6222.dat",
+      "kind": "official_parts"
+    },
+    "parts/85943.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/85943.dat",
+      "path": "parts/85943.dat",
+      "kind": "official_parts"
+    },
+    "parts/23948.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/23948.dat",
+      "path": "parts/23948.dat",
+      "kind": "official_parts"
+    },
+    "parts/57585.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/57585.dat",
+      "path": "parts/57585.dat",
+      "kind": "official_parts"
+    },
+    "parts/80015.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/80015.dat",
+      "path": "parts/80015.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/30043.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30043.dat",
+      "path": "parts/30043.dat",
+      "kind": "official_parts"
+    },
+    "parts/208.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/208.dat",
+      "path": "parts/208.dat",
+      "kind": "official_parts"
+    },
+    "parts/209.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/209.dat",
+      "path": "parts/209.dat",
+      "kind": "official_parts"
+    },
+    "parts/22484.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/22484.dat",
+      "path": "parts/22484.dat",
+      "kind": "official_parts"
+    },
+    "parts/32009.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32009.dat",
+      "path": "parts/32009.dat",
+      "kind": "official_parts"
+    },
+    "parts/5489.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/5489.dat",
+      "path": "parts/5489.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/2142.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/2142.dat",
+      "path": "parts/2142.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/37695.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/37695.dat",
+      "path": "parts/37695.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/5058.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/5058.dat",
+      "path": "parts/5058.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/32002.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32002.dat",
+      "path": "parts/32002.dat",
+      "kind": "official_parts"
+    },
+    "parts/32017.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32017.dat",
+      "path": "parts/32017.dat",
+      "kind": "official_parts"
+    },
+    "parts/39790.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/39790.dat",
+      "path": "parts/39790.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/24316.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/24316.dat",
+      "path": "parts/24316.dat",
+      "kind": "official_parts"
+    },
+    "parts/6628.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6628.dat",
+      "path": "parts/6628.dat",
+      "kind": "official_parts"
+    },
+    "parts/80477.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/80477.dat",
+      "path": "parts/80477.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/30526.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/30526.dat",
+      "path": "parts/30526.dat",
+      "kind": "official_parts"
+    },
+    "parts/35470.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/35470.dat",
+      "path": "parts/35470.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/2357.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/2357.dat",
+      "path": "parts/2357.dat",
+      "kind": "official_parts"
+    },
+    "parts/25269.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/25269.dat",
+      "path": "parts/25269.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3062b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3062b.dat",
+      "path": "parts/3062b.dat",
+      "kind": "official_parts"
+    },
+    "parts/60592.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/60592.dat",
+      "path": "parts/60592.dat",
+      "kind": "official_parts"
+    },
+    "parts/60601.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/60601.dat",
+      "path": "parts/60601.dat",
+      "kind": "official_parts"
+    },
+    "parts/5903.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/5903.dat",
+      "path": "parts/5903.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/3622.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3622.dat",
+      "path": "parts/3622.dat",
+      "kind": "official_parts"
+    },
+    "parts/6636.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/6636.dat",
+      "path": "parts/6636.dat",
+      "kind": "official_parts"
+    },
+    "parts/3036.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3036.dat",
+      "path": "parts/3036.dat",
+      "kind": "official_parts"
+    },
+    "parts/10187.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/10187.dat",
+      "path": "parts/10187.dat",
+      "kind": "official_parts"
+    },
+    "parts/6908.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/6908.dat",
+      "path": "parts/6908.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/32249.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/32249.dat",
+      "path": "parts/32249.dat",
+      "kind": "official_parts"
+    },
+    "parts/10202.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/10202.dat",
+      "path": "parts/10202.dat",
+      "kind": "official_parts"
+    },
+    "parts/3030.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3030.dat",
+      "path": "parts/3030.dat",
+      "kind": "official_parts"
+    },
+    "parts/3172.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3172.dat",
+      "path": "parts/3172.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/61408.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/LEGO/61408.dat",
+      "path": "parts/61408.dat",
+      "kind": "studio_lego_parts"
+    },
+    "p/connhole.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connhole.dat",
+      "path": "p/connhole.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4edge.dat",
+      "path": "p/4-4edge.dat",
+      "kind": "relative"
+    },
+    "p/4-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4cyli.dat",
+      "path": "p/4-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/32013s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/32013s01.dat",
+      "path": "parts/s/32013s01.dat",
+      "kind": "relative"
+    },
+    "p/rect.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/rect.dat",
+      "path": "p/rect.dat",
+      "kind": "relative"
+    },
+    "p/rect3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/rect3.dat",
+      "path": "p/rect3.dat",
+      "kind": "relative"
+    },
+    "p/rect2p.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/rect2p.dat",
+      "path": "p/rect2p.dat",
+      "kind": "relative"
+    },
+    "p/axle.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axle.dat",
+      "path": "p/axle.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud4.dat",
+      "path": "p/stud4.dat",
+      "kind": "official_primitives"
+    },
+    "p/box5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box5.dat",
+      "path": "p/box5.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud.dat",
+      "path": "p/stud.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/1750s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/1750s01.dat",
+      "path": "parts/s/1750s01.dat",
+      "kind": "relative"
+    },
+    "p/1-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4cyli.dat",
+      "path": "p/1-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/recte4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/recte4.dat",
+      "path": "p/recte4.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4cylo.dat",
+      "path": "p/2-4cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ndis.dat",
+      "path": "p/2-4ndis.dat",
+      "kind": "official_primitives"
+    },
+    "p/box2-7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box2-7.dat",
+      "path": "p/box2-7.dat",
+      "kind": "relative"
+    },
+    "p/stud3a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud3a.dat",
+      "path": "p/stud3a.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3u2p.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3u2p.dat",
+      "path": "p/box3u2p.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ndis.dat",
+      "path": "p/4-4ndis.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4cylo.dat",
+      "path": "p/4-4cylo.dat",
+      "kind": "relative"
+    },
+    "p/4-4ring1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring1.dat",
+      "path": "p/4-4ring1.dat",
+      "kind": "official_primitives"
+    },
+    "p/connhol3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connhol3.dat",
+      "path": "p/connhol3.dat",
+      "kind": "official_primitives"
+    },
+    "p/box4-2p.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4-2p.dat",
+      "path": "p/box4-2p.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8cyli.dat",
+      "path": "p/1-8cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8edge.dat",
+      "path": "p/1-8edge.dat",
+      "kind": "relative"
+    },
+    "p/3-8edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8edge.dat",
+      "path": "p/3-8edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud2a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud2a.dat",
+      "path": "p/stud2a.dat",
+      "kind": "official_primitives"
+    },
+    "p/connect.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connect.dat",
+      "path": "p/connect.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4ring3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring3.dat",
+      "path": "p/4-4ring3.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/98138s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/98138s01.dat",
+      "path": "parts/s/98138s01.dat",
+      "kind": "relative"
+    },
+    "p/4-4disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4disc.dat",
+      "path": "p/4-4disc.dat",
+      "kind": "relative"
+    },
+    "p/cylj4x8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/cylj4x8.dat",
+      "path": "p/cylj4x8.dat",
+      "kind": "official_primitives"
+    },
+    "p/peghole.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/peghole.dat",
+      "path": "p/peghole.dat",
+      "kind": "official_primitives"
+    },
+    "p/box2-5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box2-5.dat",
+      "path": "p/box2-5.dat",
+      "kind": "relative"
+    },
+    "p/2-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4cyli.dat",
+      "path": "p/2-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4edge.dat",
+      "path": "p/2-4edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud2.dat",
+      "path": "p/stud2.dat",
+      "kind": "relative"
+    },
+    "parts/s/32556s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/32556s01.dat",
+      "path": "parts/s/32556s01.dat",
+      "kind": "relative"
+    },
+    "p/connect4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connect4.dat",
+      "path": "p/connect4.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4cylo.dat",
+      "path": "p/1-4cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4tang.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4tang.dat",
+      "path": "p/1-4tang.dat",
+      "kind": "official_primitives"
+    },
+    "p/box4-4a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4-4a.dat",
+      "path": "p/box4-4a.dat",
+      "kind": "relative"
+    },
+    "p/1-4ring1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring1.dat",
+      "path": "p/1-4ring1.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ndis.dat",
+      "path": "p/1-4ndis.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4chrd.dat",
+      "path": "p/1-4chrd.dat",
+      "kind": "relative"
+    },
+    "p/stug-1x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-1x2.dat",
+      "path": "p/stug-1x2.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug-2x1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-2x1.dat",
+      "path": "p/stug-2x1.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud3.dat",
+      "path": "p/stud3.dat",
+      "kind": "relative"
+    },
+    "parts/s/15535s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/15535s01.dat",
+      "path": "parts/s/15535s01.dat",
+      "kind": "relative"
+    },
+    "p/4-4ring2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring2.dat",
+      "path": "p/4-4ring2.dat",
+      "kind": "relative"
+    },
+    "p/4-4ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring9.dat",
+      "path": "p/4-4ring9.dat",
+      "kind": "official_primitives"
+    },
+    "p/box4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4.dat",
+      "path": "p/box4.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4rin15.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4rin15.dat",
+      "path": "p/4-4rin15.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4ring4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring4.dat",
+      "path": "p/4-4ring4.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4cylc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4cylc.dat",
+      "path": "p/2-4cylc.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4edge.dat",
+      "path": "p/48/4-4edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4cyli.dat",
+      "path": "p/48/4-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4rin22.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4rin22.dat",
+      "path": "p/48/4-4rin22.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/22888s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/22888s01.dat",
+      "path": "parts/s/22888s01.dat",
+      "kind": "official_parts"
+    },
+    "p/stud18a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud18a.dat",
+      "path": "p/stud18a.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug4-1x3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-1x3.dat",
+      "path": "p/stug4-1x3.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug4-1x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-1x2.dat",
+      "path": "p/stug4-1x2.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4stud4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4stud4.dat",
+      "path": "p/2-4stud4.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3-7a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3-7a.dat",
+      "path": "p/box3-7a.dat",
+      "kind": "official_primitives"
+    },
+    "p/box2-9p.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box2-9p.dat",
+      "path": "p/box2-9p.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-4chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-4chrd.dat",
+      "path": "p/48/1-4chrd.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug-1x8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-1x8.dat",
+      "path": "p/stug-1x8.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug-1x6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-1x6.dat",
+      "path": "p/stug-1x6.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/4740s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/4740s01.dat",
+      "path": "parts/s/4740s01.dat",
+      "kind": "relative"
+    },
+    "p/4-4con1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con1.dat",
+      "path": "p/4-4con1.dat",
+      "kind": "relative"
+    },
+    "p/4-4con3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con3.dat",
+      "path": "p/4-4con3.dat",
+      "kind": "relative"
+    },
+    "p/4-4con4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con4.dat",
+      "path": "p/4-4con4.dat",
+      "kind": "official_primitives"
+    },
+    "parts/3023.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/3023.dat",
+      "path": "parts/3023.dat",
+      "kind": "relative"
+    },
+    "p/1-4cyls.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4cyls.dat",
+      "path": "p/1-4cyls.dat",
+      "kind": "relative"
+    },
+    "p/2-8sphe.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-8sphe.dat",
+      "path": "p/2-8sphe.dat",
+      "kind": "relative"
+    },
+    "p/4-4ring6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring6.dat",
+      "path": "p/4-4ring6.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3039s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3039s01.dat",
+      "path": "parts/s/3039s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3001s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3001s01.dat",
+      "path": "parts/s/3001s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3010s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3010s01.dat",
+      "path": "parts/s/3010s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/87079s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/87079s01.dat",
+      "path": "parts/s/87079s01.dat",
+      "kind": "relative"
+    },
+    "p/stud6a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud6a.dat",
+      "path": "p/stud6a.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-8sphe.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-8sphe.dat",
+      "path": "p/4-8sphe.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con5.dat",
+      "path": "p/4-4con5.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con16.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con16.dat",
+      "path": "p/4-4con16.dat",
+      "kind": "official_primitives"
+    },
+    "parts/bl_973pb6136c01_3814_0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb6136c01_3814_0.dat",
+      "path": "parts/bl_973pb6136c01_3814_0.dat",
+      "kind": "relative"
+    },
+    "parts/3818.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3818.dat",
+      "path": "parts/3818.dat",
+      "kind": "relative"
+    },
+    "parts/3819.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3819.dat",
+      "path": "parts/3819.dat",
+      "kind": "relative"
+    },
+    "parts/3820.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3820.dat",
+      "path": "parts/3820.dat",
+      "kind": "relative"
+    },
+    "parts/s/3626cs02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3626cs02.dat",
+      "path": "parts/s/3626cs02.dat",
+      "kind": "official_parts"
+    },
+    "p/t04o6250.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04o6250.dat",
+      "path": "p/t04o6250.dat",
+      "kind": "official_primitives"
+    },
+    "p/t08o6250.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t08o6250.dat",
+      "path": "p/t08o6250.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/30124bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/30124bs01.dat",
+      "path": "parts/s/30124bs01.dat",
+      "kind": "relative"
+    },
+    "parts/s/30124bs02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/30124bs02.dat",
+      "path": "parts/s/30124bs02.dat",
+      "kind": "relative"
+    },
+    "parts/s/30124bs04.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/30124bs04.dat",
+      "path": "parts/s/30124bs04.dat",
+      "kind": "relative"
+    },
+    "parts/s/30124bs05.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/30124bs05.dat",
+      "path": "parts/s/30124bs05.dat",
+      "kind": "relative"
+    },
+    "parts/s/2447bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/2447bs01.dat",
+      "path": "parts/s/2447bs01.dat",
+      "kind": "relative"
+    },
+    "p/1-8ring6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring6.dat",
+      "path": "p/1-8ring6.dat",
+      "kind": "relative"
+    },
+    "p/1-8cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/1-8cylo.dat",
+      "path": "p/1-8cylo.dat",
+      "kind": "relative"
+    },
+    "p/1-8tang.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8tang.dat",
+      "path": "p/1-8tang.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring7.dat",
+      "path": "p/1-8ring7.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring4.dat",
+      "path": "p/1-8ring4.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ndis.dat",
+      "path": "p/1-8ndis.dat",
+      "kind": "official_primitives"
+    },
+    "p/rect1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/rect1.dat",
+      "path": "p/rect1.dat",
+      "kind": "relative"
+    },
+    "p/3-8cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8cylo.dat",
+      "path": "p/3-8cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-8ring3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8ring3.dat",
+      "path": "p/3-8ring3.dat",
+      "kind": "relative"
+    },
+    "p/3-8ring2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8ring2.dat",
+      "path": "p/3-8ring2.dat",
+      "kind": "relative"
+    },
+    "p/4-4cylc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4cylc.dat",
+      "path": "p/4-4cylc.dat",
+      "kind": "relative"
+    },
+    "p/3-8chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8chrd.dat",
+      "path": "p/3-8chrd.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16cyli.dat",
+      "path": "p/3-16cyli.dat",
+      "kind": "relative"
+    },
+    "p/3-16rin4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16rin4.dat",
+      "path": "p/3-16rin4.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16cylo.dat",
+      "path": "p/3-16cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16chrd.dat",
+      "path": "p/3-16chrd.dat",
+      "kind": "relative"
+    },
+    "p/3-16ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16ndis.dat",
+      "path": "p/3-16ndis.dat",
+      "kind": "relative"
+    },
+    "p/3-16edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16edge.dat",
+      "path": "p/3-16edge.dat",
+      "kind": "relative"
+    },
+    "p/1-8chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8chrd.dat",
+      "path": "p/1-8chrd.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud4o.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud4o.dat",
+      "path": "p/stud4o.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/11213s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/11213s01.dat",
+      "path": "parts/s/11213s01.dat",
+      "kind": "relative"
+    },
+    "p/stug-4x4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-4x4.dat",
+      "path": "p/stug-4x4.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3023bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/3023bs01.dat",
+      "path": "parts/s/3023bs01.dat",
+      "kind": "relative"
+    },
+    "p/stud4a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud4a.dat",
+      "path": "p/stud4a.dat",
+      "kind": "official_primitives"
+    },
+    "p/axlehol3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehol3.dat",
+      "path": "p/axlehol3.dat",
+      "kind": "official_primitives"
+    },
+    "p/axlehol8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehol8.dat",
+      "path": "p/axlehol8.dat",
+      "kind": "official_primitives"
+    },
+    "p/axleho10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axleho10.dat",
+      "path": "p/axleho10.dat",
+      "kind": "official_primitives"
+    },
+    "p/axlehol2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehol2.dat",
+      "path": "p/axlehol2.dat",
+      "kind": "official_primitives"
+    },
+    "p/axlehol9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehol9.dat",
+      "path": "p/axlehol9.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud10.dat",
+      "path": "p/stud10.dat",
+      "kind": "relative"
+    },
+    "parts/s/15535s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/15535s02.dat",
+      "path": "parts/s/15535s02.dat",
+      "kind": "official_parts"
+    },
+    "parts/s/15068s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/15068s01.dat",
+      "path": "parts/s/15068s01.dat",
+      "kind": "relative"
+    },
+    "p/48/1-8cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8cyli.dat",
+      "path": "p/48/1-8cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4disc.dat",
+      "path": "p/1-4disc.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4edge.dat",
+      "path": "p/1-4edge.dat",
+      "kind": "relative"
+    },
+    "p/4-4rin10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4rin10.dat",
+      "path": "p/4-4rin10.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/43898s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/43898s01.dat",
+      "path": "parts/s/43898s01.dat",
+      "kind": "relative"
+    },
+    "p/48/4-4con1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4con1.dat",
+      "path": "p/48/4-4con1.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4con2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4con2.dat",
+      "path": "p/48/4-4con2.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4con9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4con9.dat",
+      "path": "p/48/4-4con9.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/2431s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/2431s01.dat",
+      "path": "parts/s/2431s01.dat",
+      "kind": "relative"
+    },
+    "p/peghole2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/peghole2.dat",
+      "path": "p/peghole2.dat",
+      "kind": "official_primitives"
+    },
+    "p/peghole3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/peghole3.dat",
+      "path": "p/peghole3.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ring5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring5.dat",
+      "path": "p/1-4ring5.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ring3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring3.dat",
+      "path": "p/1-4ring3.dat",
+      "kind": "official_primitives"
+    },
+    "p/studx.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/studx.dat",
+      "path": "p/studx.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug4-1x5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-1x5.dat",
+      "path": "p/stug4-1x5.dat",
+      "kind": "relative"
+    },
+    "p/48/1-12edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-12edge.dat",
+      "path": "p/48/1-12edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-48rin9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-48rin9.dat",
+      "path": "p/48/1-48rin9.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-48edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-48edge.dat",
+      "path": "p/48/1-48edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-4edge.dat",
+      "path": "p/48/1-4edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-4cyli.dat",
+      "path": "p/48/1-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-12cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-12cyli.dat",
+      "path": "p/48/1-12cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-8chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8chrd.dat",
+      "path": "p/48/1-8chrd.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug-1x4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-1x4.dat",
+      "path": "p/stug-1x4.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4ring3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ring3.dat",
+      "path": "p/2-4ring3.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4ring4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ring4.dat",
+      "path": "p/2-4ring4.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4ring2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ring2.dat",
+      "path": "p/2-4ring2.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3u10p.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3u10p.dat",
+      "path": "p/box3u10p.dat",
+      "kind": "official_primitives"
+    },
+    "p/box2-11.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box2-11.dat",
+      "path": "p/box2-11.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/77850s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/77850s01.dat",
+      "path": "parts/s/77850s01.dat",
+      "kind": "relative"
+    },
+    "p/stug3-1x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug3-1x2.dat",
+      "path": "p/stug3-1x2.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3068bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3068bs01.dat",
+      "path": "parts/s/3068bs01.dat",
+      "kind": "relative"
+    },
+    "p/connect8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connect8.dat",
+      "path": "p/connect8.dat",
+      "kind": "relative"
+    },
+    "p/5-8cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/5-8cyli.dat",
+      "path": "p/5-8cyli.dat",
+      "kind": "relative"
+    },
+    "p/4-4ring8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring8.dat",
+      "path": "p/4-4ring8.dat",
+      "kind": "official_primitives"
+    },
+    "parts/3815tex.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3815tex.dat",
+      "path": "parts/3815tex.dat",
+      "kind": "relative"
+    },
+    "parts/3817tex.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3817tex.dat",
+      "path": "parts/3817tex.dat",
+      "kind": "relative"
+    },
+    "parts/3816tex.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3816tex.dat",
+      "path": "parts/3816tex.dat",
+      "kind": "relative"
+    },
+    "parts/s/32555s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/32555s01.dat",
+      "path": "parts/s/32555s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/32555s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/32555s02.dat",
+      "path": "parts/s/32555s02.dat",
+      "kind": "relative"
+    },
+    "p/stug2-1x4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug2-1x4.dat",
+      "path": "p/stug2-1x4.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug2-4x1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug2-4x1.dat",
+      "path": "p/stug2-4x1.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-8cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8cyli.dat",
+      "path": "p/3-8cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/5-8edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/5-8edge.dat",
+      "path": "p/5-8edge.dat",
+      "kind": "relative"
+    },
+    "p/rect2a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/rect2a.dat",
+      "path": "p/rect2a.dat",
+      "kind": "relative"
+    },
+    "p/box3u5p.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3u5p.dat",
+      "path": "p/box3u5p.dat",
+      "kind": "official_primitives"
+    },
+    "p/box4-5a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4-5a.dat",
+      "path": "p/box4-5a.dat",
+      "kind": "official_primitives"
+    },
+    "p/confric5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/confric5.dat",
+      "path": "p/confric5.dat",
+      "kind": "official_primitives"
+    },
+    "p/confric4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/confric4.dat",
+      "path": "p/confric4.dat",
+      "kind": "official_primitives"
+    },
+    "p/axlehol4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehol4.dat",
+      "path": "p/axlehol4.dat",
+      "kind": "official_primitives"
+    },
+    "p/npeghol4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/npeghol4.dat",
+      "path": "p/npeghol4.dat",
+      "kind": "official_primitives"
+    },
+    "p/beamhole.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/beamhole.dat",
+      "path": "p/beamhole.dat",
+      "kind": "official_primitives"
+    },
+    "p/npeghole.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/npeghole.dat",
+      "path": "p/npeghole.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4rin16.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4rin16.dat",
+      "path": "p/2-4rin16.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4ring8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ring8.dat",
+      "path": "p/2-4ring8.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring8.dat",
+      "path": "p/1-8ring8.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-8rin12.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8rin12.dat",
+      "path": "p/3-8rin12.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/64179s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/64179s01.dat",
+      "path": "parts/s/64179s01.dat",
+      "kind": "relative"
+    },
+    "p/confric6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/confric6.dat",
+      "path": "p/confric6.dat",
+      "kind": "official_primitives"
+    },
+    "p/confric8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/confric8.dat",
+      "path": "p/confric8.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4ring1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4ring1.dat",
+      "path": "p/3-4ring1.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4edge.dat",
+      "path": "p/3-4edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/axleend.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axleend.dat",
+      "path": "p/axleend.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/32039s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/32039s01.dat",
+      "path": "parts/s/32039s01.dat",
+      "kind": "relative"
+    },
+    "p/4-4con2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con2.dat",
+      "path": "p/4-4con2.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con24.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con24.dat",
+      "path": "p/4-4con24.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4ring7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring7.dat",
+      "path": "p/4-4ring7.dat",
+      "kind": "relative"
+    },
+    "p/4-4con6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con6.dat",
+      "path": "p/4-4con6.dat",
+      "kind": "official_primitives"
+    },
+    "p/bush.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/bush.dat",
+      "path": "p/bush.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con7.dat",
+      "path": "p/4-4con7.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con8.dat",
+      "path": "p/4-4con8.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/30340s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/30340s01.dat",
+      "path": "parts/s/30340s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/30340s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/30340s02.dat",
+      "path": "parts/s/30340s02.dat",
+      "kind": "relative"
+    },
+    "p/4-4ring10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/4-4ring10.dat",
+      "path": "p/4-4ring10.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/4-4ring21.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/4-4ring21.dat",
+      "path": "p/4-4ring21.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/t01o2500.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t01o2500.dat",
+      "path": "p/t01o2500.dat",
+      "kind": "official_primitives"
+    },
+    "p/npeghol9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/npeghol9.dat",
+      "path": "p/npeghol9.dat",
+      "kind": "official_primitives"
+    },
+    "p/peghole5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/peghole5.dat",
+      "path": "p/peghole5.dat",
+      "kind": "official_primitives"
+    },
+    "p/npeghol2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/npeghol2.dat",
+      "path": "p/npeghol2.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ring2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring2.dat",
+      "path": "p/1-4ring2.dat",
+      "kind": "relative"
+    },
+    "p/1-4ring6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring6.dat",
+      "path": "p/1-4ring6.dat",
+      "kind": "official_primitives"
+    },
+    "p/tri3u1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/tri3u1.dat",
+      "path": "p/tri3u1.dat",
+      "kind": "official_primitives"
+    },
+    "p/bush0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/bush0.dat",
+      "path": "p/bush0.dat",
+      "kind": "relative"
+    },
+    "p/confric9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/confric9.dat",
+      "path": "p/confric9.dat",
+      "kind": "official_primitives"
+    },
+    "p/npeghol8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/npeghol8.dat",
+      "path": "p/npeghol8.dat",
+      "kind": "relative"
+    },
+    "p/1-8ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring9.dat",
+      "path": "p/1-8ring9.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ring9.dat",
+      "path": "p/2-4ring9.dat",
+      "kind": "relative"
+    },
+    "p/connect7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connect7.dat",
+      "path": "p/connect7.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4chrd.dat",
+      "path": "p/2-4chrd.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/24866s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/24866s01.dat",
+      "path": "parts/s/24866s01.dat",
+      "kind": "relative"
+    },
+    "p/box4-1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4-1.dat",
+      "path": "p/box4-1.dat",
+      "kind": "relative"
+    },
+    "p/recte3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/recte3.dat",
+      "path": "p/recte3.dat",
+      "kind": "official_primitives"
+    },
+    "p/box4o8a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4o8a.dat",
+      "path": "p/box4o8a.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4cylc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4cylc.dat",
+      "path": "p/1-4cylc.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug2-1x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug2-1x2.dat",
+      "path": "p/stug2-1x2.dat",
+      "kind": "official_primitives"
+    },
+    "p/box5-4a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box5-4a.dat",
+      "path": "p/box5-4a.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/11477s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/11477s01.dat",
+      "path": "parts/s/11477s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3623s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3623s01.dat",
+      "path": "parts/s/3623s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3069bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3069bs01.dat",
+      "path": "parts/s/3069bs01.dat",
+      "kind": "relative"
+    },
+    "parts/s/28192s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/28192s01.dat",
+      "path": "parts/s/28192s01.dat",
+      "kind": "relative"
+    },
+    "parts/3665a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3665a.dat",
+      "path": "parts/3665a.dat",
+      "kind": "unofficial_parts"
+    },
+    "parts/s/3298s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3298s01.dat",
+      "path": "parts/s/3298s01.dat",
+      "kind": "relative"
+    },
+    "p/3-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4cyli.dat",
+      "path": "p/3-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/14719s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/14719s01.dat",
+      "path": "parts/s/14719s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/30363s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/30363s01.dat",
+      "path": "parts/s/30363s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/4286s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/4286s01.dat",
+      "path": "parts/s/4286s01.dat",
+      "kind": "relative"
+    },
+    "p/1-8cyls.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8cyls.dat",
+      "path": "p/1-8cyls.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8cyls2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8cyls2.dat",
+      "path": "p/1-8cyls2.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4cyls.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4cyls.dat",
+      "path": "p/2-4cyls.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl3hol3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl3hol3.dat",
+      "path": "p/axl3hol3.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl3ho10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl3ho10.dat",
+      "path": "p/axl3ho10.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl3hol9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl3hol9.dat",
+      "path": "p/axl3hol9.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl3hol8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl3hol8.dat",
+      "path": "p/axl3hol8.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl3hol2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl3hol2.dat",
+      "path": "p/axl3hol2.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4rin12.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4rin12.dat",
+      "path": "p/4-4rin12.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con13.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con13.dat",
+      "path": "p/4-4con13.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/33320s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/33320s01.dat",
+      "path": "parts/s/33320s01.dat",
+      "kind": "relative"
+    },
+    "p/box4o4a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4o4a.dat",
+      "path": "p/box4o4a.dat",
+      "kind": "official_primitives"
+    },
+    "p/triangle.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/triangle.dat",
+      "path": "p/triangle.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3040s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3040s01.dat",
+      "path": "parts/s/3040s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/29111s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/29111s01.dat",
+      "path": "parts/s/29111s01.dat",
+      "kind": "relative"
+    },
+    "p/stud4od.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud4od.dat",
+      "path": "p/stud4od.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con0.dat",
+      "path": "p/4-4con0.dat",
+      "kind": "relative"
+    },
+    "p/connect2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connect2.dat",
+      "path": "p/connect2.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4ering.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ering.dat",
+      "path": "p/4-4ering.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/15706s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/15706s01.dat",
+      "path": "parts/s/15706s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3009s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3009s01.dat",
+      "path": "parts/s/3009s01.dat",
+      "kind": "relative"
+    },
+    "p/ring2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/ring2.dat",
+      "path": "p/ring2.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug3-1x3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug3-1x3.dat",
+      "path": "p/stug3-1x3.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/57906s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/57906s01.dat",
+      "path": "parts/s/57906s01.dat",
+      "kind": "relative"
+    },
+    "p/clh10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/clh10.dat",
+      "path": "p/clh10.dat",
+      "kind": "official_primitives"
+    },
+    "p/clh6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/clh6.dat",
+      "path": "p/clh6.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/4697bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/4697bs01.dat",
+      "path": "parts/s/4697bs01.dat",
+      "kind": "relative"
+    },
+    "p/1-4cyls2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4cyls2.dat",
+      "path": "p/1-4cyls2.dat",
+      "kind": "relative"
+    },
+    "p/48/1-16cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-16cylo.dat",
+      "path": "p/48/1-16cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-16chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-16chrd.dat",
+      "path": "p/48/1-16chrd.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/32474s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/32474s01.dat",
+      "path": "parts/s/32474s01.dat",
+      "kind": "relative"
+    },
+    "p/stug4-2x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-2x2.dat",
+      "path": "p/stug4-2x2.dat",
+      "kind": "relative"
+    },
+    "p/stug-3x3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-3x3.dat",
+      "path": "p/stug-3x3.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3002s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3002s01.dat",
+      "path": "parts/s/3002s01.dat",
+      "kind": "relative"
+    },
+    "p/48/5-24edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/5-24edge.dat",
+      "path": "p/48/5-24edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/5-24cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/5-24cyli.dat",
+      "path": "p/48/5-24cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3u4a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3u4a.dat",
+      "path": "p/box3u4a.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3u8p.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3u8p.dat",
+      "path": "p/box3u8p.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/85984s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/85984s01.dat",
+      "path": "parts/s/85984s01.dat",
+      "kind": "relative"
+    },
+    "p/confric3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/confric3.dat",
+      "path": "p/confric3.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04q5000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04q5000.dat",
+      "path": "p/t04q5000.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/53451s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/53451s01.dat",
+      "path": "parts/s/53451s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3037s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3037s01.dat",
+      "path": "parts/s/3037s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3008s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3008s01.dat",
+      "path": "parts/s/3008s01.dat",
+      "kind": "relative"
+    },
+    "p/stug3-1x4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug3-1x4.dat",
+      "path": "p/stug3-1x4.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug-1x5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-1x5.dat",
+      "path": "p/stug-1x5.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/7302s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/7302s01.dat",
+      "path": "parts/s/7302s01.dat",
+      "kind": "relative"
+    },
+    "p/48/1-4cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-4cylo.dat",
+      "path": "p/48/1-4cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/toothb12.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/toothb12.dat",
+      "path": "p/toothb12.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4ring9.dat",
+      "path": "p/48/4-4ring9.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3-3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3-3.dat",
+      "path": "p/box3-3.dat",
+      "kind": "official_primitives"
+    },
+    "p/axlehol6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehol6.dat",
+      "path": "p/axlehol6.dat",
+      "kind": "official_primitives"
+    },
+    "p/5-16cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/5-16cylo.dat",
+      "path": "p/5-16cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring12.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring12.dat",
+      "path": "p/1-8ring12.dat",
+      "kind": "official_primitives"
+    },
+    "p/axlehol5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehol5.dat",
+      "path": "p/axlehol5.dat",
+      "kind": "relative"
+    },
+    "p/stug4-1x6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-1x6.dat",
+      "path": "p/stug4-1x6.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug-1x7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-1x7.dat",
+      "path": "p/stug-1x7.dat",
+      "kind": "official_primitives"
+    },
+    "p/toothr.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/toothr.dat",
+      "path": "p/toothr.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl3hole.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl3hole.dat",
+      "path": "p/axl3hole.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-16edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-16edge.dat",
+      "path": "p/48/1-16edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-16cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-16cyli.dat",
+      "path": "p/48/1-16cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4ring2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4ring2.dat",
+      "path": "p/3-4ring2.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-16edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-16edge.dat",
+      "path": "p/1-16edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/2-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/2-4edge.dat",
+      "path": "p/48/2-4edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-8edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8edge.dat",
+      "path": "p/48/1-8edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/2-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/2-4cyli.dat",
+      "path": "p/48/2-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-4rin18.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-4rin18.dat",
+      "path": "p/48/1-4rin18.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-4ring8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-4ring8.dat",
+      "path": "p/48/1-4ring8.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-8ring6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-8ring6.dat",
+      "path": "p/3-8ring6.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ring7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring7.dat",
+      "path": "p/1-4ring7.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ring8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring8.dat",
+      "path": "p/1-4ring8.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring2.dat",
+      "path": "p/1-8ring2.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl2hole.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl2hole.dat",
+      "path": "p/axl2hole.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04i2500.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04i2500.dat",
+      "path": "p/t04i2500.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4ring4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4ring4.dat",
+      "path": "p/48/4-4ring4.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4ring4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4ring4.dat",
+      "path": "p/3-4ring4.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4chrd.dat",
+      "path": "p/3-4chrd.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4cylo.dat",
+      "path": "p/3-4cylo.dat",
+      "kind": "relative"
+    },
+    "p/8/2-4cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/8/2-4cylo.dat",
+      "path": "p/8/2-4cylo.dat",
+      "kind": "relative"
+    },
+    "p/8/2-4ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/2-4ndis.dat",
+      "path": "p/8/2-4ndis.dat",
+      "kind": "official_primitives"
+    },
+    "p/8/2-4chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/2-4chrd.dat",
+      "path": "p/8/2-4chrd.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3565s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/3565s01.dat",
+      "path": "parts/s/3565s01.dat",
+      "kind": "relative"
+    },
+    "p/48/7-48cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/7-48cylo.dat",
+      "path": "p/48/7-48cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/7-48ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/7-48ndis.dat",
+      "path": "p/48/7-48ndis.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/63864s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/63864s01.dat",
+      "path": "parts/s/63864s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/30367cs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/30367cs01.dat",
+      "path": "parts/s/30367cs01.dat",
+      "kind": "relative"
+    },
+    "p/r04o1500.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/r04o1500.dat",
+      "path": "p/r04o1500.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/32523s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/32523s01.dat",
+      "path": "parts/s/32523s01.dat",
+      "kind": "relative"
+    },
+    "p/1-8tndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/1-8tndis.dat",
+      "path": "p/1-8tndis.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/npeghol20.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/npeghol20.dat",
+      "path": "p/npeghol20.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/ring3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/ring3.dat",
+      "path": "p/ring3.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3u7a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3u7a.dat",
+      "path": "p/box3u7a.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4ring5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4ring5.dat",
+      "path": "p/4-4ring5.dat",
+      "kind": "official_primitives"
+    },
+    "parts/3815b.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3815b.dat",
+      "path": "parts/3815b.dat",
+      "kind": "relative"
+    },
+    "parts/3816c.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3816c.dat",
+      "path": "parts/3816c.dat",
+      "kind": "relative"
+    },
+    "parts/3817c.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/3817c.dat",
+      "path": "parts/3817c.dat",
+      "kind": "relative"
+    },
+    "parts/bl_973pb5956c02_3814_0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb5956c02_3814_0.dat",
+      "path": "parts/bl_973pb5956c02_3814_0.dat",
+      "kind": "relative"
+    },
+    "p/stud16.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud16.dat",
+      "path": "p/stud16.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/bl_3626pb3515_0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_3626pb3515_0.dat",
+      "path": "parts/s/bl_3626pb3515_0.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_3626pb3515_1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_3626pb3515_1.dat",
+      "path": "parts/s/bl_3626pb3515_1.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_3626pb3515_2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_3626pb3515_2.dat",
+      "path": "parts/s/bl_3626pb3515_2.dat",
+      "kind": "relative"
+    },
+    "parts/bl_973pb6345c01_3814_0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb6345c01_3814_0.dat",
+      "path": "parts/bl_973pb6345c01_3814_0.dat",
+      "kind": "relative"
+    },
+    "p/5-16edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/5-16edge.dat",
+      "path": "p/5-16edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/t16o6250.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t16o6250.dat",
+      "path": "p/t16o6250.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3626cs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3626cs01.dat",
+      "path": "parts/s/3626cs01.dat",
+      "kind": "official_parts"
+    },
+    "p/1-16cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-16cyli.dat",
+      "path": "p/1-16cyli.dat",
+      "kind": "official_primitives"
+    },
+    "parts/bl_973pb4947.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/bl_973pb4947.dat",
+      "path": "parts/bl_973pb4947.dat",
+      "kind": "relative"
+    },
+    "parts/s/61506s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/61506s01.dat",
+      "path": "parts/s/61506s01.dat",
+      "kind": "relative"
+    },
+    "p/3-4ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4ndis.dat",
+      "path": "p/3-4ndis.dat",
+      "kind": "relative"
+    },
+    "parts/s/49668s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/49668s01.dat",
+      "path": "parts/s/49668s01.dat",
+      "kind": "relative"
+    },
+    "p/1-16ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-16ndis.dat",
+      "path": "p/1-16ndis.dat",
+      "kind": "relative"
+    },
+    "p/5-8cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/5-8cylo.dat",
+      "path": "p/5-8cylo.dat",
+      "kind": "relative"
+    },
+    "parts/s/41835s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/41835s01.dat",
+      "path": "parts/s/41835s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/41835s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/41835s02.dat",
+      "path": "parts/s/41835s02.dat",
+      "kind": "relative"
+    },
+    "parts/s/41835s03.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/41835s03.dat",
+      "path": "parts/s/41835s03.dat",
+      "kind": "relative"
+    },
+    "parts/s/24324s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/24324s01.dat",
+      "path": "parts/s/24324s01.dat",
+      "kind": "relative"
+    },
+    "p/3-4cylc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4cylc.dat",
+      "path": "p/3-4cylc.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4disc.dat",
+      "path": "p/3-4disc.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16disc.dat",
+      "path": "p/3-16disc.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-8cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8cylo.dat",
+      "path": "p/48/1-8cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/5-16cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/5-16cyli.dat",
+      "path": "p/5-16cyli.dat",
+      "kind": "relative"
+    },
+    "p/5-16disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/5-16disc.dat",
+      "path": "p/5-16disc.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/24093s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/24093s01.dat",
+      "path": "parts/s/24093s01.dat",
+      "kind": "relative"
+    },
+    "p/box3u6.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3u6.dat",
+      "path": "p/box3u6.dat",
+      "kind": "official_primitives"
+    },
+    "p/8-8sphe.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8-8sphe.dat",
+      "path": "p/8-8sphe.dat",
+      "kind": "relative"
+    },
+    "p/t04i0625.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04i0625.dat",
+      "path": "p/t04i0625.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04o0625.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04o0625.dat",
+      "path": "p/t04o0625.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04i1304.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04i1304.dat",
+      "path": "p/t04i1304.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04o1304.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04o1304.dat",
+      "path": "p/t04o1304.dat",
+      "kind": "official_primitives"
+    },
+    "p/tri3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/tri3.dat",
+      "path": "p/tri3.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4disc.dat",
+      "path": "p/2-4disc.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ring4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring4.dat",
+      "path": "p/1-4ring4.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16cys2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16cys2.dat",
+      "path": "p/3-16cys2.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16rin3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16rin3.dat",
+      "path": "p/3-16rin3.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug2-2x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug2-2x2.dat",
+      "path": "p/stug2-2x2.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3941s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3941s01.dat",
+      "path": "parts/s/3941s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/60474s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/60474s01.dat",
+      "path": "parts/s/60474s01.dat",
+      "kind": "relative"
+    },
+    "p/stug-2x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-2x2.dat",
+      "path": "p/stug-2x2.dat",
+      "kind": "relative"
+    },
+    "p/48/4-4aring.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4aring.dat",
+      "path": "p/48/4-4aring.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/5904s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/5904s01.dat",
+      "path": "parts/s/5904s01.dat",
+      "kind": "relative"
+    },
+    "p/clip13.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/clip13.dat",
+      "path": "p/clip13.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8sphe.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8sphe.dat",
+      "path": "p/1-8sphe.dat",
+      "kind": "relative"
+    },
+    "parts/s/32064s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/32064s01.dat",
+      "path": "parts/s/32064s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/14769s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/14769s01.dat",
+      "path": "parts/s/14769s01.dat",
+      "kind": "relative"
+    },
+    "p/stud4h.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud4h.dat",
+      "path": "p/stud4h.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4ring9.dat",
+      "path": "p/1-4ring9.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/15279s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/15279s01.dat",
+      "path": "parts/s/15279s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/80497s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/80497s01.dat",
+      "path": "parts/s/80497s01.dat",
+      "kind": "relative"
+    },
+    "p/48/tm06i0400.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/tm06i0400.dat",
+      "path": "p/48/tm06i0400.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/tm06o0400.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/tm06o0400.dat",
+      "path": "p/48/tm06o0400.dat",
+      "kind": "official_primitives"
+    },
+    "p/cylj4x10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/cylj4x10.dat",
+      "path": "p/cylj4x10.dat",
+      "kind": "official_primitives"
+    },
+    "p/axleend2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/axleend2.dat",
+      "path": "p/axleend2.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/4-4cyls.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4cyls.dat",
+      "path": "p/4-4cyls.dat",
+      "kind": "relative"
+    },
+    "p/box4-7a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4-7a.dat",
+      "path": "p/box4-7a.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/7324s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/7324s01.dat",
+      "path": "parts/s/7324s01.dat",
+      "kind": "relative"
+    },
+    "p/48/tm08q1125.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/tm08q1125.dat",
+      "path": "p/48/tm08q1125.dat",
+      "kind": "official_primitives"
+    },
+    "p/t01o4000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t01o4000.dat",
+      "path": "p/t01o4000.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4cylj1x1e.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4cylj1x1e.dat",
+      "path": "p/2-4cylj1x1e.dat",
+      "kind": "official_primitives"
+    },
+    "p/t08q3333.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t08q3333.dat",
+      "path": "p/t08q3333.dat",
+      "kind": "official_primitives"
+    },
+    "p/t08q4000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t08q4000.dat",
+      "path": "p/t08q4000.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04q4000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04q4000.dat",
+      "path": "p/t04q4000.dat",
+      "kind": "official_primitives"
+    },
+    "p/studa.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/studa.dat",
+      "path": "p/studa.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4con43.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4con43.dat",
+      "path": "p/4-4con43.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/15469s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/15469s01.dat",
+      "path": "parts/s/15469s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/4865bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/4865bs01.dat",
+      "path": "parts/s/4865bs01.dat",
+      "kind": "relative"
+    },
+    "p/axlehole.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axlehole.dat",
+      "path": "p/axlehole.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16cyls.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16cyls.dat",
+      "path": "p/3-16cyls.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl2hol2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl2hol2.dat",
+      "path": "p/axl2hol2.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/80015s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/80015s01.dat",
+      "path": "parts/s/80015s01.dat",
+      "kind": "relative"
+    },
+    "p/t04q3750.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04q3750.dat",
+      "path": "p/t04q3750.dat",
+      "kind": "official_primitives"
+    },
+    "p/joint8ball.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/joint8ball.dat",
+      "path": "p/joint8ball.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/5489s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/5489s01.dat",
+      "path": "parts/s/5489s01.dat",
+      "kind": "relative"
+    },
+    "p/48/tm08q2375.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/tm08q2375.dat",
+      "path": "p/48/tm08q2375.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4con5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/2-4con5.dat",
+      "path": "p/2-4con5.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/2-4ring1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ring1.dat",
+      "path": "p/2-4ring1.dat",
+      "kind": "official_primitives"
+    },
+    "p/2-4ering.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/2-4ering.dat",
+      "path": "p/2-4ering.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/37695s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/37695s01.dat",
+      "path": "parts/s/37695s01.dat",
+      "kind": "relative"
+    },
+    "p/connect3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/connect3.dat",
+      "path": "p/connect3.dat",
+      "kind": "official_primitives"
+    },
+    "p/beamhol2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/beamhol2.dat",
+      "path": "p/beamhol2.dat",
+      "kind": "official_primitives"
+    },
+    "p/4-4cyl1sph2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4cyl1sph2.dat",
+      "path": "p/4-4cyl1sph2.dat",
+      "kind": "relative"
+    },
+    "p/confricrib1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/confricrib1.dat",
+      "path": "p/confricrib1.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/confricrib2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/confricrib2.dat",
+      "path": "p/confricrib2.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/connectcollar5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/connectcollar5.dat",
+      "path": "p/connectcollar5.dat",
+      "kind": "unofficial_primitives"
+    },
+    "parts/s/35470s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/35470s01.dat",
+      "path": "parts/s/35470s01.dat",
+      "kind": "relative"
+    },
+    "p/stug-1x3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug-1x3.dat",
+      "path": "p/stug-1x3.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/25269s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/25269s01.dat",
+      "path": "parts/s/25269s01.dat",
+      "kind": "relative"
+    },
+    "p/box0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box0.dat",
+      "path": "p/box0.dat",
+      "kind": "official_primitives"
+    },
+    "p/7-16cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/7-16cyli.dat",
+      "path": "p/7-16cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/7-16ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/7-16ndis.dat",
+      "path": "p/7-16ndis.dat",
+      "kind": "official_primitives"
+    },
+    "p/7-16disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/7-16disc.dat",
+      "path": "p/7-16disc.dat",
+      "kind": "official_primitives"
+    },
+    "p/7-16edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/7-16edge.dat",
+      "path": "p/7-16edge.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/60601s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/60601s01.dat",
+      "path": "parts/s/60601s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/5903s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/5903s02.dat",
+      "path": "parts/s/5903s02.dat",
+      "kind": "relative"
+    },
+    "parts/s/3622s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3622s01.dat",
+      "path": "parts/s/3622s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/6636s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/6636s01.dat",
+      "path": "parts/s/6636s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/10187s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/10187s01.dat",
+      "path": "parts/s/10187s01.dat",
+      "kind": "relative"
+    },
+    "p/npeghol3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/npeghol3.dat",
+      "path": "p/npeghol3.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug4-5x5.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-5x5.dat",
+      "path": "p/stug4-5x5.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/6881s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/6881s01.dat",
+      "path": "parts/s/6881s01.dat",
+      "kind": "relative"
+    },
+    "p/3-4ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4ring9.dat",
+      "path": "p/3-4ring9.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/33299s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/33299s01.dat",
+      "path": "parts/s/33299s01.dat",
+      "kind": "official_parts"
+    },
+    "p/axl2hol9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl2hol9.dat",
+      "path": "p/axl2hol9.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl2hol8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl2hol8.dat",
+      "path": "p/axl2hol8.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl2ho10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl2ho10.dat",
+      "path": "p/axl2ho10.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl2hol3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/axl2hol3.dat",
+      "path": "p/axl2hol3.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16tang.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/3-16tang.dat",
+      "path": "p/3-16tang.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/box5-1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box5-1.dat",
+      "path": "p/box5-1.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud2s2e.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud2s2e.dat",
+      "path": "p/stud2s2e.dat",
+      "kind": "official_primitives"
+    },
+    "p/box3u6a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/box3u6a.dat",
+      "path": "p/box3u6a.dat",
+      "kind": "unofficial_primitives"
+    },
+    "parts/s/98138s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/98138s02.dat",
+      "path": "parts/s/98138s02.dat",
+      "kind": "official_parts"
+    },
+    "p/connectslit4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/connectslit4.dat",
+      "path": "p/connectslit4.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/connectslit3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/connectslit3.dat",
+      "path": "p/connectslit3.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/connectring.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/connectring.dat",
+      "path": "p/connectring.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/3-16ring3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/3-16ring3.dat",
+      "path": "p/3-16ring3.dat",
+      "kind": "relative"
+    },
+    "p/3-16ring7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/3-16ring7.dat",
+      "path": "p/3-16ring7.dat",
+      "kind": "unofficial_primitives"
+    },
+    "parts/s/22888s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/22888s02.dat",
+      "path": "parts/s/22888s02.dat",
+      "kind": "official_parts"
+    },
+    "p/1-4stud4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4stud4.dat",
+      "path": "p/1-4stud4.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-16stud4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/3-16stud4.dat",
+      "path": "p/3-16stud4.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/1-8stud4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8stud4.dat",
+      "path": "p/1-8stud4.dat",
+      "kind": "official_primitives"
+    },
+    "p/t16o1429.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t16o1429.dat",
+      "path": "p/t16o1429.dat",
+      "kind": "relative"
+    },
+    "p/box4t.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box4t.dat",
+      "path": "p/box4t.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/bl_973pb6136c01_3814_0_0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb6136c01_3814_0_0.dat",
+      "path": "parts/s/bl_973pb6136c01_3814_0_0.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb6136c01_3814_0_1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb6136c01_3814_0_1.dat",
+      "path": "parts/s/bl_973pb6136c01_3814_0_1.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb6136c01_3814_0_2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb6136c01_3814_0_2.dat",
+      "path": "parts/s/bl_973pb6136c01_3814_0_2.dat",
+      "kind": "relative"
+    },
+    "parts/s/3818s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/3818s01.dat",
+      "path": "parts/s/3818s01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3818s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3818s02.dat",
+      "path": "parts/s/3818s02.dat",
+      "kind": "official_parts"
+    },
+    "parts/s/30124bs03.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/30124bs03.dat",
+      "path": "parts/s/30124bs03.dat",
+      "kind": "official_parts"
+    },
+    "p/stud16a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/stud16a.dat",
+      "path": "p/stud16a.dat",
+      "kind": "unofficial_primitives"
+    },
+    "parts/s/2447bs02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/2447bs02.dat",
+      "path": "parts/s/2447bs02.dat",
+      "kind": "official_parts"
+    },
+    "p/48/1-48cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-48cylo.dat",
+      "path": "p/48/1-48cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring1.dat",
+      "path": "p/1-8ring1.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring27.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring27.dat",
+      "path": "p/1-8ring27.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring18.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/1-8ring18.dat",
+      "path": "p/1-8ring18.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/4-4cylse.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/4-4cylse.dat",
+      "path": "p/4-4cylse.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4rin13.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4rin13.dat",
+      "path": "p/48/4-4rin13.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4rin14.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4rin14.dat",
+      "path": "p/48/4-4rin14.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/4-4con12.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/4-4con12.dat",
+      "path": "p/48/4-4con12.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-8ring3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8ring3.dat",
+      "path": "p/1-8ring3.dat",
+      "kind": "official_primitives"
+    },
+    "p/fric.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/fric.dat",
+      "path": "p/fric.dat",
+      "kind": "relative"
+    },
+    "p/3-16rin2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-16rin2.dat",
+      "path": "p/3-16rin2.dat",
+      "kind": "relative"
+    },
+    "p/axl5end.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/axl5end.dat",
+      "path": "p/axl5end.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/bush1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/bush1.dat",
+      "path": "p/bush1.dat",
+      "kind": "relative"
+    },
+    "p/t02o2000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t02o2000.dat",
+      "path": "p/t02o2000.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04o2000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04o2000.dat",
+      "path": "p/t04o2000.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4con18.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4con18.dat",
+      "path": "p/1-4con18.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4con19.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4con19.dat",
+      "path": "p/1-4con19.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4con31.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4con31.dat",
+      "path": "p/1-4con31.dat",
+      "kind": "official_primitives"
+    },
+    "p/3-4ring8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/3-4ring8.dat",
+      "path": "p/3-4ring8.dat",
+      "kind": "official_primitives"
+    },
+    "p/t02i2258.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t02i2258.dat",
+      "path": "p/t02i2258.dat",
+      "kind": "official_primitives"
+    },
+    "p/t04i2258.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/t04i2258.dat",
+      "path": "p/t04i2258.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4rin12.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4rin12.dat",
+      "path": "p/1-4rin12.dat",
+      "kind": "official_primitives"
+    },
+    "p/box2-9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box2-9.dat",
+      "path": "p/box2-9.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3665as01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/3665as01.dat",
+      "path": "parts/s/3665as01.dat",
+      "kind": "relative"
+    },
+    "p/stud4s.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud4s.dat",
+      "path": "p/stud4s.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-16chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-16chrd.dat",
+      "path": "p/1-16chrd.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-4con3.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-4con3.dat",
+      "path": "p/1-4con3.dat",
+      "kind": "relative"
+    },
+    "p/box3-5a.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/box3-5a.dat",
+      "path": "p/box3-5a.dat",
+      "kind": "relative"
+    },
+    "p/stug3-1x7.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug3-1x7.dat",
+      "path": "p/stug3-1x7.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-4ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-4ring9.dat",
+      "path": "p/48/1-4ring9.dat",
+      "kind": "official_primitives"
+    },
+    "p/8/2-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/2-4edge.dat",
+      "path": "p/8/2-4edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/8/2-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/2-4cyli.dat",
+      "path": "p/8/2-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/7-48edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/7-48edge.dat",
+      "path": "p/48/7-48edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/7-48cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/7-48cyli.dat",
+      "path": "p/48/7-48cyli.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/30367s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/30367s01.dat",
+      "path": "parts/s/30367s01.dat",
+      "kind": "official_parts"
+    },
+    "p/1-16tang.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/1-16tang.dat",
+      "path": "p/1-16tang.dat",
+      "kind": "relative"
+    },
+    "p/3-16tndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/3-16tndis.dat",
+      "path": "p/3-16tndis.dat",
+      "kind": "relative"
+    },
+    "p/8/3-8cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/3-8cylo.dat",
+      "path": "p/8/3-8cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/8/3-8chrd.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/3-8chrd.dat",
+      "path": "p/8/3-8chrd.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3815bs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/3815bs01.dat",
+      "path": "parts/s/3815bs01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3817cs01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/3817cs01.dat",
+      "path": "parts/s/3817cs01.dat",
+      "kind": "relative"
+    },
+    "parts/s/3817cs03.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/3817cs03.dat",
+      "path": "parts/s/3817cs03.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb5956c02_3814_0_0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb5956c02_3814_0_0.dat",
+      "path": "parts/s/bl_973pb5956c02_3814_0_0.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb5956c02_3814_0_1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb5956c02_3814_0_1.dat",
+      "path": "parts/s/bl_973pb5956c02_3814_0_1.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb5956c02_3814_0_2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb5956c02_3814_0_2.dat",
+      "path": "parts/s/bl_973pb5956c02_3814_0_2.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb6345c01_3814_0_0.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb6345c01_3814_0_0.dat",
+      "path": "parts/s/bl_973pb6345c01_3814_0_0.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb6345c01_3814_0_1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb6345c01_3814_0_1.dat",
+      "path": "parts/s/bl_973pb6345c01_3814_0_1.dat",
+      "kind": "relative"
+    },
+    "parts/s/bl_973pb6345c01_3814_0_2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/s/bl_973pb6345c01_3814_0_2.dat",
+      "path": "parts/s/bl_973pb6345c01_3814_0_2.dat",
+      "kind": "relative"
+    },
+    "parts/973tex.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/parts/973tex.dat",
+      "path": "parts/973tex.dat",
+      "kind": "relative"
+    },
+    "p/1-8ring11.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/1-8ring11.dat",
+      "path": "p/1-8ring11.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/bump5000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/bump5000.dat",
+      "path": "p/bump5000.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-8disc.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8disc.dat",
+      "path": "p/48/1-8disc.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug10-2x2.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug10-2x2.dat",
+      "path": "p/stug10-2x2.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-8ring1.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8ring1.dat",
+      "path": "p/48/1-8ring1.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-8ring8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8ring8.dat",
+      "path": "p/48/1-8ring8.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-48ring9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-48ring9.dat",
+      "path": "p/48/1-48ring9.dat",
+      "kind": "official_primitives"
+    },
+    "p/48/1-8ring4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-8ring4.dat",
+      "path": "p/48/1-8ring4.dat",
+      "kind": "official_primitives"
+    },
+    "p/axl5hol9.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/axl5hol9.dat",
+      "path": "p/axl5hol9.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/axl5ho10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/axl5ho10.dat",
+      "path": "p/axl5ho10.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/axl5hol8.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/axl5hol8.dat",
+      "path": "p/axl5hol8.dat",
+      "kind": "unofficial_primitives"
+    },
+    "p/48/1-16tang.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-16tang.dat",
+      "path": "p/48/1-16tang.dat",
+      "kind": "official_primitives"
+    },
+    "p/boxjcyl4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/boxjcyl4.dat",
+      "path": "p/boxjcyl4.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/5489s02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/5489s02.dat",
+      "path": "parts/s/5489s02.dat",
+      "kind": "official_parts"
+    },
+    "p/8/1-4ndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/8/1-4ndis.dat",
+      "path": "p/8/1-4ndis.dat",
+      "kind": "relative"
+    },
+    "p/8/1-4cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/8/1-4cylo.dat",
+      "path": "p/8/1-4cylo.dat",
+      "kind": "relative"
+    },
+    "p/1-8rin10.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-8rin10.dat",
+      "path": "p/1-8rin10.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/5903s01.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/5903s01.dat",
+      "path": "parts/s/5903s01.dat",
+      "kind": "official_parts"
+    },
+    "p/1-16cylo.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/1-16cylo.dat",
+      "path": "p/1-16cylo.dat",
+      "kind": "official_primitives"
+    },
+    "p/stug4-4x4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-4x4.dat",
+      "path": "p/stug4-4x4.dat",
+      "kind": "relative"
+    },
+    "p/stug4-1x4.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stug4-1x4.dat",
+      "path": "p/stug4-1x4.dat",
+      "kind": "relative"
+    },
+    "p/48/1-24cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-24cyli.dat",
+      "path": "p/48/1-24cyli.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3818s03.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3818s03.dat",
+      "path": "parts/s/3818s03.dat",
+      "kind": "official_parts"
+    },
+    "parts/s/3818s04.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3818s04.dat",
+      "path": "parts/s/3818s04.dat",
+      "kind": "official_parts"
+    },
+    "p/48/1-48cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/48/1-48cyli.dat",
+      "path": "p/48/1-48cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/stud2s.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/stud2s.dat",
+      "path": "p/stud2s.dat",
+      "kind": "official_primitives"
+    },
+    "p/empty.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/empty.dat",
+      "path": "p/empty.dat",
+      "kind": "relative"
+    },
+    "p/r04o1000.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/r04o1000.dat",
+      "path": "p/r04o1000.dat",
+      "kind": "official_primitives"
+    },
+    "p/8/3-8edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/3-8edge.dat",
+      "path": "p/8/3-8edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/8/3-8cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/3-8cyli.dat",
+      "path": "p/8/3-8cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/hipstud.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/hipstud.dat",
+      "path": "p/hipstud.dat",
+      "kind": "official_primitives"
+    },
+    "parts/s/3817cs02.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/3817cs02.dat",
+      "path": "parts/s/3817cs02.dat",
+      "kind": "official_parts"
+    },
+    "parts/s/5489s03.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/parts/s/5489s03.dat",
+      "path": "parts/s/5489s03.dat",
+      "kind": "official_parts"
+    },
+    "p/8/1-4edge.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/1-4edge.dat",
+      "path": "p/8/1-4edge.dat",
+      "kind": "official_primitives"
+    },
+    "p/8/1-4cyli.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/p/8/1-4cyli.dat",
+      "path": "p/8/1-4cyli.dat",
+      "kind": "official_primitives"
+    },
+    "p/1-16tndis.dat": {
+      "source": "/Applications/Studio 2.0/ldraw/UnOfficial/p/1-16tndis.dat",
+      "path": "p/1-16tndis.dat",
+      "kind": "unofficial_primitives"
+    }
+  }
+}

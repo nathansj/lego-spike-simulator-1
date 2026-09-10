@@ -1034,6 +1034,22 @@ export class WebGL extends WebGLCompiler {
         }
     }
 
+    rotateQuaternion(rotation: { x: number; y: number; z: number; w: number }, inverse = false) {
+        const direction = inverse ? -1 : 1;
+        this.multMatrix(
+            m4.compose(
+                [0, 0, 0],
+                [
+                    rotation.x * direction,
+                    rotation.y * direction,
+                    rotation.z * direction,
+                    rotation.w
+                ],
+                [1, 1, 1]
+            )
+        );
+    }
+
     scale(s: number) {
         // The inverse is incorrect for non-unifor scaling
         this.modelMatrix = m4.scale(this.modelMatrix, s, s, s);

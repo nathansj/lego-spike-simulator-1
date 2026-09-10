@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "model": "45832_02.mpd",
+    "mission": "Exploding Seeds",
+    "mechanics": ["release","dynamic-pieces","latch"],
+    "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
+    "segments": [
+        {
+            "id": "45832-02-model",
+            "name": "45832_02 mission model",
+            "selection": {},
+            "includeRootGeometry": true,
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
+        }
+    ],
+    "joints": []
+}

@@ -1,0 +1,23 @@
+{
+    "version": 1,
+    "model": "45832_10.mpd",
+    "mission": "Fragile Microhabitats",
+    "mechanics": ["fixed","preserve-position","no-contact"],
+    "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
+    "segments": [
+        {
+            "id": "45832-10-model",
+            "name": "45832_10 mission model",
+            "selection": {},
+            "includeRootGeometry": true,
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
+        }
+    ],
+    "joints": []
+}

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { boundaryStore } from '$lib/spike/scene';
+    import { boundaryStore, sceneStore } from '$lib/spike/scene';
     import { Modal, Label, Range, Toggle } from 'flowbite-svelte';
     import {
         getStartDelay,
@@ -15,6 +15,7 @@
     let timeScale = getTimeFactor();
     let boundaryScale = $boundaryStore.scale;
     let startDelay = getStartDelay() / 1000.0;
+    $: physicalEncoders = $sceneStore.physicsWorld?.encoderMode === 'physical';
 
     function updateSleep() {
         setStepSleep(stepTime * 1000);
@@ -53,6 +54,20 @@
                 collisions: !old.collisions
             };
         });
+    }
+
+    function togglePhysicsDebug() {
+        boundaryStore.update((old) => ({ ...old, debugPhysics: !old.debugPhysics }));
+    }
+
+    function togglePhysicalEncoders() {
+        sceneStore.update((scene) => ({
+            ...scene,
+            physicsWorld: {
+                ...(scene.physicsWorld ?? {}),
+                encoderMode: physicalEncoders ? 'command' : 'physical'
+            }
+        }));
     }
 </script>
 
@@ -102,6 +117,16 @@
             checked={$boundaryStore.collisions}
         >
             Show boundary collisions
+        </Toggle>
+        <Toggle
+            size="small"
+            on:change={() => togglePhysicsDebug()}
+            checked={$boundaryStore.debugPhysics}
+        >
+            Show physics colliders and joints
+        </Toggle>
+        <Toggle size="small" on:change={() => togglePhysicalEncoders()} checked={physicalEncoders}>
+            Physical drive encoders (wheel slip)
         </Toggle>
     </div>
 </Modal>

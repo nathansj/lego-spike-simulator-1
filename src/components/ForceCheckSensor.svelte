@@ -4,6 +4,7 @@
     import { WebGL, type MapTexture } from '$lib/ldraw/gl';
     import { type SceneStore, type SceneObject } from '$lib/spike/scene';
     import { Hub, type PortType } from '$lib/spike/vm';
+    import type { Simulation } from '$lib/spike/simulation';
     import * as m4 from '$lib/ldraw/m4';
     import { componentStore, findPartTransform, type Model } from '$lib/ldraw/components';
 
@@ -13,6 +14,8 @@
     export let forceSensorId: number | 'none' = 'none';
     export let port: PortType;
     export let hub: Hub;
+    export let physicsEnabled = false;
+    export let simulation: Simulation | undefined;
 
     let canRender = false;
     let gl: WebGL | undefined;
@@ -28,6 +31,16 @@
     function setOverride(colour: string) {
         override = colour;
         overrideOpen = false;
+        simulation?.setForceSensorOverride(
+            port,
+            colour === 'release'
+                ? 0
+                : colour === 'press'
+                  ? 2
+                  : colour === 'hard press'
+                    ? 6
+                    : undefined
+        );
     }
 
     function reportSensor(gl: WebGL) {
@@ -42,6 +55,10 @@
                 force = 6.0;
                 hub.measureForce(port, force);
             }
+            return;
+        }
+        if (physicsEnabled) {
+            force = hub.ports[port].measure.force;
             return;
         }
         const frame = gl.getColourBuffer();
@@ -119,7 +136,9 @@
                     -obj.compiled.recenter.z
                 );
             }
-            if (obj.rotation) {
+            if (obj.rotationQuaternion) {
+                gl.rotateQuaternion(obj.rotationQuaternion, true);
+            } else if (obj.rotation) {
                 gl.rotate(-obj.rotation, 0.0, 1.0, 0.0);
             }
             if (obj.position) {
@@ -142,7 +161,9 @@
             if (obj.position) {
                 gl.translate(obj.position.x, obj.position.y, obj.position.z);
             }
-            if (obj.rotation) {
+            if (obj.rotationQuaternion) {
+                gl.rotateQuaternion(obj.rotationQuaternion);
+            } else if (obj.rotation) {
                 gl.rotate(obj.rotation, 0.0, 1.0, 0.0);
             }
             if (obj.compiled) {
@@ -193,7 +214,10 @@
         const obj = robot;
         if (obj.bricks) {
             if (!obj.compiled || forceCompile) {
-                obj.compiled = gl.compileModel(obj.bricks, { rescale: false });
+                obj.compiled = gl.compileModel(obj.bricks, {
+                    rescale: false,
+                    recenter: !obj.preserveOrigin
+                });
             }
         }
         if (!obj.position && obj.compiled) {
@@ -212,7 +236,10 @@
         for (const obj of objects) {
             if (obj.bricks) {
                 if (!obj.compiled || forceCompile) {
-                    obj.compiled = gl.compileModel(obj.bricks, { rescale: false });
+                    obj.compiled = gl.compileModel(obj.bricks, {
+                        rescale: false,
+                        recenter: !obj.preserveOrigin
+                    });
                 }
             }
             if (!obj.position && obj.compiled) {
@@ -243,6 +270,7 @@
 
     onDestroy(() => {
         canRender = false;
+        simulation?.setForceSensorOverride(port, undefined);
         if (mapTexture && gl) {
             gl.deleteTexture(mapTexture.texture);
             mapTexture = null;

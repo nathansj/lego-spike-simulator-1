@@ -8,6 +8,11 @@ import * as m4 from '$lib/ldraw/m4';
 
 export type PortType = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 export const allPorts: PortType[] = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+export interface RobotMotion {
+    step(seconds: number, scene: SceneStore, hub: Hub): void;
+    reset?(): void;
+}
 export const fontEmbedsSpace = false;
 let stepSleep = 0;
 let timeFactor = 1.0;
@@ -2321,7 +2326,7 @@ export class Hub {
             F: new Port('none')
         };
         this.wheels = [];
-        this.moveSpeed = 0;
+        this.moveSpeed = 50;
         this.moveDistance = 175;
         this.movePair1 = 'A';
         this.movePair2 = 'B';
@@ -2341,7 +2346,7 @@ export class Hub {
         this.ports.D.reset();
         this.ports.E.reset();
         this.ports.F.reset();
-        this.moveSpeed = 0;
+        this.moveSpeed = 50;
         this.moveDistance = 175;
         this.movePair1 = 'A';
         this.movePair2 = 'B';
@@ -2365,7 +2370,7 @@ export class Hub {
             F: new Port('none')
         };
         this.wheels = [];
-        this.moveSpeed = 0;
+        this.moveSpeed = 50;
         this.movePair1 = 'A';
         this.movePair2 = 'B';
         this.moveDistance = 175;
@@ -3004,7 +3009,7 @@ export class VM {
         return shortest;
     }
 
-    step(seconds: number, scene: SceneStore) {
+    step(seconds: number, scene: SceneStore, robotMotion?: RobotMotion) {
         if (this.state == 'running') {
             let duration = seconds * timeFactor + this.deltaTime;
             if (this.wait >= duration) {
@@ -3015,7 +3020,15 @@ export class VM {
                 const stepTime = this.stepTime();
                 this.processSleep(stepTime);
                 this.runThreads();
-                this.moveRobot(stepTime, scene);
+                if (!robotMotion) {
+                    this.moveRobot(stepTime, scene);
+                }
+                // Physics-backed motion must run during the sleep interval of a
+                // movement command. Calling it only after the command completes
+                // allows the next command to replace the motor state first.
+                if (robotMotion) {
+                    robotMotion.step(stepTime, scene, this.hub);
+                }
                 duration -= stepTime;
             }
             this.deltaTime = duration;
