@@ -100,7 +100,9 @@ function runtimePhysics(object: SceneObject): NonNullable<SceneObject['physics']
         throw new Error(`Scene object is missing physics definitions: ${object.id ?? object.name}`);
     }
     if (physics.autoCollider || physics.colliders.length === 0) {
-        throw new Error(`Scene object physics must define explicit colliders: ${object.id ?? object.name}`);
+        throw new Error(
+            `Scene object physics must define explicit colliders: ${object.id ?? object.name}`
+        );
     }
     return object.hinge
         ? { ...physics, bodyType: 'dynamic', enabledRotations: undefined }
@@ -170,6 +172,7 @@ export class Simulation {
 
     advance(frameDeltaSeconds: number): number {
         const steps = this.physics.advance(frameDeltaSeconds, (dt) => {
+            this.syncScene();
             this.updateSensors();
             this.vm.step(dt, this.scene, this.drive);
         });

@@ -19,6 +19,12 @@ However, the system can be built locally and executed directly
 from files, so no webserver is required. The software can run completely
 from the web browser.
 
+# Development team
+
+See [the agent team and delivery roadmap](./docs/agent-team.md) for reusable Codex
+specialists and [the code review](./docs/code-review-2026-09-10.md) for the current
+BIOGLOW readiness assessment. Repository working conventions are in [AGENTS.md](./AGENTS.md).
+
 # Screenshots
 
 ![Start screen](./website/start.png)

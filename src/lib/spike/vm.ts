@@ -823,7 +823,7 @@ export class ActionStatement extends Statement {
                                 this.execute_movemotor(
                                     thread,
                                     port,
-                                    amount * revolution_time,
+                                    (amount * revolution_time) / 360.0,
                                     100.0,
                                     reverse,
                                     false

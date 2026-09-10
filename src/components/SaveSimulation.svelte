@@ -11,6 +11,7 @@
     import { allPorts, Hub } from '$lib/spike/vm';
     import { sceneStore } from '$lib/spike/scene';
     import JSZip from 'jszip';
+    import { sceneObjectArchiveEntry } from '$lib/spike/scene-archive';
     import { serializeSceneDefinition } from '$lib/spike/scene-schema';
 
     export let modalOpen = false;
@@ -42,13 +43,13 @@
         if (scene.map) {
             zip.file('mat.jpg', scene.map);
         }
-        for (const obj of scene.objects) {
+        const json = serializeSceneDefinition(scene);
+        for (const [index, obj] of scene.objects.entries()) {
             if (obj.bricks) {
                 const content = saveMPD(obj.bricks);
-                zip.file(`bricks-${obj.name}`, content);
+                zip.file(sceneObjectArchiveEntry(json.objects[index].id), content);
             }
         }
-        const json = serializeSceneDefinition(scene);
         zip.file('scene.json', JSON.stringify(json));
         const sceneZip = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
         FileSaver.saveAs(sceneZip, 'scene.spk');

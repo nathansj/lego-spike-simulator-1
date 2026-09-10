@@ -15,6 +15,10 @@
     import Menu from '$components/Menu.svelte';
     import { type MenuAction, type MenuEntry } from '$components/Menu.svelte';
     import JSZip from 'jszip';
+    import {
+        legacySceneObjectArchiveEntry,
+        sceneObjectArchiveEntry
+    } from '$lib/spike/scene-archive';
     import { parseSceneDefinition } from '$lib/spike/scene-schema';
     import { WebGLCompiler } from '$lib/ldraw/gl';
     import {
@@ -482,7 +486,11 @@
                     preserveOrigin: scene.robot.preserveOrigin
                 };
                 for (const obj of scene.objects) {
-                    const objFile = zipFile.file(`bricks-${obj.name}`);
+                    const stableObjectFile = obj.id
+                        ? zipFile.file(sceneObjectArchiveEntry(obj.id))
+                        : null;
+                    const objFile =
+                        stableObjectFile ?? zipFile.file(legacySceneObjectArchiveEntry(obj.name));
                     if (objFile) {
                         const content = await objFile.async('string');
                         const model = loadModel(obj.name, content);

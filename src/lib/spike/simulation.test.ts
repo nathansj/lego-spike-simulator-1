@@ -1,9 +1,64 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as m4 from '$lib/ldraw/m4';
 import type { RobotMotion, VM } from '$lib/spike/vm';
-import { Hub, Motor, Port, Wheel } from '$lib/spike/vm';
+import {
+    ActionStatement,
+    EventStatement,
+    Hub,
+    Motor,
+    Port,
+    setStartDelay,
+    StatementBlock,
+    Value,
+    VM as SpikeVM,
+    Wheel
+} from '$lib/spike/vm';
 import type { SceneStore } from '$lib/spike/scene';
 import { Simulation } from '$lib/spike/simulation';
+
+const emptyScene: SceneStore = {
+    robot: { anchored: false, name: 'Robot', position: { x: 0, y: 0, z: 0 } },
+    objects: [],
+    map: undefined,
+    mapWidth: 1000,
+    mapHeight: 1000
+};
+
+function runMotorFor(
+    unit: 'degrees' | 'rotations' | 'seconds',
+    amount: number,
+    direction: 'clockwise' | 'counterclockwise'
+) {
+    const hub = new Hub();
+    hub.ports.A = new Port('motor');
+    hub.ports.A.motor = new Motor(1);
+    const action = new ActionStatement('flippermotor_motorTurnForDirection', 'motor', [
+        new Value('literal', '', 'A'),
+        new Value('literal', '', direction),
+        new Value('literal', '', amount.toString()),
+        new Value('literal', '', unit)
+    ]);
+    const event = new EventStatement(
+        'flipperevents_whenProgramStarts',
+        'start',
+        [],
+        new StatementBlock([action])
+    );
+    const vm = new SpikeVM('robot', hub, {}, new Map([['start', event]]), new Map(), undefined);
+    const motor = hub.ports.A.motor;
+    vm.start();
+
+    expect(motor.on).toBe(true);
+    expect(motor.reverse).toBe(direction === 'counterclockwise');
+
+    let elapsed = 0;
+    while (motor.on && elapsed < 1) {
+        vm.step(0.001, emptyScene);
+        elapsed += 0.001;
+    }
+    expect(motor.on).toBe(false);
+    return elapsed;
+}
 
 function drivenHub(): Hub {
     const hub = new Hub();
@@ -22,6 +77,42 @@ function drivenHub(): Hub {
     hub.wheels = [left, right];
     return hub;
 }
+
+describe('SPIKE VM motor durations', () => {
+    beforeEach(() => {
+        vi.stubGlobal('Audio', class {});
+        vi.stubGlobal(
+            'AudioContext',
+            class {
+                destination = {};
+                createOscillator() {
+                    return { connect() {} };
+                }
+            }
+        );
+        setStartDelay(0);
+    });
+
+    afterEach(() => {
+        setStartDelay(1);
+        vi.unstubAllGlobals();
+    });
+
+    it('runs 90 degrees for the same duration as one quarter rotation in either direction', () => {
+        const clockwiseDegrees = runMotorFor('degrees', 90, 'clockwise');
+        const counterclockwiseDegrees = runMotorFor('degrees', 90, 'counterclockwise');
+        const quarterRotation = runMotorFor('rotations', 0.25, 'clockwise');
+
+        expect(clockwiseDegrees).toBeCloseTo(quarterRotation, 3);
+        expect(counterclockwiseDegrees).toBeCloseTo(quarterRotation, 3);
+        expect(clockwiseDegrees).toBeCloseTo((0.25 * 60) / 101.25, 2);
+    });
+
+    it('keeps seconds and rotations as direct duration units', () => {
+        expect(runMotorFor('seconds', 0.2, 'counterclockwise')).toBeCloseTo(0.2, 2);
+        expect(runMotorFor('rotations', 1, 'clockwise')).toBeCloseTo(60 / 101.25, 2);
+    });
+});
 
 describe('Simulation runtime', () => {
     it('drives into an object and deterministically restores physics and motors', async () => {
