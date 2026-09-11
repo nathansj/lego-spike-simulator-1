@@ -36,6 +36,7 @@
         observeDroneSurvey,
         type DroneSurveyObservationGeometry
     } from '$lib/fll/drone-survey-observations';
+    import type { DroneSurveyObservationGeometryProfile } from '$lib/fll/drone-survey-observation-geometry-profile';
     import HubWidget from '$components/HubWidget.svelte';
     import RobotPreview from '$components/RobotPreview.svelte';
     import ScenePreview from '$components/ScenePreview.svelte';
@@ -58,6 +59,7 @@
     export let tilt = true;
     export let gridScale = 0;
     export let m01ObservationGeometry: DroneSurveyObservationGeometry | undefined = undefined;
+    export let m01ObservationProfile: DroneSurveyObservationGeometryProfile | undefined = undefined;
 
     let compiler = new WebGLCompiler();
 
@@ -558,6 +560,7 @@
                         <DroneSurveyScoreFeedback
                             score={droneSurveyScore}
                             observationGeometryAvailable={m01ObservationGeometry !== undefined}
+                            profile={m01ObservationProfile}
                         />
                     </div>
                 {/if}

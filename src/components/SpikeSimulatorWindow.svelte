@@ -12,7 +12,10 @@
     import WheelConnector from '$components/WheelConnector.svelte';
     import LoadScene from '$components/LoadScene.svelte';
     import type { DroneSurveyObservationGeometry } from '$lib/fll/drone-survey-observations';
-    import { parseDroneSurveyObservationGeometryProfile } from '$lib/fll/drone-survey-observation-geometry-profile';
+    import {
+        parseDroneSurveyObservationGeometryProfile,
+        type DroneSurveyObservationGeometryProfile
+    } from '$lib/fll/drone-survey-observation-geometry-profile';
     import { type LDrawStore, componentStore } from '$lib/ldraw/components';
     import { Hub, codeStore } from '$lib/spike/vm';
     import {
@@ -44,6 +47,7 @@
     let tilt = true;
     let gridScale = 0;
     let m01ObservationGeometry: DroneSurveyObservationGeometry | undefined;
+    let m01ObservationProfile: DroneSurveyObservationGeometryProfile | undefined;
     let m01ProfileFileName: string | undefined;
     let m01ProfileStatus =
         'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
@@ -249,6 +253,7 @@
         const input = event.currentTarget as HTMLInputElement;
         const file = input.files?.[0];
         m01ObservationGeometry = undefined;
+        m01ObservationProfile = undefined;
         m01ProfileFileName = undefined;
         m01ProfileError = undefined;
 
@@ -262,6 +267,7 @@
             const profileText = await file.text();
             if (loadGeneration !== m01ProfileLoadGeneration) return;
             const profile = parseDroneSurveyObservationGeometryProfile(profileText);
+            m01ObservationProfile = profile;
             m01ObservationGeometry = profile.geometry;
             m01ProfileFileName = file.name;
             m01ProfileStatus = `User-supplied M01 calibration profile loaded: ${file.name}.`;
@@ -279,10 +285,13 @@
     function clearM01ObservationProfile(): void {
         m01ProfileLoadGeneration++;
         m01ObservationGeometry = undefined;
+        m01ObservationProfile = undefined;
         m01ProfileFileName = undefined;
         m01ProfileError = undefined;
         m01ProfileStatus =
             'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
+        const input = document.getElementById('m01-calibration-profile') as HTMLInputElement | null;
+        if (input) input.value = '';
     }
 
     $: updateButtons($componentStore);
@@ -447,6 +456,7 @@
                         {robotFocus}
                         {gridScale}
                         {m01ObservationGeometry}
+                        {m01ObservationProfile}
                     />
                 </div>
             {/key}

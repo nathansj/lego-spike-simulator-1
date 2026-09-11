@@ -1,8 +1,10 @@
 <script lang="ts">
     import type { DroneSurveyScore } from '$lib/fll/drone-survey';
+    import type { DroneSurveyObservationGeometryProfile } from '$lib/fll/drone-survey-observation-geometry-profile';
 
     export let score: DroneSurveyScore | undefined;
     export let observationGeometryAvailable = false;
+    export let profile: DroneSurveyObservationGeometryProfile | undefined;
 </script>
 
 <section
@@ -24,6 +26,11 @@
                 </li>
             {/each}
         </ul>
+        {#if profile}
+            <p class="mt-3 text-xs text-gray-600">
+                Profile: {profile.provenance.sourceVersion} ({profile.calibration.status})
+            </p>
+        {/if}
         <p class="mt-3">
             <a href={score.source.rulebook.url} target="_blank" rel="noreferrer">
                 View scoring source (Rulebook p. {score.source.rulebook.page})
