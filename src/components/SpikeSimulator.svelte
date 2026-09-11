@@ -31,6 +31,7 @@
     import { Simulation, type PhysicsSensorPose } from '$lib/spike/simulation';
     import { createExplicitModelPhysics } from '$lib/physics/articulation-presets';
     import { DroneSurveyMatchController } from '$lib/fll/match-controller';
+    import { BioglowMatchClock } from '$lib/fll/match-clock';
     import type { DroneSurveyScore } from '$lib/fll/drone-survey';
     import {
         observeDroneSurvey,
@@ -73,10 +74,12 @@
     let vm: VM | undefined;
     let simulation: Simulation | undefined;
     let simulationGeneration = 0;
+    let bioglowMatchClock = new BioglowMatchClock();
     let droneSurveyMatchController = createDroneSurveyMatchController();
     let droneSurveyScore: DroneSurveyScore | undefined;
     let droneSurveyMatchState = droneSurveyMatchController.state;
     let droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
+    let droneSurveyMatchExpired = false;
     let hubImage = '0000000000000000000000000';
     let hubCentreButtonColour = '#ffffff';
     let compiledRobot: CompiledModel | undefined = $componentStore.robotModel
@@ -97,27 +100,34 @@
     }
 
     function clearDroneSurveyMatch(): void {
+        bioglowMatchClock.reset();
         droneSurveyMatchController.reset();
         droneSurveyScore = undefined;
+        droneSurveyMatchExpired = false;
         droneSurveyMatchState = droneSurveyMatchController.state;
         droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
     }
 
     function startDroneSurveyMatch(): void {
+        bioglowMatchClock.reset();
         droneSurveyMatchController = createDroneSurveyMatchController();
         droneSurveyMatchController.start();
         droneSurveyScore = undefined;
+        droneSurveyMatchExpired = false;
         droneSurveyMatchState = droneSurveyMatchController.state;
         droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
     }
 
     function recordCompletedFixedSteps(steps: number): void {
         if (steps === 0 || droneSurveyMatchController.state !== 'running' || !simulation) return;
-        droneSurveyMatchController.setElapsedFixedSimulationTime(
-            droneSurveyMatchController.elapsedFixedSimulationTimeSeconds +
-                steps * simulation.physics.fixedTimeStep
-        );
+        bioglowMatchClock.advanceFixedSteps(steps, simulation.physics.fixedTimeStep);
+        droneSurveyMatchController.setElapsedFixedSimulationTime(bioglowMatchClock.elapsedSeconds);
         droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
+        droneSurveyMatchExpired = bioglowMatchClock.expired;
+        if (droneSurveyMatchExpired) {
+            vm?.stop();
+            if (m01ObservationGeometry) finishDroneSurveyMatch();
+        }
     }
 
     function finishDroneSurveyMatch(): void {
@@ -359,7 +369,10 @@
             if (lastFrame > 0) {
                 const seconds = frameTime / 1000.0;
                 if (simulation) {
-                    recordCompletedFixedSteps(simulation.advance(seconds));
+                    const boundedSeconds = Math.min(seconds, bioglowMatchClock.remainingSeconds);
+                    if (boundedSeconds > 0) {
+                        recordCompletedFixedSteps(simulation.advance(boundedSeconds));
+                    }
                 } else {
                     vm.step(Math.min(seconds, 0.1), scene);
                 }
@@ -563,6 +576,12 @@
                         <p class="text-sm">
                             M01 elapsed simulation time: {droneSurveyElapsedSeconds.toFixed(2)} seconds
                         </p>
+                        {#if droneSurveyMatchExpired}
+                            <p class="text-sm font-medium text-amber-700">
+                                Official 2.5-minute match time reached. Finish the frozen match to
+                                evaluate M01.
+                            </p>
+                        {/if}
                         <button
                             type="button"
                             class="rounded bg-blue-700 px-3 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-gray-400"
@@ -570,7 +589,7 @@
                             disabled={droneSurveyMatchState !== 'running' ||
                                 m01ObservationGeometry === undefined}
                         >
-                            Finish M01 match
+                            Finish M01 practice match
                         </button>
                         <DroneSurveyScoreFeedback
                             score={droneSurveyScore}
