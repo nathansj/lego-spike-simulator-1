@@ -65,6 +65,14 @@ describe('BIOGLOW Founders Edition mission catalog', () => {
         );
     });
 
+    it('describes the M02 scoring foundation without claiming full implementation', () => {
+        const m02 = BIOGLOW_MISSION_CATALOG.find(({ id }) => id === 'M02')!;
+
+        expect(m02.readiness.scoring.status).toBe('not-implemented');
+        expect(m02.readiness.scoring.detail).toContain('source-backed M02 scorer');
+        expect(m02.readiness.scoring.detail).toContain('authoritative physics observation');
+    });
+
     it('separates existing sidecars from unverified mechanics and scoring coverage', () => {
         const sidecarMissions = BIOGLOW_MISSION_CATALOG.filter(
             ({ readiness }) => readiness.repositoryAssetPresence.status === 'verified'

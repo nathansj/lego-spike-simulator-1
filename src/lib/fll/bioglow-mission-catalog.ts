@@ -123,6 +123,11 @@ const unimplementedScoring = {
     detail: 'No mission scorer or end-of-match observation contract is implemented in the repository.'
 };
 
+const m02ScoringFoundation = {
+    status: 'not-implemented' as const,
+    detail: 'A source-backed M02 scorer, end-of-match contract, and fail-closed observation boundary exist, but no authoritative physics observation or global match adjudicator is connected.'
+};
+
 export const BIOGLOW_MISSION_CATALOG = [
     {
         id: 'M01',
@@ -156,7 +161,7 @@ export const BIOGLOW_MISSION_CATALOG = [
             officialRuleSourceCoverage: ruleCoverage('02', 'Exploding Seeds'),
             repositoryAssetPresence: sidecarAsset('02'),
             mechanics: sidecarMechanics,
-            scoring: unimplementedScoring
+            scoring: m02ScoringFoundation
         }
     },
     {
