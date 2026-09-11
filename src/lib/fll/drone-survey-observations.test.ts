@@ -3,6 +3,7 @@ import fixture from '$lib/physics/fixtures/drone-scene.json';
 import { createMatDefinition } from '$lib/physics/bodies';
 import { PhysicsWorld } from '$lib/physics/world';
 import {
+    DroneSurveyObservationUnavailableError,
     observeDroneSurvey,
     type DroneSurveyObservationGeometry
 } from '$lib/fll/drone-survey-observations';
@@ -10,13 +11,17 @@ import { parseSceneDefinition } from '$lib/spike/scene-schema';
 
 const IDENTITY_ROTATION = { x: 0, y: 0, z: 0, w: 1 } as const;
 
-async function fixtureWorld(): Promise<PhysicsWorld> {
+async function fixtureWorld(
+    excludedBodyIds: ReadonlySet<string> = new Set()
+): Promise<PhysicsWorld> {
     const scene = parseSceneDefinition(fixture);
     const world = await PhysicsWorld.create(scene.physicsWorld);
     world.addBody(createMatDefinition(scene.mapWidth, scene.mapHeight));
     for (const object of [scene.robot, ...scene.objects]) {
+        const id = object === scene.robot ? '#robot' : object.id!;
+        if (excludedBodyIds.has(id)) continue;
         world.addBody({
-            id: object === scene.robot ? '#robot' : object.id!,
+            id,
             positionMm: object.position!,
             rotation: object.rotationQuaternion,
             physics: object.physics!
@@ -101,25 +106,65 @@ describe('Drone Survey physics observations', () => {
         robot.setLinvel({ x: 0, y: 0, z: 0 }, true);
         world.step();
 
-        expect(observeDroneSurvey(world, geometryFor(world))).toMatchObject({
+        expect(observeDroneSurvey(world, geometryFor(world))).toEqual({
+            droneNoLongerTouchingMat: true,
+            lidarMapCompletelyFlipped: true,
+            scanMarkerAtLeastPartlyInSurveyArea: true,
             missionModelTouchingEquipmentAtEnd: true
         });
 
         world.dispose();
     });
 
-    it('fails explicitly when a required semantic body is absent', async () => {
-        const world = await PhysicsWorld.create();
-        world.addBody(createMatDefinition(100, 100));
+    it('reports unavailable evidence when no mission-model body set is complete', async () => {
+        const world = await fixtureWorld(new Set(['45832-01-link-b']));
 
-        expect(() =>
-            observeDroneSurvey(world, {
-                lidarMapFlippedRotationRelativeToMat: IDENTITY_ROTATION,
-                maximumLidarMapRotationErrorRadians: 0,
-                surveyAreaMm: { minX: 0, maxX: 0, minZ: 0, maxZ: 0 },
-                scanMarkerOverlapMarginMm: 0
+        expect(() => observeDroneSurvey(world, geometryFor(world))).toThrowError(
+            expect.objectContaining({
+                name: 'DroneSurveyObservationUnavailableError',
+                evidence: {
+                    status: 'unavailable',
+                    reason: 'missing-required-semantic-bodies',
+                    missingEquipmentBodyIds: [],
+                    missionModelBodySets: [
+                        { id: 'fixture-v2', missingBodyIds: ['45832-01-link-b'] },
+                        {
+                            id: 'sidecar-v1',
+                            missingBodyIds: [
+                                '45832-01-rail-a',
+                                '45832-01-rail-b',
+                                '45832-01-pilot-base'
+                            ]
+                        }
+                    ]
+                }
             })
-        ).toThrow('Missing Drone Survey physics body: 45832-01-fixed-scenery');
+        );
+
+        world.dispose();
+    });
+
+    it('reports unavailable evidence when required equipment is absent', async () => {
+        const world = await fixtureWorld(new Set(['#robot']));
+
+        let thrown: unknown;
+        try {
+            observeDroneSurvey(world, geometryFor(world));
+        } catch (error) {
+            thrown = error;
+        }
+
+        expect(thrown).toBeInstanceOf(DroneSurveyObservationUnavailableError);
+        expect(thrown).toMatchObject({
+            evidence: {
+                status: 'unavailable',
+                reason: 'missing-required-semantic-bodies',
+                missingEquipmentBodyIds: ['#robot'],
+                missionModelBodySets: expect.arrayContaining([
+                    { id: 'fixture-v2', missingBodyIds: [] }
+                ])
+            }
+        });
 
         world.dispose();
     });

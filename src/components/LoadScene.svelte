@@ -19,6 +19,11 @@
         legacySceneObjectArchiveEntry,
         sceneObjectArchiveEntry
     } from '$lib/spike/scene-archive';
+    import {
+        M01_OBSERVATION_PROFILE_ARCHIVE_ENTRY,
+        parseM01ObservationProfileArchiveEntry,
+        type M01ObservationProfileLoadedCallback
+    } from '$lib/spike/m01-observation-profile-archive';
     import { parseSceneDefinition } from '$lib/spike/scene-schema';
     import { WebGLCompiler } from '$lib/ldraw/gl';
     import {
@@ -28,6 +33,9 @@
     } from '$lib/physics/articulation-presets';
 
     export let modalOpen = false;
+    /** Called after a successful scene commit; `undefined` means this legacy archive has no profile. */
+    export let onM01ObservationProfileLoaded: M01ObservationProfileLoadedCallback | undefined =
+        undefined;
     let numberOfLoads = 0;
     let mapFile: Blob | undefined = $sceneStore.map;
     let camera: 'top' | 'left' | 'right' | 'front' | 'back' = 'front';
@@ -454,89 +462,98 @@
         if (element) {
             const fileElement = element as HTMLInputElement;
             if (fileElement.files && fileElement.files.length > 0) {
-                const first = fileElement.files[0];
-                const zip = new JSZip();
-                const zipFile = await zip.loadAsync(first);
-                let map: Blob | undefined = undefined;
-                const jsonFile = zipFile.file('scene.json');
-                if (!jsonFile) {
-                    console.log('Invalid scene file format, missing scene.json');
-                    return;
-                }
-                const sceneDefContents = await jsonFile.async('string');
-                const scene = parseSceneDefinition(JSON.parse(sceneDefContents));
-                const objects: SceneObject[] = [];
-
-                const mapFile = zipFile.file('mat.jpg');
-                if (mapFile) {
-                    map = await mapFile.async('blob');
-                }
-
-                const robot = {
-                    id: scene.robot.id,
-                    anchored: scene.robot.anchored,
-                    position: scene.robot.position,
-                    rotation: scene.robot.rotation,
-                    name: scene.robot.name,
-                    bricks: $componentStore.robotModel,
-                    physics: scene.robot.physics,
-                    drive: scene.robot.drive,
-                    hinge: scene.robot.hinge,
-                    rotationQuaternion: scene.robot.rotationQuaternion,
-                    preserveOrigin: scene.robot.preserveOrigin
-                };
-                for (const obj of scene.objects) {
-                    const stableObjectFile = obj.id
-                        ? zipFile.file(sceneObjectArchiveEntry(obj.id))
-                        : null;
-                    const objFile =
-                        stableObjectFile ?? zipFile.file(legacySceneObjectArchiveEntry(obj.name));
-                    if (objFile) {
-                        const content = await objFile.async('string');
-                        const model = loadModel(obj.name, content);
-                        updateUnresolvedParts();
-                        objects.push({
-                            id: obj.id,
-                            anchored: obj.anchored,
-                            position: obj.position,
-                            rotation: obj.rotation,
-                            name: obj.name,
-                            bricks: model,
-                            physics: obj.physics,
-                            hinge: obj.hinge,
-                            rotationQuaternion: obj.rotationQuaternion,
-                            preserveOrigin: obj.preserveOrigin,
-                            editorGroup: obj.editorGroup,
-                            editorName: obj.editorName
-                        });
-                    } else {
-                        objects.push({
-                            id: obj.id,
-                            anchored: obj.anchored,
-                            position: obj.position,
-                            rotation: obj.rotation,
-                            name: obj.name,
-                            physics: obj.physics,
-                            hinge: obj.hinge,
-                            rotationQuaternion: obj.rotationQuaternion,
-                            preserveOrigin: obj.preserveOrigin,
-                            editorGroup: obj.editorGroup,
-                            editorName: obj.editorName
-                        });
+                try {
+                    const first = fileElement.files[0];
+                    const zip = new JSZip();
+                    const zipFile = await zip.loadAsync(first);
+                    let map: Blob | undefined = undefined;
+                    const jsonFile = zipFile.file('scene.json');
+                    if (!jsonFile) {
+                        throw new Error('Invalid scene file format, missing scene.json');
                     }
-                }
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                sceneStore.update((old) => {
-                    return {
-                        robot: robot,
-                        objects: objects,
-                        map: map,
-                        mapWidth: scene.mapWidth,
-                        mapHeight: scene.mapHeight,
-                        physicsWorld: scene.physicsWorld,
-                        joints: scene.joints
+                    const sceneDefContents = await jsonFile.async('string');
+                    const scene = parseSceneDefinition(JSON.parse(sceneDefContents));
+                    const profileFile = zipFile.file(M01_OBSERVATION_PROFILE_ARCHIVE_ENTRY);
+                    const loadedM01ObservationProfile = profileFile
+                        ? parseM01ObservationProfileArchiveEntry(await profileFile.async('string'))
+                        : undefined;
+                    const objects: SceneObject[] = [];
+
+                    const mapFile = zipFile.file('mat.jpg');
+                    if (mapFile) {
+                        map = await mapFile.async('blob');
+                    }
+
+                    const robot = {
+                        id: scene.robot.id,
+                        anchored: scene.robot.anchored,
+                        position: scene.robot.position,
+                        rotation: scene.robot.rotation,
+                        name: scene.robot.name,
+                        bricks: $componentStore.robotModel,
+                        physics: scene.robot.physics,
+                        drive: scene.robot.drive,
+                        hinge: scene.robot.hinge,
+                        rotationQuaternion: scene.robot.rotationQuaternion,
+                        preserveOrigin: scene.robot.preserveOrigin
                     };
-                });
+                    for (const obj of scene.objects) {
+                        const stableObjectFile = obj.id
+                            ? zipFile.file(sceneObjectArchiveEntry(obj.id))
+                            : null;
+                        const objFile =
+                            stableObjectFile ??
+                            zipFile.file(legacySceneObjectArchiveEntry(obj.name));
+                        if (objFile) {
+                            const content = await objFile.async('string');
+                            const model = loadModel(obj.name, content);
+                            updateUnresolvedParts();
+                            objects.push({
+                                id: obj.id,
+                                anchored: obj.anchored,
+                                position: obj.position,
+                                rotation: obj.rotation,
+                                name: obj.name,
+                                bricks: model,
+                                physics: obj.physics,
+                                hinge: obj.hinge,
+                                rotationQuaternion: obj.rotationQuaternion,
+                                preserveOrigin: obj.preserveOrigin,
+                                editorGroup: obj.editorGroup,
+                                editorName: obj.editorName
+                            });
+                        } else {
+                            objects.push({
+                                id: obj.id,
+                                anchored: obj.anchored,
+                                position: obj.position,
+                                rotation: obj.rotation,
+                                name: obj.name,
+                                physics: obj.physics,
+                                hinge: obj.hinge,
+                                rotationQuaternion: obj.rotationQuaternion,
+                                preserveOrigin: obj.preserveOrigin,
+                                editorGroup: obj.editorGroup,
+                                editorName: obj.editorName
+                            });
+                        }
+                    }
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    sceneStore.update((old) => {
+                        return {
+                            robot: robot,
+                            objects: objects,
+                            map: map,
+                            mapWidth: scene.mapWidth,
+                            mapHeight: scene.mapHeight,
+                            physicsWorld: scene.physicsWorld,
+                            joints: scene.joints
+                        };
+                    });
+                    onM01ObservationProfileLoaded?.(loadedM01ObservationProfile);
+                } catch (error) {
+                    console.error('Failed to load scene archive:', error);
+                }
             }
         }
     }

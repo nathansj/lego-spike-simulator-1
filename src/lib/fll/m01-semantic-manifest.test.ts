@@ -19,6 +19,12 @@ describe('M01 Drone Survey semantic manifest', () => {
             ])
         );
         expect(manifest.fixtureBodyIds).not.toContain(manifest.bodyIds.mat);
+        expect(
+            manifest.missionModelBodySets.find(({ id }) => id === 'fixture-v2')?.bodyIds
+        ).toEqual(manifest.fixtureBodyIds.filter((id) => id !== manifest.bodyIds.equipment[0]));
+        expect(new Set(manifest.missionModelBodySets.flatMap(({ bodyIds }) => bodyIds))).toEqual(
+            new Set(manifest.bodyIds.missionModel)
+        );
     });
 
     it('keeps every geometry and calibration input explicitly unresolved', () => {

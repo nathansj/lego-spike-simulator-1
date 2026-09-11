@@ -27,9 +27,11 @@
             {/each}
         </ul>
         {#if profile}
-            <p class="mt-3 text-xs text-gray-600">
-                Profile: {profile.provenance.sourceVersion} ({profile.calibration.status})
-            </p>
+            <div class="mt-3 text-xs text-gray-600">
+                <p>Profile source: {profile.provenance.source}</p>
+                <p>Version: {profile.provenance.sourceVersion}; recorded: {profile.provenance.recordedOn}</p>
+                <p>Calibration status: {profile.calibration.status}</p>
+            </div>
         {/if}
         <p class="mt-3">
             <a href={score.source.rulebook.url} target="_blank" rel="noreferrer">

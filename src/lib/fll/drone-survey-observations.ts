@@ -1,25 +1,35 @@
 import type { DroneSurveyObservation } from '$lib/fll/drone-survey';
+import { M01_DRONE_SURVEY_SEMANTIC_MANIFEST } from '$lib/fll/m01-semantic-manifest';
 import type { PhysicsQuaternion, PhysicsVector } from '$lib/physics/types';
 import type { PhysicsTransform, PhysicsWorld } from '$lib/physics/world';
 
-export const DRONE_SURVEY_OBSERVATION_IDS = {
-    mat: '#mat',
-    equipment: ['#robot'],
-    drone: '45832-01-drone',
-    lidarMap: '45832-01-fixed-scenery',
-    scanMarker: '45832-01-red-base',
-    missionModel: [
-        '45832-01-fixed-scenery',
-        '45832-01-base',
-        '45832-01-red-base',
-        '45832-01-link-a',
-        '45832-01-drone',
-        '45832-01-link-b',
-        '45832-01-rail-a',
-        '45832-01-rail-b',
-        '45832-01-pilot-base'
-    ]
-} as const;
+export const DRONE_SURVEY_OBSERVATION_IDS = M01_DRONE_SURVEY_SEMANTIC_MANIFEST.bodyIds;
+
+export type DroneSurveyMissionModelBodySetId =
+    (typeof M01_DRONE_SURVEY_SEMANTIC_MANIFEST.missionModelBodySets)[number]['id'];
+
+export interface DroneSurveyObservationUnavailableEvidence {
+    status: 'unavailable';
+    reason: 'missing-required-semantic-bodies';
+    missingEquipmentBodyIds: string[];
+    missionModelBodySets: Array<{
+        id: DroneSurveyMissionModelBodySetId;
+        missingBodyIds: string[];
+    }>;
+}
+
+export class DroneSurveyObservationUnavailableError extends Error {
+    constructor(readonly evidence: DroneSurveyObservationUnavailableEvidence) {
+        const missingEquipment = evidence.missingEquipmentBodyIds.join(', ') || 'none';
+        const missionModelSets = evidence.missionModelBodySets
+            .map(({ id, missingBodyIds }) => `${id}: ${missingBodyIds.join(', ') || 'complete'}`)
+            .join('; ');
+        super(
+            `Drone Survey observation unavailable: missing equipment bodies: ${missingEquipment}; mission-model body sets: ${missionModelSets}`
+        );
+        this.name = 'DroneSurveyObservationUnavailableError';
+    }
+}
 
 export interface DroneSurveyAreaMm {
     minX: number;
@@ -156,13 +166,42 @@ function pointRelativeToReference(
     return rotate(conjugate(normalized(reference.rotation, 'mat rotation')), worldPoint);
 }
 
-function missionModelTouchesEquipment(world: PhysicsWorld): boolean {
-    return DRONE_SURVEY_OBSERVATION_IDS.missionModel.some(
-        (missionBodyId) =>
-            world.getBody(missionBodyId) !== undefined &&
-            DRONE_SURVEY_OBSERVATION_IDS.equipment.some((equipmentBodyId) =>
-                world.bodiesAreTouching(missionBodyId, equipmentBodyId)
-            )
+function requireMissionEquipmentBodies(world: PhysicsWorld): string[] {
+    const missingEquipmentBodyIds = DRONE_SURVEY_OBSERVATION_IDS.equipment.filter(
+        (bodyId) => world.getBody(bodyId) === undefined
+    );
+    const missionModelBodySets = M01_DRONE_SURVEY_SEMANTIC_MANIFEST.missionModelBodySets.map(
+        ({ id, bodyIds }) => ({
+            id,
+            missingBodyIds: bodyIds.filter((bodyId) => world.getBody(bodyId) === undefined)
+        })
+    );
+    const hasCompleteMissionModelBodySet = missionModelBodySets.some(
+        ({ missingBodyIds }) => missingBodyIds.length === 0
+    );
+
+    if (missingEquipmentBodyIds.length > 0 || !hasCompleteMissionModelBodySet) {
+        throw new DroneSurveyObservationUnavailableError({
+            status: 'unavailable',
+            reason: 'missing-required-semantic-bodies',
+            missingEquipmentBodyIds,
+            missionModelBodySets
+        });
+    }
+
+    return DRONE_SURVEY_OBSERVATION_IDS.missionModel.filter(
+        (bodyId) => world.getBody(bodyId) !== undefined
+    );
+}
+
+function missionModelTouchesEquipment(
+    world: PhysicsWorld,
+    missionModelBodyIds: readonly string[]
+): boolean {
+    return missionModelBodyIds.some((missionBodyId) =>
+        DRONE_SURVEY_OBSERVATION_IDS.equipment.some((equipmentBodyId) =>
+            world.bodiesAreTouching(missionBodyId, equipmentBodyId)
+        )
     );
 }
 
@@ -176,13 +215,11 @@ export function observeDroneSurvey(
     geometry: DroneSurveyObservationGeometry
 ): DroneSurveyObservation {
     validateGeometry(geometry);
+    const missionModelBodyIds = requireMissionEquipmentBodies(world);
     const mat = requireTransform(world, DRONE_SURVEY_OBSERVATION_IDS.mat);
     const lidarMap = requireTransform(world, DRONE_SURVEY_OBSERVATION_IDS.lidarMap);
     const scanMarker = requireTransform(world, DRONE_SURVEY_OBSERVATION_IDS.scanMarker);
     requireTransform(world, DRONE_SURVEY_OBSERVATION_IDS.drone);
-    for (const equipmentBodyId of DRONE_SURVEY_OBSERVATION_IDS.equipment) {
-        requireTransform(world, equipmentBodyId);
-    }
 
     const lidarRotation = relativeRotation(lidarMap, mat);
     const scanMarkerPoint = pointRelativeToReference(
@@ -206,6 +243,6 @@ export function observeDroneSurvey(
             scanMarkerPoint.x <= area.maxX + margin &&
             scanMarkerPoint.z >= area.minZ - margin &&
             scanMarkerPoint.z <= area.maxZ + margin,
-        missionModelTouchingEquipmentAtEnd: missionModelTouchesEquipment(world)
+        missionModelTouchingEquipmentAtEnd: missionModelTouchesEquipment(world, missionModelBodyIds)
     };
 }

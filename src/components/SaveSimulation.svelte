@@ -12,10 +12,17 @@
     import { sceneStore } from '$lib/spike/scene';
     import JSZip from 'jszip';
     import { sceneObjectArchiveEntry } from '$lib/spike/scene-archive';
+    import {
+        M01_OBSERVATION_PROFILE_ARCHIVE_ENTRY,
+        serializeM01ObservationProfileArchiveEntry
+    } from '$lib/spike/m01-observation-profile-archive';
     import { serializeSceneDefinition } from '$lib/spike/scene-schema';
+    import type { DroneSurveyObservationGeometryProfile } from '$lib/fll/drone-survey-observation-geometry-profile';
 
     export let modalOpen = false;
     export let hub: Hub;
+    /** Optional M01 profile saved in the dedicated archive entry when supplied by the parent. */
+    export let m01ObservationProfile: DroneSurveyObservationGeometryProfile | undefined = undefined;
 
     function saveRobot() {
         const robot = $componentStore.robotModel;
@@ -49,6 +56,12 @@
                 const content = saveMPD(obj.bricks);
                 zip.file(sceneObjectArchiveEntry(json.objects[index].id), content);
             }
+        }
+        if (m01ObservationProfile) {
+            zip.file(
+                M01_OBSERVATION_PROFILE_ARCHIVE_ENTRY,
+                serializeM01ObservationProfileArchiveEntry(m01ObservationProfile)
+            );
         }
         zip.file('scene.json', JSON.stringify(json));
         const sceneZip = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });

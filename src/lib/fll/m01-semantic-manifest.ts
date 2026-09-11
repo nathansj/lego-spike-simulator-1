@@ -36,6 +36,30 @@ export const M01_DRONE_SURVEY_SEMANTIC_MANIFEST = {
             '45832-01-pilot-base'
         ]
     },
+    missionModelBodySets: [
+        {
+            id: 'fixture-v2',
+            bodyIds: [
+                '45832-01-fixed-scenery',
+                '45832-01-base',
+                '45832-01-red-base',
+                '45832-01-link-a',
+                '45832-01-drone',
+                '45832-01-link-b'
+            ]
+        },
+        {
+            id: 'sidecar-v1',
+            bodyIds: [
+                '45832-01-fixed-scenery',
+                '45832-01-red-base',
+                '45832-01-rail-a',
+                '45832-01-drone',
+                '45832-01-rail-b',
+                '45832-01-pilot-base'
+            ]
+        }
+    ],
     fixtureBodyIds: [
         '#robot',
         '45832-01-fixed-scenery',

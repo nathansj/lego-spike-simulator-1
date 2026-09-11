@@ -294,13 +294,28 @@
         if (input) input.value = '';
     }
 
+    function applyM01ObservationProfile(
+        profile: DroneSurveyObservationGeometryProfile | undefined
+    ): void {
+        m01ObservationProfile = profile;
+        m01ObservationGeometry = profile?.geometry;
+        m01ProfileFileName = profile ? 'profile from saved scene' : undefined;
+        m01ProfileError = undefined;
+        m01ProfileStatus = profile
+            ? 'User-supplied M01 calibration profile restored from the saved scene.'
+            : 'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
+    }
+
     $: updateButtons($componentStore);
 </script>
 
 <PortConnector bind:modalOpen={connectorOpen} bind:hub />
 <WheelConnector bind:modalOpen={wheelsOpen} bind:hub />
-<SaveSimulation bind:modalOpen={saveOpen} bind:hub />
-<LoadScene bind:modalOpen={sceneOpen} />
+<SaveSimulation bind:modalOpen={saveOpen} bind:hub {m01ObservationProfile} />
+<LoadScene
+    bind:modalOpen={sceneOpen}
+    onM01ObservationProfileLoaded={applyM01ObservationProfile}
+/>
 <SimulatorSettings bind:modalOpen={settingsOpen} />
 {#if modalOpen}
     <div class="{split == 1 ? 'flex-1' : 'flex-[2]'} h-full overflow-hidden">
