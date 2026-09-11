@@ -2,6 +2,7 @@
     import type { DroneSurveyScore } from '$lib/fll/drone-survey';
 
     export let score: DroneSurveyScore | undefined;
+    export let observationGeometryAvailable = false;
 </script>
 
 <section
@@ -24,11 +25,18 @@
             {/each}
         </ul>
         <p class="mt-3">
-            <a href={score.source.url} target="_blank" rel="noreferrer">View scoring source</a>
+            <a href={score.source.rulebook.url} target="_blank" rel="noreferrer">
+                View scoring source (Rulebook p. {score.source.rulebook.page})
+            </a>
         </p>
     {:else}
         <p class="mt-2" role="status">
-            M01 score feedback is unavailable until match observations are evaluated.
+            {#if observationGeometryAvailable}
+                M01 score feedback is unavailable until the match is finished.
+            {:else}
+                M01 score feedback is unavailable because calibrated observation geometry is not
+                configured.
+            {/if}
         </p>
     {/if}
 </section>

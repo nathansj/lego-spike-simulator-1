@@ -1,7 +1,25 @@
 import { describe, expect, it } from 'vitest';
-import { scoreDroneSurvey } from '$lib/fll/drone-survey';
+import { DRONE_SURVEY_RULE_SOURCE, scoreDroneSurvey } from '$lib/fll/drone-survey';
 
 describe('Drone Survey scoring', () => {
+    it('pins the official M01 source page and applicable dated update', () => {
+        expect(DRONE_SURVEY_RULE_SOURCE).toMatchObject({
+            edition: 'BIOGLOW Founders Edition Challenge 2026-27',
+            rulebook: {
+                url: 'https://firstinspires.blob.core.windows.net/fll/challenge/2026-27/fll-challenge-bioglow-rgr.pdf',
+                page: 9
+            },
+            challengeUpdate: {
+                url: 'https://firstinspires.blob.core.windows.net/fll/challenge/2026-27/fll-challenge-bioglow-updates.pdf',
+                updated: '2026-09-02',
+                update: '01',
+                affectsM01: false
+            },
+            verifiedOn: '2026-09-10'
+        });
+        expect(DRONE_SURVEY_RULE_SOURCE.rulebook.revision).toContain('No displayed revision');
+    });
+
     it('awards 20 points when the drone is off the mat', () => {
         const result = scoreDroneSurvey({
             droneNoLongerTouchingMat: true,

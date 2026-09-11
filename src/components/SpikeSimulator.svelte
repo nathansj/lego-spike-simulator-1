@@ -30,12 +30,19 @@
     import { boundaryStore } from '$lib/spike/scene';
     import { Simulation, type PhysicsSensorPose } from '$lib/spike/simulation';
     import { createExplicitModelPhysics } from '$lib/physics/articulation-presets';
+    import { DroneSurveyMatchController } from '$lib/fll/match-controller';
+    import type { DroneSurveyScore } from '$lib/fll/drone-survey';
+    import {
+        observeDroneSurvey,
+        type DroneSurveyObservationGeometry
+    } from '$lib/fll/drone-survey-observations';
     import HubWidget from '$components/HubWidget.svelte';
     import RobotPreview from '$components/RobotPreview.svelte';
     import ScenePreview from '$components/ScenePreview.svelte';
     import ColourSensor from '$components/ColourSensor.svelte';
     import DistanceSensor from '$components/DistanceSensor.svelte';
     import ForceCheckSensor from '$components/ForceCheckSensor.svelte';
+    import DroneSurveyScoreFeedback from '$components/DroneSurveyScoreFeedback.svelte';
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
     import { onDestroy } from 'svelte';
@@ -50,6 +57,7 @@
     export let robotFocus = false;
     export let tilt = true;
     export let gridScale = 0;
+    export let m01ObservationGeometry: DroneSurveyObservationGeometry | undefined = undefined;
 
     let compiler = new WebGLCompiler();
 
@@ -63,6 +71,10 @@
     let vm: VM | undefined;
     let simulation: Simulation | undefined;
     let simulationGeneration = 0;
+    let droneSurveyMatchController = createDroneSurveyMatchController();
+    let droneSurveyScore: DroneSurveyScore | undefined;
+    let droneSurveyMatchState = droneSurveyMatchController.state;
+    let droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
     let hubImage = '0000000000000000000000000';
     let hubCentreButtonColour = '#ffffff';
     let compiledRobot: CompiledModel | undefined = $componentStore.robotModel
@@ -72,6 +84,48 @@
     let lastFrame: number = 0;
     let scene = copyScene($sceneStore);
     let id = genId();
+
+    function createDroneSurveyMatchController(): DroneSurveyMatchController {
+        return new DroneSurveyMatchController(() => {
+            if (!simulation || !m01ObservationGeometry) {
+                throw new Error('M01 score observations require calibrated geometry');
+            }
+            return observeDroneSurvey(simulation.physics, m01ObservationGeometry);
+        });
+    }
+
+    function clearDroneSurveyMatch(): void {
+        droneSurveyMatchController.reset();
+        droneSurveyScore = undefined;
+        droneSurveyMatchState = droneSurveyMatchController.state;
+        droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
+    }
+
+    function startDroneSurveyMatch(): void {
+        droneSurveyMatchController = createDroneSurveyMatchController();
+        droneSurveyMatchController.start();
+        droneSurveyScore = undefined;
+        droneSurveyMatchState = droneSurveyMatchController.state;
+        droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
+    }
+
+    function recordCompletedFixedSteps(steps: number): void {
+        if (steps === 0 || droneSurveyMatchController.state !== 'running' || !simulation) return;
+        droneSurveyMatchController.setElapsedFixedSimulationTime(
+            droneSurveyMatchController.elapsedFixedSimulationTimeSeconds +
+                steps * simulation.physics.fixedTimeStep
+        );
+        droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
+    }
+
+    function finishDroneSurveyMatch(): void {
+        if (droneSurveyMatchController.state !== 'running') return;
+        if (m01ObservationGeometry) {
+            droneSurveyScore = droneSurveyMatchController.finish();
+            droneSurveyMatchState = droneSurveyMatchController.state;
+            vm?.stop();
+        }
+    }
 
     const partNames: Record<string, string> = {
         '54696': 'motor',
@@ -284,7 +338,7 @@
             if (lastFrame > 0) {
                 const seconds = frameTime / 1000.0;
                 if (simulation) {
-                    simulation.advance(seconds);
+                    recordCompletedFixedSteps(simulation.advance(seconds));
                 } else {
                     vm.step(Math.min(seconds, 0.1), scene);
                 }
@@ -299,6 +353,7 @@
     async function startOrPauseSimulation(start: boolean) {
         const generation = ++simulationGeneration;
         if (start) {
+            clearDroneSurveyMatch();
             simulation?.dispose();
             simulation = undefined;
             if (vm) {
@@ -377,6 +432,7 @@
                     return pose ? [{ port: sensor.port, type: sensor.type, pose }] : [];
                 })
             );
+            startDroneSurveyMatch();
             lastFrame = 0;
             requestAnimationFrame(stepVM);
         } else {
@@ -387,6 +443,7 @@
                 hubImage = '0000000000000000000000000';
                 hubCentreButtonColour = '#ffffff';
             }
+            clearDroneSurveyMatch();
         }
     }
 
@@ -420,6 +477,7 @@
         simulationGeneration++;
         simulation?.dispose();
         simulation = undefined;
+        clearDroneSurveyMatch();
     });
 </script>
 
@@ -479,6 +537,26 @@
                         on:rightRelease={hubRightRelease}
                     />
                 </div>
+                {#if runSimulation}
+                    <div class="mx-3 mt-3 space-y-2">
+                        <p class="text-sm">
+                            M01 elapsed simulation time: {droneSurveyElapsedSeconds.toFixed(2)} seconds
+                        </p>
+                        <button
+                            type="button"
+                            class="rounded bg-blue-700 px-3 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-gray-400"
+                            on:click={finishDroneSurveyMatch}
+                            disabled={droneSurveyMatchState !== 'running' ||
+                                m01ObservationGeometry === undefined}
+                        >
+                            Finish M01 match
+                        </button>
+                        <DroneSurveyScoreFeedback
+                            score={droneSurveyScore}
+                            observationGeometryAvailable={m01ObservationGeometry !== undefined}
+                        />
+                    </div>
+                {/if}
                 {#if runSimulation}
                     {#each sensors as sensor}
                         {#if sensor.type == 'light'}
