@@ -46,7 +46,7 @@
     import DroneSurveyScoreFeedback from '$components/DroneSurveyScoreFeedback.svelte';
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
-    import { onDestroy } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
 
     export let runSimulation: boolean = false;
     export let workspace: Blockly.WorkspaceSvg | undefined;
@@ -269,6 +269,16 @@
         });
     }
 
+    function configureRobot(robot: Model): void {
+        compiledRobot = compiler.compileModel(robot, { rescale: false });
+        updateSceneRobot(robot, compiledRobot);
+        hub.reload();
+        connectPorts(hub, robot);
+        connectWheels(hub, robot);
+        loadWheelTransforms(hub, robot);
+        hub = hub;
+    }
+
     async function loadRobot() {
         const element = document.getElementById('load_robot');
         if (element) {
@@ -322,6 +332,11 @@
             }
         }
     }
+
+    onMount(() => {
+        const robot = $componentStore.robotModel;
+        if (robot) configureRobot(robot);
+    });
 
     function handleHubEvent(event: string, value: string) {
         if (event == 'screen') {

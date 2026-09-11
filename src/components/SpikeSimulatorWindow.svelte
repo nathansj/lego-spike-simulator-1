@@ -53,6 +53,7 @@
         'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
     let m01ProfileError: string | undefined;
     let m01ProfileLoadGeneration = 0;
+    let robotModelGeneration = 0;
 
     let cameraMenu = buildCameraMenu();
 
@@ -306,6 +307,10 @@
             : 'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
     }
 
+    function handleRobotModelLoaded(): void {
+        robotModelGeneration += 1;
+    }
+
     $: updateButtons($componentStore);
 </script>
 
@@ -315,6 +320,7 @@
 <LoadScene
     bind:modalOpen={sceneOpen}
     onM01ObservationProfileLoaded={applyM01ObservationProfile}
+    onRobotModelLoaded={handleRobotModelLoaded}
 />
 <SimulatorSettings bind:modalOpen={settingsOpen} />
 {#if modalOpen}
@@ -457,7 +463,7 @@
                     <p class="mt-1 text-red-700">Profile error: {m01ProfileError}</p>
                 {/if}
             </div>
-            {#key blocklyOpen}
+            {#key `${blocklyOpen}-${robotModelGeneration}`}
                 <div class="flex-1 w-full overflow-hidden">
                     <SpikeSimulator
                         bind:runSimulation

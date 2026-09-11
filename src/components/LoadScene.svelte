@@ -6,6 +6,7 @@
         loadModel,
         setStudioMode,
         componentStore,
+        setRobotFromContent,
         updateUnresolvedParts
     } from '$lib/ldraw/components';
     import { sceneStore, type SceneStore, type SceneObject } from '$lib/spike/scene';
@@ -19,6 +20,7 @@
         legacySceneObjectArchiveEntry,
         sceneObjectArchiveEntry
     } from '$lib/spike/scene-archive';
+    import { parseRobotArchiveEntry, ROBOT_ARCHIVE_ENTRY } from '$lib/spike/robot-archive';
     import {
         M01_OBSERVATION_PROFILE_ARCHIVE_ENTRY,
         parseM01ObservationProfileArchiveEntry,
@@ -36,6 +38,8 @@
     /** Called after a successful scene commit; `undefined` means this legacy archive has no profile. */
     export let onM01ObservationProfileLoaded: M01ObservationProfileLoadedCallback | undefined =
         undefined;
+    /** Called after an archived robot has been restored and the scene commit succeeds. */
+    export let onRobotModelLoaded: ((robot: Model) => void) | undefined = undefined;
     let numberOfLoads = 0;
     let mapFile: Blob | undefined = $sceneStore.map;
     let camera: 'top' | 'left' | 'right' | 'front' | 'back' = 'front';
@@ -473,6 +477,10 @@
                     }
                     const sceneDefContents = await jsonFile.async('string');
                     const scene = parseSceneDefinition(JSON.parse(sceneDefContents));
+                    const robotFile = zipFile.file(ROBOT_ARCHIVE_ENTRY);
+                    const robotContent = robotFile
+                        ? parseRobotArchiveEntry(await robotFile.async('string'))
+                        : undefined;
                     const profileFile = zipFile.file(M01_OBSERVATION_PROFILE_ARCHIVE_ENTRY);
                     const loadedM01ObservationProfile = profileFile
                         ? parseM01ObservationProfileArchiveEntry(await profileFile.async('string'))
@@ -484,13 +492,16 @@
                         map = await mapFile.async('blob');
                     }
 
+                    const loadedRobot = robotContent
+                        ? setRobotFromContent(robotContent)
+                        : $componentStore.robotModel;
                     const robot = {
                         id: scene.robot.id,
                         anchored: scene.robot.anchored,
                         position: scene.robot.position,
                         rotation: scene.robot.rotation,
                         name: scene.robot.name,
-                        bricks: $componentStore.robotModel,
+                        bricks: loadedRobot,
                         physics: scene.robot.physics,
                         drive: scene.robot.drive,
                         hinge: scene.robot.hinge,
@@ -551,6 +562,7 @@
                         };
                     });
                     onM01ObservationProfileLoaded?.(loadedM01ObservationProfile);
+                    if (robotContent && loadedRobot) onRobotModelLoaded?.(loadedRobot);
                 } catch (error) {
                     console.error('Failed to load scene archive:', error);
                 }

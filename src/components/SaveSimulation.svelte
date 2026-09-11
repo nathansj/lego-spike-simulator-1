@@ -12,6 +12,7 @@
     import { sceneStore } from '$lib/spike/scene';
     import JSZip from 'jszip';
     import { sceneObjectArchiveEntry } from '$lib/spike/scene-archive';
+    import { ROBOT_ARCHIVE_ENTRY } from '$lib/spike/robot-archive';
     import {
         M01_OBSERVATION_PROFILE_ARCHIVE_ENTRY,
         serializeM01ObservationProfileArchiveEntry
@@ -51,6 +52,10 @@
             zip.file('mat.jpg', scene.map);
         }
         const json = serializeSceneDefinition(scene);
+        const robot = $componentStore.robotModel;
+        if (robot) {
+            zip.file(ROBOT_ARCHIVE_ENTRY, saveMPD(robot));
+        }
         for (const [index, obj] of scene.objects.entries()) {
             if (obj.bricks) {
                 const content = saveMPD(obj.bricks);
