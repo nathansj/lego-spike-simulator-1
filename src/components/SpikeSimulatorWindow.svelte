@@ -5,6 +5,7 @@
     import MenuDropdown from '$components/MenuDropdown.svelte';
     import { type MenuAction } from '$components/Menu.svelte';
     import HubIcon from '$components/HubIcon.svelte';
+    import BioglowMissionReadiness from '$components/BioglowMissionReadiness.svelte';
     import SpikeSimulator from '$components/SpikeSimulator.svelte';
     import SaveSimulation from '$components/SaveSimulation.svelte';
     import SimulatorSettings from '$components/SimulatorSettings.svelte';
@@ -463,6 +464,7 @@
                     <p class="mt-1 text-red-700">Profile error: {m01ProfileError}</p>
                 {/if}
             </div>
+            <BioglowMissionReadiness />
             {#key `${blocklyOpen}-${robotModelGeneration}`}
                 <div class="flex-1 w-full overflow-hidden">
                     <SpikeSimulator

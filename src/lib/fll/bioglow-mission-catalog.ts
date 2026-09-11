@@ -22,6 +22,7 @@ export const BIOGLOW_SOURCE_URLS = {
 export type BioglowMissionId = `M${string}`;
 export type ReadinessStatus =
     | 'verified'
+    | 'located'
     | 'unverified'
     | 'unavailable'
     | 'implemented'
@@ -36,7 +37,7 @@ export interface MissionSource {
 
 export interface BioglowMissionReadiness {
     officialRuleSourceCoverage: {
-        status: Extract<ReadinessStatus, 'verified' | 'unverified'>;
+        status: Extract<ReadinessStatus, 'verified' | 'located' | 'unverified'>;
         detail: string;
         sources: readonly MissionSource[];
     };
@@ -78,11 +79,12 @@ const regionalMissionIndexSource: MissionSource = {
 function ruleCoverage(
     missionNumber: string,
     missionName: string,
-    extraSources: MissionSource[] = []
+    extraSources: MissionSource[] = [],
+    status: 'verified' | 'located' = 'located'
 ) {
     return {
-        status: 'verified' as const,
-        detail: 'The FIRST software scoresheet identifies this mission and its score criteria; the IET regional program partner mission index independently lists the mission model name.',
+        status,
+        detail: 'The FIRST software scoresheet lists this mission identity and score-sheet observables; the IET regional program partner mission index provides a supporting model reference. Full rulebook coverage is tracked separately.',
         sources: [
             scoreSheetSource(missionNumber, missionName),
             regionalMissionIndexSource,
@@ -133,7 +135,7 @@ export const BIOGLOW_MISSION_CATALOG = [
                     locator: 'page 9, Mission 01: Drone Survey',
                     verifiedOn: BIOGLOW_CATALOG_VERIFIED_ON
                 }
-            ]),
+            ], 'verified'),
             repositoryAssetPresence: sidecarAsset('01'),
             mechanics: sidecarMechanics,
             scoring: {

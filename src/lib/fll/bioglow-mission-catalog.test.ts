@@ -30,7 +30,9 @@ describe('BIOGLOW Founders Edition mission catalog', () => {
     it('pins a verified primary source and date for every mission', () => {
         for (const mission of BIOGLOW_MISSION_CATALOG) {
             const sources = mission.readiness.officialRuleSourceCoverage.sources;
-            expect(mission.readiness.officialRuleSourceCoverage.status).toBe('verified');
+            expect(mission.readiness.officialRuleSourceCoverage.status).toBe(
+                mission.id === 'M01' ? 'verified' : 'located'
+            );
             expect(sources).toEqual(
                 expect.arrayContaining([
                     expect.objectContaining({
