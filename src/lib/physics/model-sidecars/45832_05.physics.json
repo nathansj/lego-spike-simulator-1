@@ -1,6 +1,25 @@
 {
     "version": 1,
     "model": "45832_05.mpd",
+    "assetProvenance": {
+        "version": 1,
+        "sourceCollection": "FLL_Bioglow",
+        "sourcePath": "models/complete/ldraw/45832_05.mpd",
+        "sha256": "dfebaf6b9174d467dc4896f54a7dc881061bd320490d0605b6a40e7a0ad4c192",
+        "byteLength": 11312,
+        "lineCount": 119,
+        "mpd": {
+            "rootFile": "45832_05.ldr",
+            "embeddedFileCount": 4,
+            "rootType1ReferenceCount": 41
+        },
+        "verifiedOn": "2026-09-11",
+        "verification": {
+            "fileIdentity": "verified",
+            "geometryInterpretation": "unverified",
+            "mechanicsCalibration": "uncalibrated"
+        }
+    },
     "mission": "Reaching Roots",
     "mechanics": ["slider","travel-limit","trigger"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",

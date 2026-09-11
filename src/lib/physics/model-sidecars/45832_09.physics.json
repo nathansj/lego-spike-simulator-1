@@ -1,6 +1,25 @@
 {
     "version": 1,
     "model": "45832_09.mpd",
+    "assetProvenance": {
+        "version": 1,
+        "sourceCollection": "FLL_Bioglow",
+        "sourcePath": "models/complete/ldraw/45832_09.mpd",
+        "sha256": "d1b0eb818254f5f249e40763b1a03ab040ddb2a9d05946dc2966a686023c7ec6",
+        "byteLength": 15633,
+        "lineCount": 167,
+        "mpd": {
+            "rootFile": "45832_09.ldr",
+            "embeddedFileCount": 6,
+            "rootType1ReferenceCount": 67
+        },
+        "verifiedOn": "2026-09-11",
+        "verification": {
+            "fileIdentity": "verified",
+            "geometryInterpretation": "unverified",
+            "mechanicsCalibration": "uncalibrated"
+        }
+    },
     "mission": "Research Platform",
     "mechanics": ["slider","latch","release","trigger"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",

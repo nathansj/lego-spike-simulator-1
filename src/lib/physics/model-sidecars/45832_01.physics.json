@@ -1,6 +1,25 @@
 {
     "version": 1,
     "model": "45832_01.mpd",
+    "assetProvenance": {
+        "version": 1,
+        "sourceCollection": "FLL_Bioglow",
+        "sourcePath": "models/complete/ldraw/45832_01.mpd",
+        "sha256": "8ea98ffe2d456024faca23e6715b8145c4e6c2c1d0f23d3c90f600b13201da09",
+        "byteLength": 20266,
+        "lineCount": 273,
+        "mpd": {
+            "rootFile": "M01.io",
+            "embeddedFileCount": 15,
+            "rootType1ReferenceCount": 9
+        },
+        "verifiedOn": "2026-09-11",
+        "verification": {
+            "fileIdentity": "verified",
+            "geometryInterpretation": "unverified",
+            "mechanicsCalibration": "uncalibrated"
+        }
+    },
     "mission": "Drone Survey",
     "mechanics": ["slider", "release", "trigger"],
     "tuningStatus": "red base is a damped planar slider; only external contact should translate it; drone carriage remains rail-bound",

@@ -1,6 +1,25 @@
 {
     "version": 1,
     "model": "45832_11.mpd",
+    "assetProvenance": {
+        "version": 1,
+        "sourceCollection": "FLL_Bioglow",
+        "sourcePath": "models/complete/ldraw/45832_11.mpd",
+        "sha256": "05d2ffbeec347d479654561688f9890048fe6db7fe1ca8f44adb476292026cab",
+        "byteLength": 20011,
+        "lineCount": 268,
+        "mpd": {
+            "rootFile": "45832_11.ldr",
+            "embeddedFileCount": 14,
+            "rootType1ReferenceCount": 47
+        },
+        "verifiedOn": "2026-09-11",
+        "verification": {
+            "fileIdentity": "verified",
+            "geometryInterpretation": "unverified",
+            "mechanicsCalibration": "uncalibrated"
+        }
+    },
     "mission": "Window to the Past",
     "mechanics": ["hinge","latch","trigger"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",

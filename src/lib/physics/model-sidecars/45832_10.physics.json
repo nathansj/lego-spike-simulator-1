@@ -1,6 +1,25 @@
 {
     "version": 1,
     "model": "45832_10.mpd",
+    "assetProvenance": {
+        "version": 1,
+        "sourceCollection": "FLL_Bioglow",
+        "sourcePath": "models/complete/ldraw/45832_10.mpd",
+        "sha256": "f28ebf7cc312942cfb9004fd99a456304702340cdd529d4450a23a2fa080bf7c",
+        "byteLength": 21715,
+        "lineCount": 293,
+        "mpd": {
+            "rootFile": "45832_10.ldr",
+            "embeddedFileCount": 15,
+            "rootType1ReferenceCount": 28
+        },
+        "verifiedOn": "2026-09-11",
+        "verification": {
+            "fileIdentity": "verified",
+            "geometryInterpretation": "unverified",
+            "mechanicsCalibration": "uncalibrated"
+        }
+    },
     "mission": "Fragile Microhabitats",
     "mechanics": ["fixed","preserve-position","no-contact"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
