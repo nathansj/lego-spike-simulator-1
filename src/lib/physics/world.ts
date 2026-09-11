@@ -164,6 +164,31 @@ export class PhysicsWorld {
         return contacts;
     }
 
+    bodiesAreTouching(firstId: string, secondId: string): boolean {
+        const first = this.getBody(firstId);
+        const second = this.getBody(secondId);
+        if (!first || !second) return false;
+        for (let firstIndex = 0; firstIndex < first.numColliders(); firstIndex++) {
+            const firstCollider = first.collider(firstIndex);
+            for (let secondIndex = 0; secondIndex < second.numColliders(); secondIndex++) {
+                const secondCollider = second.collider(secondIndex);
+                if (this.world.intersectionPair(firstCollider, secondCollider)) return true;
+                let touching = false;
+                this.world.contactPair(firstCollider, secondCollider, (manifold) => {
+                    for (
+                        let contactIndex = 0;
+                        contactIndex < manifold.numContacts();
+                        contactIndex++
+                    ) {
+                        if (manifold.contactDist(contactIndex) <= 0) touching = true;
+                    }
+                });
+                if (touching) return true;
+            }
+        }
+        return false;
+    }
+
     addWorldHinge(id: string, axis: HingeAxis): void {
         this.addHinge({
             id: `hinge-${id}`,
