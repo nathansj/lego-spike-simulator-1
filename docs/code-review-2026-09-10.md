@@ -134,7 +134,7 @@ two-wheel/four-wheel configurations, gearing, and signs.
 | M02–M13 mechanics are placeholders                       | Sidecars contain one fixed segment and no joints; e.g. `src/lib/physics/model-sidecars/45832_03.physics.json:14` | Per-mechanism actuation, limits, release, and reset tests plus measured calibration        |
 | Latch threshold is contact-based, not general joint load | `src/lib/physics/world.ts:357`; review probe's 1 N latch remained attached under sustained 100 N applied force   | Agreed release-load semantics; sustained pull and transmitted/distributed load tests       |
 | IMU capabilities are incomplete                          | Exposed blocks in `src/lib/blockly/toolbox.ts:315`; pitch/roll zeroes in `src/lib/spike/vm.ts:1756`              | Capability matrix, supported sensor tests, and explicit diagnostics for unsupported blocks |
-| Full match/scoring layer is absent                       | `src/lib/spike/scene.ts:23` describes physical objects; no dedicated scoring/match module found                  | Versioned official rules, condition-level score tests, match lifecycle, reset              |
+| Full match/scoring layer is incomplete                   | M01 now has a pure scorer in `src/lib/fll/drone-survey.ts`; match lifecycle and M02–M15 scoring remain absent    | Versioned rules for every mission, condition-level score tests, match lifecycle, reset     |
 | Readiness documentation overstates scope                 | `PHYSICS_IMPLEMENTATION_PLAN.md:3` calls its physics pass complete                                               | Distinguish that completed pass from complete BIOGLOW physics and mission coverage         |
 
 The official regional resource index lists 15 missions, including M14 Seeds of
@@ -163,3 +163,9 @@ new cancellation test verifies that a timed motor stops immediately and cannot
 resume after VM cancellation. Remaining review findings are tracked by the team
 roadmap; the agent roster and milestone acceptance criteria are in [the team
 guide](./agent-team.md).
+
+The first M01 Drone Survey scorer is now implemented with condition-level tests for
+the 20-point base result, 10-point bonus, bonus dependency, and equipment-contact
+constraint. It consumes explicit observations and does not infer mission state from
+rendered geometry. Wiring those observations to the M01 mechanism and match
+lifecycle remains part of Milestone 1.

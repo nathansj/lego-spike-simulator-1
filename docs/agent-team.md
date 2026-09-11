@@ -130,7 +130,8 @@ implementation. Record any unsourced dynamics as assumptions.
 
 -   Assemble a verified field placement and a configurable reference robot.
 -   Execute a block program that physically interacts with the mechanism.
--   Implement source-backed scoring observations and an explanation panel.
+-   Wire the source-backed M01 scorer to mechanism observations and an explanation
+    panel; its pure rule contract is already in `src/lib/fll/drone-survey.ts`.
 -   Test success, failure, boundary conditions, repeated runs, and reset.
 -   Verify kinematic expectations, repeatability, and parameter sensitivity with
     the virtual reference. Add measured trials when available; do not require
