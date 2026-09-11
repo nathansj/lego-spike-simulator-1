@@ -42,7 +42,7 @@
         if (source.title.includes('Scoresheet')) return 'Scoresheet';
         if (source.title.includes('Rulebook')) return 'Rulebook';
         if (source.title.includes('Updates')) return 'Updates';
-        return 'Mission index';
+        return 'IET index';
     }
 </script>
 
@@ -57,16 +57,19 @@
 
         <div class="border-t border-sky-200 px-3 py-3 text-sm">
             <p class="text-sky-950">
-                {BIOGLOW_FOUNDERS_EDITION}. Listed mission references checked {BIOGLOW_CATALOG_VERIFIED_ON}; rulebook coverage varies by mission.
+                {BIOGLOW_FOUNDERS_EDITION}. Listed mission references checked {BIOGLOW_CATALOG_VERIFIED_ON};
+                rulebook coverage varies by mission.
             </p>
             <p class="mt-1 text-xs text-sky-900">
-                Readiness describes this simulator checkout, not real-world field calibration or official-scoring certification.
+                Readiness describes this simulator checkout, not real-world field calibration or
+                official-scoring certification.
             </p>
 
             <div class="mt-3 overflow-x-auto rounded border border-sky-200 bg-white">
                 <table class="w-full min-w-[48rem] text-left text-xs">
                     <caption class="sr-only">
-                        BIOGLOW mission scoring, mechanics, asset readiness, and supporting references
+                        BIOGLOW mission scoring, mechanics, asset readiness, and supporting
+                        references
                     </caption>
                     <thead class="bg-sky-100 text-sky-950">
                         <tr>
@@ -84,7 +87,8 @@
                                     scope="row"
                                     class="whitespace-nowrap px-3 py-2 font-medium text-gray-900"
                                 >
-                                    {mission.id} {mission.name}
+                                    {mission.id}
+                                    {mission.name}
                                 </th>
                                 <td class="px-3 py-2">
                                     <span
@@ -92,7 +96,9 @@
                                     >
                                         {statusLabel(mission.readiness.scoring.status)}
                                     </span>
-                                    <p class="mt-1 text-gray-600">{mission.readiness.scoring.detail}</p>
+                                    <p class="mt-1 text-gray-600">
+                                        {mission.readiness.scoring.detail}
+                                    </p>
                                 </td>
                                 <td class="px-3 py-2">
                                     <span
@@ -100,7 +106,9 @@
                                     >
                                         {statusLabel(mission.readiness.mechanics.status)}
                                     </span>
-                                    <p class="mt-1 text-gray-600">{mission.readiness.mechanics.detail}</p>
+                                    <p class="mt-1 text-gray-600">
+                                        {mission.readiness.mechanics.detail}
+                                    </p>
                                 </td>
                                 <td class="px-3 py-2">
                                     <span
@@ -110,9 +118,19 @@
                                             mission.readiness.repositoryAssetPresence.status
                                         )}
                                     </span>
-                                    <p class="mt-1 text-gray-600">{mission.readiness.repositoryAssetPresence.detail}</p>
+                                    <p class="mt-1 text-gray-600">
+                                        {mission.readiness.repositoryAssetPresence.detail}
+                                    </p>
                                 </td>
                                 <td class="px-3 py-2">
+                                    <p class="mb-2 text-gray-600">
+                                        <strong
+                                            >{statusLabel(
+                                                mission.readiness.officialRuleSourceCoverage.status
+                                            )}:</strong
+                                        >
+                                        {mission.readiness.officialRuleSourceCoverage.detail}
+                                    </p>
                                     <ul
                                         class="space-y-1"
                                         aria-label={`${mission.id} supporting references`}
@@ -127,7 +145,9 @@
                                                 >
                                                     {sourceLabel(source)}
                                                 </a>
-                                                <p class="text-gray-600">{source.locator}; checked {source.verifiedOn}</p>
+                                                <p class="text-gray-600">
+                                                    {source.locator}; checked {source.verifiedOn}
+                                                </p>
                                             </li>
                                         {/each}
                                     </ul>

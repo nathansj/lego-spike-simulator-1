@@ -128,14 +128,19 @@ export const BIOGLOW_MISSION_CATALOG = [
         id: 'M01',
         name: 'Drone Survey',
         readiness: {
-            officialRuleSourceCoverage: ruleCoverage('01', 'Drone Survey', [
-                {
-                    title: 'FIRST LEGO League Challenge BIOGLOW Robot Game Rulebook',
-                    url: BIOGLOW_SOURCE_URLS.rulebook,
-                    locator: 'page 9, Mission 01: Drone Survey',
-                    verifiedOn: BIOGLOW_CATALOG_VERIFIED_ON
-                }
-            ], 'verified'),
+            officialRuleSourceCoverage: ruleCoverage(
+                '01',
+                'Drone Survey',
+                [
+                    {
+                        title: 'FIRST LEGO League Challenge BIOGLOW Robot Game Rulebook',
+                        url: BIOGLOW_SOURCE_URLS.rulebook,
+                        locator: 'page 9, Mission 01: Drone Survey',
+                        verifiedOn: BIOGLOW_CATALOG_VERIFIED_ON
+                    }
+                ],
+                'verified'
+            ),
             repositoryAssetPresence: sidecarAsset('01'),
             mechanics: sidecarMechanics,
             scoring: {
