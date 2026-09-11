@@ -22,17 +22,18 @@ still required to admit simulator mechanics.
 -   `src/lib/physics/model-sidecars/45832_02.physics.json` is a repository sidecar,
     version 1. It is not an official source or a calibrated model.
 
-The source record identifies official M02 model instructions, but no admitted
-model asset, field-setup extraction, measurement record, or calibration trial is
-present in this checkout. Consequently, no source-backed simulator geometry or
-mechanics are currently available.
+The source record identifies official M02 model instructions, and the repository
+now records a source-backed scoring contract plus a fail-closed observation
+boundary. No admitted model asset, field-setup extraction, measurement record, or
+calibration trial is present in this checkout. Consequently, no source-backed
+simulator geometry or mechanics are currently available.
 
 ## Source-backed model facts
 
 | Fact                                                                        | Evidence                                                                       | Status     |
 | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------ | ---------- |
 | Official mission identity and title                                         | FIRST software scoresheet mission entry and supporting regional mission index. | Located    |
-| Official model/build composition                                            | No official M02 build or model source is recorded.                             | Unverified |
+| Official model/build composition                                            | Official M02 building instructions, Build Bag 3, pages 1-15.                   | Located    |
 | Field placement, orientation, and registration                              | No official M02 field-setup source is recorded.                                | Unverified |
 | Moving members, latch, and release behavior                                 | No official mechanics source or measurement record is recorded.                | Unverified |
 | Geometry, dimensions, masses, friction, forces, travel, anchors, and limits | No source or measurement record is recorded.                                   | Unverified |
@@ -144,13 +145,13 @@ separate source-backed M02 observation contract is accepted.
 
 ## Open record
 
-| Required record                          | Current state                           |
-| ---------------------------------------- | --------------------------------------- |
-| Official source/version register         | Missing                                 |
-| Permitted M02 model asset and provenance | Missing                                 |
-| Asset import and field placement record  | Missing                                 |
-| Geometry partition and stable IDs        | Missing                                 |
-| Joint/latch/release definition           | Missing                                 |
-| Collider plan and contact verification   | Missing                                 |
-| Reset/repeatability evidence             | Missing                                 |
-| M02 scoring observation contract         | Missing; out of scope for this document |
+| Required record                          | Current state                                                                                                                                |
+| ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Official source/version register         | Missing                                                                                                                                      |
+| Permitted M02 model asset and provenance | Missing                                                                                                                                      |
+| Asset import and field placement record  | Missing                                                                                                                                      |
+| Geometry partition and stable IDs        | Missing                                                                                                                                      |
+| Joint/latch/release definition           | Missing                                                                                                                                      |
+| Collider plan and contact verification   | Missing                                                                                                                                      |
+| Reset/repeatability evidence             | Missing                                                                                                                                      |
+| M02 scoring observation contract         | Present in `src/lib/fll/m02-exploding-seeds-observation-contract.ts`; executable scorer and fail-closed input boundary are separate modules. | Accepted, geometry unverified |
