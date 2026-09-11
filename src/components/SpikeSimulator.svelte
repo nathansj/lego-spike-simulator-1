@@ -127,6 +127,10 @@
         }
     }
 
+    $: if (!m01ObservationGeometry && droneSurveyMatchController.state !== 'idle') {
+        clearDroneSurveyMatch();
+    }
+
     const partNames: Record<string, string> = {
         '54696': 'motor',
         '54696p01': 'motor',

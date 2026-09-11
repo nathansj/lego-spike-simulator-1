@@ -11,6 +11,8 @@
     import PortConnector from '$components/PortConnector.svelte';
     import WheelConnector from '$components/WheelConnector.svelte';
     import LoadScene from '$components/LoadScene.svelte';
+    import type { DroneSurveyObservationGeometry } from '$lib/fll/drone-survey-observations';
+    import { parseDroneSurveyObservationGeometryProfile } from '$lib/fll/drone-survey-observation-geometry-profile';
     import { type LDrawStore, componentStore } from '$lib/ldraw/components';
     import { Hub, codeStore } from '$lib/spike/vm';
     import {
@@ -41,6 +43,12 @@
     let robotFocus = false;
     let tilt = true;
     let gridScale = 0;
+    let m01ObservationGeometry: DroneSurveyObservationGeometry | undefined;
+    let m01ProfileFileName: string | undefined;
+    let m01ProfileStatus =
+        'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
+    let m01ProfileError: string | undefined;
+    let m01ProfileLoadGeneration = 0;
 
     let cameraMenu = buildCameraMenu();
 
@@ -236,6 +244,47 @@
         settingsOpen = true;
     }
 
+    async function loadM01ObservationProfile(event: Event): Promise<void> {
+        const loadGeneration = ++m01ProfileLoadGeneration;
+        const input = event.currentTarget as HTMLInputElement;
+        const file = input.files?.[0];
+        m01ObservationGeometry = undefined;
+        m01ProfileFileName = undefined;
+        m01ProfileError = undefined;
+
+        if (!file) {
+            m01ProfileStatus =
+                'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
+            return;
+        }
+
+        try {
+            const profileText = await file.text();
+            if (loadGeneration !== m01ProfileLoadGeneration) return;
+            const profile = parseDroneSurveyObservationGeometryProfile(profileText);
+            m01ObservationGeometry = profile.geometry;
+            m01ProfileFileName = file.name;
+            m01ProfileStatus = `User-supplied M01 calibration profile loaded: ${file.name}.`;
+        } catch (error) {
+            if (loadGeneration !== m01ProfileLoadGeneration) return;
+            m01ProfileError =
+                error instanceof Error
+                    ? error.message
+                    : 'The calibration profile could not be read.';
+            m01ProfileStatus =
+                'M01 scoring is disabled because the selected calibration profile is invalid.';
+        }
+    }
+
+    function clearM01ObservationProfile(): void {
+        m01ProfileLoadGeneration++;
+        m01ObservationGeometry = undefined;
+        m01ProfileFileName = undefined;
+        m01ProfileError = undefined;
+        m01ProfileStatus =
+            'M01 scoring is disabled until a user-supplied calibration profile is loaded.';
+    }
+
     $: updateButtons($componentStore);
 </script>
 
@@ -307,6 +356,28 @@
                     class="bg-white rounded-2xl"
                 />
                 <Tooltip triggeredBy="#camera_config_button">Set camera for simulator</Tooltip>
+                <div
+                    class="flex items-center gap-2 rounded border border-amber-300 bg-amber-50 px-2 py-1 text-sm"
+                >
+                    <label for="m01-calibration-profile" class="font-medium">
+                        M01 user-supplied calibration
+                    </label>
+                    <input
+                        id="m01-calibration-profile"
+                        type="file"
+                        accept=".json,application/json"
+                        aria-describedby="m01-calibration-profile-status"
+                        on:change={loadM01ObservationProfile}
+                    />
+                    <Button
+                        color="light"
+                        size="xs"
+                        on:click={clearM01ObservationProfile}
+                        disabled={m01ObservationGeometry === undefined}
+                    >
+                        Clear calibration
+                    </Button>
+                </div>
                 {#if runSimulation}
                     <Button color="light" class="!p-2" on:click={stopRobot}>
                         <div class="w-8 h-8 flex flex-col justify-center items-center">
@@ -346,6 +417,22 @@
                     <Tooltip>Close the simulation window</Tooltip>
                 {/if}
             </div>
+            <div
+                id="m01-calibration-profile-status"
+                class="border-b border-amber-200 bg-amber-50 px-3 py-2 text-sm"
+                role={m01ProfileError ? 'alert' : 'status'}
+                aria-live="polite"
+            >
+                <p>{m01ProfileStatus}</p>
+                {#if m01ProfileFileName}
+                    <p class="mt-1">
+                        Scoring uses this calibration only; it is not an official field profile.
+                    </p>
+                {/if}
+                {#if m01ProfileError}
+                    <p class="mt-1 text-red-700">Profile error: {m01ProfileError}</p>
+                {/if}
+            </div>
             {#key blocklyOpen}
                 <div class="flex-1 w-full overflow-hidden">
                     <SpikeSimulator
@@ -359,6 +446,7 @@
                         {tilt}
                         {robotFocus}
                         {gridScale}
+                        {m01ObservationGeometry}
                     />
                 </div>
             {/key}
