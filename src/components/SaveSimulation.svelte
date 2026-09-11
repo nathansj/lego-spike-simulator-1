@@ -25,20 +25,22 @@
     /** Optional M01 profile saved in the dedicated archive entry when supplied by the parent. */
     export let m01ObservationProfile: DroneSurveyObservationGeometryProfile | undefined = undefined;
 
+    function syncRobotConnections(robot: NonNullable<typeof $componentStore.robotModel>): void {
+        clearPorts(robot);
+        for (const port of allPorts) {
+            const id = hub.ports[port].id();
+            if (id !== 'none') setPort(robot, 'main', port, id);
+        }
+        for (const wheel of hub.wheels) {
+            setPort(robot, 'main', wheel.port, wheel.id);
+            setGearRatio(robot, wheel.gearing, wheel.id);
+        }
+    }
+
     function saveRobot() {
         const robot = $componentStore.robotModel;
         if (robot) {
-            clearPorts(robot);
-            for (const port of allPorts) {
-                const id = hub.ports[port].id();
-                if (id !== 'none') {
-                    setPort(robot, 'main', port, id);
-                }
-            }
-            for (const wheel of hub.wheels) {
-                setPort(robot, 'main', wheel.port, wheel.id);
-                setGearRatio(robot, wheel.gearing, wheel.id);
-            }
+            syncRobotConnections(robot);
             const content = saveMPD(robot);
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
             FileSaver.saveAs(blob, 'robot.mpd');
@@ -48,11 +50,12 @@
     async function saveScene() {
         const scene = $sceneStore;
         const zip = new JSZip();
+        const robot = $componentStore.robotModel;
+        if (robot) syncRobotConnections(robot);
         if (scene.map) {
             zip.file('mat.jpg', scene.map);
         }
         const json = serializeSceneDefinition(scene);
-        const robot = $componentStore.robotModel;
         if (robot) {
             zip.file(ROBOT_ARCHIVE_ENTRY, saveMPD(robot));
         }

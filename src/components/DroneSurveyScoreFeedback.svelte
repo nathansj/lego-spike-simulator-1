@@ -43,8 +43,7 @@
             {#if observationGeometryAvailable}
                 M01 score feedback is unavailable until the match is finished.
             {:else}
-                M01 score feedback is unavailable because calibrated observation geometry is not
-                configured.
+                M01 score feedback is unavailable because observation geometry is not configured.
             {/if}
         </p>
     {/if}

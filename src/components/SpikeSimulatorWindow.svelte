@@ -368,7 +368,7 @@
                     </div>
                 </Button>
                 <Tooltip
-                    >Save the robot with ports and wheels, or the scene (without the robot)</Tooltip
+                    >Save the robot with ports and wheels, or the complete scene archive</Tooltip
                 >
                 <Button color="light" class="!p-2" on:click={openSettings}>
                     <CogOutline class="w-8 h-8" />
