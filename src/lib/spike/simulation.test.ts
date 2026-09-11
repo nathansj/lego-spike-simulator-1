@@ -80,7 +80,12 @@ function drivenHub(): Hub {
 
 describe('SPIKE VM motor durations', () => {
     beforeEach(() => {
-        vi.stubGlobal('Audio', class {});
+        vi.stubGlobal(
+            'Audio',
+            class {
+                pause() {}
+            }
+        );
         vi.stubGlobal(
             'AudioContext',
             class {
@@ -111,6 +116,34 @@ describe('SPIKE VM motor durations', () => {
     it('keeps seconds and rotations as direct duration units', () => {
         expect(runMotorFor('seconds', 0.2, 'counterclockwise')).toBeCloseTo(0.2, 2);
         expect(runMotorFor('rotations', 1, 'clockwise')).toBeCloseTo(60 / 101.25, 2);
+    });
+
+    it('stops a timed motor when its VM is cancelled', () => {
+        const hub = new Hub();
+        hub.ports.A = new Port('motor');
+        hub.ports.A.motor = new Motor(1);
+        const action = new ActionStatement('flippermotor_motorTurnForDirection', 'motor', [
+            new Value('literal', '', 'A'),
+            new Value('literal', '', 'clockwise'),
+            new Value('literal', '', '2'),
+            new Value('literal', '', 'seconds')
+        ]);
+        const event = new EventStatement(
+            'flipperevents_whenProgramStarts',
+            'start',
+            [],
+            new StatementBlock([action])
+        );
+        const vm = new SpikeVM('robot', hub, {}, new Map([['start', event]]), new Map(), undefined);
+
+        vm.start();
+        expect(hub.ports.A.motor.on).toBe(true);
+        vm.step(0.1, emptyScene);
+        vm.stop();
+
+        expect(hub.ports.A.motor.on).toBe(false);
+        vm.step(3, emptyScene);
+        expect(hub.ports.A.motor.on).toBe(false);
     });
 });
 

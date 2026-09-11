@@ -157,5 +157,9 @@ links, and Markdown formatting pass validation. Named-agent discovery has not
 been smoke-tested in a fresh session. The installed CLI does not support
 `--strict-config` with `features list`, so that command provided no validation.
 
-No application defects are fixed by this review. The agent roster and milestone
-acceptance criteria are in [the team guide](./agent-team.md).
+The follow-up implementation has fixed the degree-duration defect, frame-batching
+gyro feedback, scene archive identity collision, and VM cancellation cleanup. The
+new cancellation test verifies that a timed motor stops immediately and cannot
+resume after VM cancellation. Remaining review findings are tracked by the team
+roadmap; the agent roster and milestone acceptance criteria are in [the team
+guide](./agent-team.md).

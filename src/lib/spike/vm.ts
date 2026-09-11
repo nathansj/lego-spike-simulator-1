@@ -60,6 +60,10 @@ class VMTask {
     }
 
     run() {}
+
+    cancel() {
+        this.complete = true;
+    }
 }
 
 class TaskProcessor {
@@ -96,6 +100,14 @@ class TaskProcessor {
             }
         }
     }
+
+    cancel() {
+        this.task?.cancel();
+        this.thread?.return(undefined);
+        this.thread = undefined;
+        this.task = undefined;
+        this.complete = true;
+    }
 }
 
 class CompleteTask extends VMTask {
@@ -128,6 +140,11 @@ class CompleteAllTask extends VMTask {
         });
         const completed = this.threads.filter((t) => t.complete);
         this.complete = completed.length == this.threads.length;
+    }
+
+    override cancel() {
+        this.threads.forEach((thread) => thread.cancel());
+        this.complete = true;
     }
 }
 
@@ -663,8 +680,11 @@ export class ActionStatement extends Statement {
                 percent: percent,
                 ignorePresetSpeed: ignorePresetSpeed
             });
-            yield thread.vm.sleep(duration);
-            attachment.motor!.stopMotor();
+            try {
+                yield thread.vm.sleep(duration);
+            } finally {
+                attachment.motor!.stopMotor();
+            }
         }
     }
 
@@ -2723,6 +2743,8 @@ export class Thread {
             return;
         }
         this.state = 'stopped';
+        this.thread?.cancel();
+        this.thread = undefined;
     }
 
     pause() {
