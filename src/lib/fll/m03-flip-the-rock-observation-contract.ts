@@ -50,20 +50,23 @@ export const M03_FLIP_THE_ROCK_OBSERVATION_CONTRACT = {
         }
     },
     scoring: {
-        status: 'point-values-unresolved',
+        status: 'source-backed',
         conditions: [
             {
                 id: 'research-flag-down',
-                observable: 'researchFlagDown === true'
+                observable: 'researchFlagDown === true',
+                points: 20,
+                source: 'rulebook, Mission 03: Flip the Rock'
             },
             {
                 id: 'rock-returned-bonus',
-                observable:
-                    'researchFlagDown === true && rockReturnedToOriginalPosition === true'
+                observable: 'researchFlagDown === true && rockReturnedToOriginalPosition === true',
+                points: 10,
+                source: 'rulebook, Mission 03: Flip the Rock'
             }
         ],
         unverified:
-            'Point values, stable model identities, visible-state tolerances, and global match eligibility remain unresolved.'
+            'Stable model identities, visible-state tolerances, and global match eligibility remain unresolved.'
     },
     reset: {
         required: true,

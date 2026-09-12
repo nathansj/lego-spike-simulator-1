@@ -17,12 +17,12 @@ describe('M03 Flip the Rock observation contract', () => {
         });
     });
 
-    it('does not invent point values or physics inputs', () => {
+    it('records source-backed point values without adding physics inputs', () => {
         const contract = M03_FLIP_THE_ROCK_OBSERVATION_CONTRACT;
 
-        expect(contract.scoring.status).toBe('point-values-unresolved');
-        expect(contract.scoring.conditions).toHaveLength(2);
-        expect(contract.scoring.unverified).toContain('Point values');
+        expect(contract.scoring.status).toBe('source-backed');
+        expect(contract.scoring.conditions.map(({ points }) => points)).toEqual([20, 10]);
+        expect(contract.scoring.unverified).toContain('Stable model identities');
         expect(contract.reset.unresolved).toBe(true);
     });
 });
