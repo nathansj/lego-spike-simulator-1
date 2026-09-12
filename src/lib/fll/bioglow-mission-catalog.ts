@@ -171,7 +171,10 @@ export const BIOGLOW_MISSION_CATALOG = [
             officialRuleSourceCoverage: ruleCoverage('03', 'Flip the Rock'),
             repositoryAssetPresence: sidecarAsset('03'),
             mechanics: sidecarMechanics,
-            scoring: unimplementedScoring
+            scoring: {
+                status: 'not-implemented',
+                detail: 'An M03 end-of-match observation contract records the flag and conditional rock-reset states; point values, physics observation, and global match eligibility are not connected.'
+            }
         }
     },
     {
