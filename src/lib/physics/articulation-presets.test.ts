@@ -26,7 +26,10 @@ function subpart(id: number, x: number, z: number): Subpart {
 
 const realModelPath =
     '/Users/Sheldon/data/projects/sourcecode/FLL_Bioglow/models/complete/ldraw/45832_01.mpd';
+const realM02ModelPath =
+    '/Users/Sheldon/data/projects/sourcecode/FLL_Bioglow/models/complete/ldraw/45832_02.mpd';
 const sidecar = findBundledModelPhysics('45832_01.mpd')!;
+const sidecar02 = findBundledModelPhysics('45832_02.mpd')!;
 
 describe('model physics articulation', () => {
     it('splits fixed scenery, red base, and both moving links', () => {
@@ -147,6 +150,27 @@ describe('model physics articulation', () => {
         expect(definition?.segments.at(-1)?.editorName).toBe('Unassigned root references');
         expect(new Set(definition?.segments.map((segment) => segment.editorGroup)).size).toBe(5);
         expect(definition?.joints).toEqual([]);
+    });
+
+    it.skipIf(!existsSync(realM02ModelPath))('matches the supplied M02 MPD groups', () => {
+        setStudioMode(true);
+        try {
+            const model = loadModel('45832_02.mpd', readFileSync(realM02ModelPath, 'utf8'));
+            const result = createModelPhysicsArticulation(
+                model,
+                { x: 0, y: 0, z: 0 },
+                sidecar02
+            );
+            expect(result.objects).toHaveLength(5);
+            expect(result.objects.slice(0, 4).every((object) => object.bricks?.subparts.length)).toBe(
+                true
+            );
+            expect(
+                result.objects.reduce((total, object) => total + (object.bricks?.subparts.length ?? 0), 0)
+            ).toBe(model.subparts.length);
+        } finally {
+            setStudioMode(false);
+        }
     });
 
     it.skipIf(!existsSync(realModelPath))('splits the real MPD fixture from sidecar data', () => {
