@@ -806,9 +806,9 @@
                 {#if selectedText && $componentStore.unresolved.length == 0}
                     <div class="absolute right-0 top-0 text-white mx-2 my-1">{selectedText}</div>
                 {/if}
-                {#if $componentStore.unresolved.length > 0}
+                {#if $componentStore.unresolved.length > 0 || ($componentStore.missing?.length ?? 0) > 0}
                     <div class="absolute right-0 top-0 text-red-600 bg-white px-2 mx-2 my-1">
-                        Missing parts: {$componentStore.unresolved.length}
+                        Missing parts: {($componentStore.missing?.length ?? 0) + $componentStore.unresolved.length}
                     </div>
                 {/if}
                 <div class="absolute left-0 top-0 h-full w-full" hidden={!renameObject}>

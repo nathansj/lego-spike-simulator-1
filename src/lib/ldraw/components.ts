@@ -93,6 +93,7 @@ export interface PartDetail {
 export interface LDrawStore {
     robotModel: Model | undefined;
     unresolved: string[];
+    missing?: string[];
     canFetchComponents: boolean;
 }
 
@@ -101,6 +102,7 @@ type ResolverCallback = (part: PartDetail) => void;
 export let robotModel: Model | undefined;
 export const components = new Map<string, Model>();
 export const unresolved = new Map<string, ResolverCallback[]>();
+const missingParts = new Set<string>();
 let canFetchComponents =
     typeof window !== 'undefined' && (window.location?.href ?? 'file://').startsWith('http');
 let subpartId = 0;
@@ -172,6 +174,7 @@ export function updateUnresolvedParts() {
         return {
             robotModel: old.robotModel,
             unresolved: getUnresolvedParts(),
+            missing: old.missing,
             canFetchComponents: old.canFetchComponents
         };
     });
@@ -623,12 +626,14 @@ async function resolveFromZipInternal(f: Blob | ArrayBuffer | Uint8Array) {
             const file = archivePaths.map((path) => zipFile.file(path)).find(Boolean);
             if (!file) {
                 console.log(`Missing ${unixPart} in part library`);
+                missingParts.add(part);
                 failedParts.push(part);
                 continue;
             }
             const content = await file.async('string');
             const model = loadModel(part, content);
             components.set(part.toLowerCase(), model);
+            missingParts.delete(part);
             const callbacks = unresolved.get(part.toLowerCase());
             if (callbacks) {
                 for (const callback of callbacks) {
@@ -638,12 +643,16 @@ async function resolveFromZipInternal(f: Blob | ArrayBuffer | Uint8Array) {
             unresolved.delete(part);
         }
         unresolvedParts = getUnresolvedParts();
+        const remainingParts = unresolvedParts.filter(
+            (part) => failedParts.findIndex((value) => value === part) < 0
+        );
         componentStore.set({
             robotModel: robotModel,
-            unresolved: unresolvedParts,
+            unresolved: remainingParts,
+            missing: [...missingParts],
             canFetchComponents: canFetchComponents
         });
-        unresolvedParts = unresolvedParts.filter((p) => failedParts.findIndex((v) => v == p) < 0);
+        unresolvedParts = remainingParts;
     }
 }
 

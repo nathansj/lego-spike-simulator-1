@@ -203,13 +203,13 @@
         if (!store.robotModel) {
             robotButtonColour = 'light';
         } else {
-            if (store.unresolved.length > 0) {
+            if (store.unresolved.length > 0 || (store.missing?.length ?? 0) > 0) {
                 robotButtonColour = 'red';
             } else {
                 robotButtonColour = 'green';
             }
         }
-        if (store.unresolved.length > 0) {
+        if (store.unresolved.length > 0 || (store.missing?.length ?? 0) > 0) {
             libraryClass = '!p-2 animate-bounce';
         } else {
             libraryClass = '!p-2';
