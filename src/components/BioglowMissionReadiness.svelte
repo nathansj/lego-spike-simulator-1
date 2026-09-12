@@ -6,6 +6,7 @@
         type MissionSource,
         type ReadinessStatus
     } from '$lib/fll/bioglow-mission-catalog';
+    import { M02_CANDIDATE_MECHANICS_RECORD } from '$lib/fll/m02-candidate-mechanics-record';
 
     function statusLabel(status: ReadinessStatus): string {
         switch (status) {
@@ -64,6 +65,50 @@
                 Readiness describes this simulator checkout, not real-world field calibration or
                 official-scoring certification.
             </p>
+
+            <details class="mt-3 rounded border border-amber-300 bg-amber-50">
+                <summary class="cursor-pointer px-3 py-2 font-semibold text-amber-950">
+                    M02 MPD candidate inspection
+                </summary>
+                <div class="border-t border-amber-200 px-3 py-3 text-amber-950">
+                    <p class="text-xs">
+                        Candidate-only mapping for <code>{M02_CANDIDATE_MECHANICS_RECORD.mpdCandidates.rootFile}</code>;
+                        no physics or scoring behavior is enabled by this view.
+                    </p>
+                    <div class="mt-2 overflow-x-auto rounded border border-amber-200 bg-white">
+                        <table class="w-full min-w-[38rem] text-left text-xs">
+                            <caption class="sr-only">M02 candidate MPD group selections</caption>
+                            <thead class="bg-amber-100 text-amber-950">
+                                <tr>
+                                    <th scope="col" class="px-3 py-2 font-semibold">Candidate partition</th>
+                                    <th scope="col" class="px-3 py-2 font-semibold">MPD groups</th>
+                                    <th scope="col" class="px-3 py-2 font-semibold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-amber-100">
+                                {#each M02_CANDIDATE_MECHANICS_RECORD.mpdCandidates.selectionCandidates as candidate}
+                                    <tr class="align-top">
+                                        <th scope="row" class="px-3 py-2 font-medium">
+                                            {candidate.partitionId}
+                                        </th>
+                                        <td class="px-3 py-2">
+                                            {#each candidate.modelNumbers as modelNumber, index}
+                                                {#if index > 0}<br />{/if}
+                                                <code>{modelNumber}</code>
+                                            {/each}
+                                        </td>
+                                        <td class="px-3 py-2">{candidate.status}</td>
+                                    </tr>
+                                {/each}
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="mt-2 text-xs">
+                        Review the candidate groups against the supplied model and video before
+                        authoring joints, colliders, or mission-connected scoring.
+                    </p>
+                </div>
+            </details>
 
             <div class="mt-3 overflow-x-auto rounded border border-sky-200 bg-white">
                 <table class="w-full min-w-[48rem] text-left text-xs">
