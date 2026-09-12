@@ -238,6 +238,18 @@
         }
     }
 
+    function refreshRobotAfterLibraryLoad(): void {
+        const robot = $sceneStore.robot.bricks ?? $componentStore.robotModel;
+        if (!robot) return;
+        compiledRobot = compiler.compileModel(robot, { rescale: false });
+        updateSceneRobot(robot, compiledRobot);
+        hub.reload();
+        connectPorts(hub, robot);
+        connectWheels(hub, robot);
+        loadWheelTransforms(hub, robot);
+        hub = hub;
+    }
+
     function sensorPose(id: number | 'none'): PhysicsSensorPose | undefined {
         if (id === 'none' || !$componentStore.robotModel) return undefined;
         const result = findPartTransform($componentStore.robotModel, id);
@@ -359,6 +371,7 @@
                 if (fileElement.files.length > 0) {
                     const first = fileElement.files[0];
                     await resolveFromZip(first);
+                    refreshRobotAfterLibraryLoad();
                     numberOfLoads++;
                 }
             }
@@ -386,6 +399,7 @@
                 const file = await (await directory.getFileHandle(name)).getFile();
                 libraryDirectoryStatus = `loading ${name}`;
                 await resolveFromZip(file);
+                refreshRobotAfterLibraryLoad();
             }
             libraryDirectoryStatus = 'all three libraries loaded for this session';
             numberOfLoads++;
@@ -409,6 +423,7 @@
             for (const [index, file] of selected.entries()) {
                 libraryDirectoryStatus = `loading ${libraryNames[index]}`;
                 await resolveFromZip(file!);
+                refreshRobotAfterLibraryLoad();
             }
             libraryDirectoryStatus = 'all three libraries loaded for this session';
             numberOfLoads++;
@@ -610,7 +625,8 @@
         />
     {/key}
     <div class="mb-2 rounded border border-gray-300 bg-gray-50 px-2 py-1 text-xs">
-        <span class="font-semibold">LDraw libraries:</span> {libraryDirectoryStatus}
+        <span class="font-semibold">LDraw libraries:</span>
+        {libraryDirectoryStatus}
     </div>
     {#if !compiledRobot && !runSimulation}
         <div class="m-2">

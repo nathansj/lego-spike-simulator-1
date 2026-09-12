@@ -11,7 +11,7 @@ import {
 describe('BIOGLOW virtual reference robot', () => {
     it('defines a modular chassis and attachment interface', () => {
         expect(VIRTUAL_REFERENCE_ROBOT.status).toBe('design-target-uncalibrated');
-        expect(VIRTUAL_REFERENCE_ROBOT.attachmentInterface.poweredPorts).toEqual(['A', 'D']);
+        expect(VIRTUAL_REFERENCE_ROBOT.attachmentInterface.poweredPorts).toEqual(['C', 'D']);
         expect(VIRTUAL_REFERENCE_ROBOT.attachmentProfiles.map(({ id }) => id)).toEqual([
             'front-pusher',
             'side-hook',
@@ -41,8 +41,8 @@ describe('BIOGLOW virtual reference robot', () => {
         expect(createVirtualReferenceRobotDrive()).toEqual({
             wheelDiameterMm: 56,
             trackWidthMm: 144,
-            leftPort: 'B',
-            rightPort: 'C'
+            leftPort: 'A',
+            rightPort: 'B'
         });
     });
 
@@ -52,11 +52,11 @@ describe('BIOGLOW virtual reference robot', () => {
         expect(model.name).toBe('bioglow-virtual-reference-robot.ldr');
         expect(model.triangles).toHaveLength(0);
         expect(model.subparts.filter(({ port }) => port).map(({ port }) => port?.port)).toEqual([
-            'B',
-            'C',
-            'B',
-            'C',
             'A',
+            'B',
+            'A',
+            'B',
+            'C',
             'D'
         ]);
         expect(model.subparts.map(({ modelNumber }) => modelNumber)).toEqual([

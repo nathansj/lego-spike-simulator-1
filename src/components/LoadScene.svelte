@@ -77,11 +77,6 @@
         });
     }
 
-    function selectedObjects(): SceneObject[] {
-        if (!select || select.startsWith('#')) return selectedObject ? [selectedObject] : [];
-        return $sceneStore.objects.filter((object) => editorKey(object) === select);
-    }
-
     function uniqueObjectId(scene: SceneStore, name: string): string {
         const base =
             name
@@ -665,70 +660,67 @@
         }
     }
 
+    function updateSelectedObjects(update: (object: SceneObject) => void) {
+        if (!modalOpen || !select || select === '#all' || select === '#map') return;
+        sceneStore.update((old) => {
+            const updateObject = (object: SceneObject) => {
+                const next = {
+                    ...object,
+                    position: object.position ? { ...object.position } : undefined
+                };
+                update(next);
+                if (object === old.robot || editorKey(object) === select) selectedObject = next;
+                return next;
+            };
+            return {
+                ...old,
+                robot: select === '#robot' ? updateObject(old.robot) : old.robot,
+                objects:
+                    select === '#robot'
+                        ? old.objects
+                        : old.objects.map((object) =>
+                              editorKey(object) === select ? updateObject(object) : object
+                          )
+            };
+        });
+    }
+
     function moveObjectLeft() {
-        if (!modalOpen) {
-            return;
-        }
-        if (!selectedObject) {
-            return;
-        }
-        for (const object of selectedObjects()) if (object.position) object.position.x -= 10.0;
+        updateSelectedObjects((object) => {
+            if (object.position) object.position.x -= 10.0;
+        });
     }
 
     function moveObjectRight() {
-        if (!modalOpen) {
-            return;
-        }
-        if (!selectedObject) {
-            return;
-        }
-        for (const object of selectedObjects()) if (object.position) object.position.x += 10.0;
+        updateSelectedObjects((object) => {
+            if (object.position) object.position.x += 10.0;
+        });
     }
 
     function moveObjectUp() {
-        if (!modalOpen) {
-            return;
-        }
-        if (!selectedObject) {
-            return;
-        }
-        for (const object of selectedObjects()) if (object.position) object.position.z -= 10.0;
+        updateSelectedObjects((object) => {
+            if (object.position) object.position.z -= 10.0;
+        });
     }
 
     function moveObjectDown() {
-        if (!modalOpen) {
-            return;
-        }
-        if (!selectedObject) {
-            return;
-        }
-        for (const object of selectedObjects()) if (object.position) object.position.z += 10.0;
+        updateSelectedObjects((object) => {
+            if (object.position) object.position.z += 10.0;
+        });
     }
 
     function rotateObjectClockwise() {
-        if (!modalOpen) {
-            return;
-        }
-        if (!selectedObject) {
-            return;
-        }
-        for (const object of selectedObjects()) {
+        updateSelectedObjects((object) => {
             object.rotation = (object.rotation ?? 0) - 10.0;
             object.rotationQuaternion = undefined;
-        }
+        });
     }
 
     function rotateObjectAntiClockwise() {
-        if (!modalOpen) {
-            return;
-        }
-        if (!selectedObject) {
-            return;
-        }
-        for (const object of selectedObjects()) {
+        updateSelectedObjects((object) => {
             object.rotation = (object.rotation ?? 0) + 10.0;
             object.rotationQuaternion = undefined;
-        }
+        });
     }
 
     function updateObjectPhysics(
@@ -808,7 +800,8 @@
                 {/if}
                 {#if $componentStore.unresolved.length > 0 || ($componentStore.missing?.length ?? 0) > 0}
                     <div class="absolute right-0 top-0 text-red-600 bg-white px-2 mx-2 my-1">
-                        Missing parts: {($componentStore.missing?.length ?? 0) + $componentStore.unresolved.length}
+                        Missing parts: {($componentStore.missing?.length ?? 0) +
+                            $componentStore.unresolved.length}
                     </div>
                 {/if}
                 <div class="absolute left-0 top-0 h-full w-full" hidden={!renameObject}>

@@ -14,15 +14,15 @@ export const VIRTUAL_REFERENCE_ROBOT = {
         wheelDiameterMm: 56,
         trackWidthMm: 144,
         drivePorts: {
-            left: 'B',
-            right: 'C'
+            left: 'A',
+            right: 'B'
         }
     },
     attachmentInterface: {
         location: 'front-center',
         widthMm: 80,
         mountingHoleSpacingMm: 40,
-        poweredPorts: ['A', 'D'],
+        poweredPorts: ['C', 'D'],
         designRules: [
             'Keep the attachment inside the chassis width when possible.',
             'Use passive alignment features before powered actuation.',
@@ -210,16 +210,16 @@ export function createVirtualReferenceRobotModel(): Model {
                 matrixAt(-72, 28, 0),
                 fallbackModels.motor,
                 brickColour('1'),
-                'B'
+                'A'
             ),
-            part(-6, '54696.dat', matrixAt(72, 28, 0), fallbackModels.motor, brickColour('1'), 'C'),
+            part(-6, '54696.dat', matrixAt(72, 28, 0), fallbackModels.motor, brickColour('1'), 'B'),
             part(
                 -7,
                 '39367p01.dat',
                 matrixAt(-72, 28, 0, wheelOnSide),
                 fallbackModels.wheel,
                 brickColour('26'),
-                'B'
+                'A'
             ),
             part(
                 -8,
@@ -227,7 +227,7 @@ export function createVirtualReferenceRobotModel(): Model {
                 matrixAt(72, 28, 0, wheelOnSide),
                 fallbackModels.wheel,
                 brickColour('26'),
-                'C'
+                'B'
             ),
             part(
                 -9,
@@ -235,7 +235,7 @@ export function createVirtualReferenceRobotModel(): Model {
                 matrixAt(-28, 52, -88, beamAlongZ),
                 fallbackModels.motor,
                 brickColour('1'),
-                'A'
+                'C'
             ),
             part(
                 -10,
