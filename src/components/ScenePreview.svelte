@@ -476,12 +476,10 @@
                 });
             }
         }
-        if (!obj.position && obj.compiled) {
+        if (!obj.position && obj.compiled && !obj.preserveOrigin) {
             obj.position = { x: 0.0, y: -obj.compiled.bbox.min.y, z: 0.0 };
-        } else if (obj.compiled && obj.position) {
+        } else if (obj.compiled && obj.position && !obj.preserveOrigin) {
             obj.position = { x: obj.position.x, y: -obj.compiled.bbox.min.y, z: obj.position.z };
-        } else if (obj.compiled) {
-            obj.position = { x: 0.0, y: -obj.compiled.bbox.min.y, z: 0.0 };
         }
     }
 

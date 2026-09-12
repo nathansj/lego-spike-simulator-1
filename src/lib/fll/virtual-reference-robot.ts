@@ -76,8 +76,7 @@ export function createVirtualReferenceRobotPhysics(): PhysicsDefinition {
         colliders: [
             {
                 shape: 'box',
-                sizeMm: { x: widthMm, y: heightMm, z: lengthMm },
-                positionMm: { x: 0, y: heightMm / 2, z: 0 }
+                sizeMm: { x: widthMm, y: heightMm, z: lengthMm }
             }
         ]
     };
