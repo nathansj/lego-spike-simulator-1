@@ -29,6 +29,51 @@ export const M02_CANDIDATE_MECHANICS_RECORD = {
         limitation:
             'The video does not establish MPD submodel identity mapping, dimensions, masses, joint anchors, travel limits, contact tolerances, or reset repeatability.'
     },
+    mpdCandidates: {
+        rootFile: '45832_02.ldr',
+        embeddedGroups: [
+            'SubModel Group 1',
+            'SubModel Group 2',
+            'SubModel Group 3',
+            '57539.dat Copy 3',
+            '57539.dat Copy 4',
+            'SubModel Group 3_Mirrored'
+        ],
+        candidateRoles: [
+            {
+                group: 'SubModel Group 1',
+                role: 'base-or-stand-candidate',
+                status: 'unresolved'
+            },
+            {
+                group: 'SubModel Group 2',
+                role: 'stem-or-support-candidate',
+                status: 'unresolved'
+            },
+            {
+                group: 'SubModel Group 3',
+                role: 'seed-or-flexible-assembly-candidate',
+                status: 'unresolved'
+            },
+            {
+                group: '57539.dat Copy 3',
+                role: 'flexible-hose-candidate',
+                status: 'unresolved'
+            },
+            {
+                group: '57539.dat Copy 4',
+                role: 'flexible-hose-candidate',
+                status: 'unresolved'
+            },
+            {
+                group: 'SubModel Group 3_Mirrored',
+                role: 'mirrored-seed-or-flexible-assembly-candidate',
+                status: 'unresolved'
+            }
+        ],
+        limitation:
+            'Generic MPD group names and mirrored/custom hose geometry are candidate evidence only; they do not establish the three scored seed IDs or a physics partition.'
+    },
     status: 'candidate-not-admitted',
     candidatePartitions: [
         {

@@ -16,6 +16,12 @@ describe('M02 candidate mechanics record', () => {
             ])
         );
         expect(M02_CANDIDATE_MECHANICS_RECORD.videoEvidence.observations).toHaveLength(2);
+        expect(M02_CANDIDATE_MECHANICS_RECORD.mpdCandidates.embeddedGroups).toHaveLength(6);
+        expect(
+            M02_CANDIDATE_MECHANICS_RECORD.mpdCandidates.candidateRoles.filter(
+                ({ role }) => role === 'flexible-hose-candidate'
+            )
+        ).toHaveLength(2);
         expect(M02_CANDIDATE_MECHANICS_RECORD.videoEvidence.limitation).toContain(
             'MPD submodel identity mapping'
         );
