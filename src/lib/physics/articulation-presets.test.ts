@@ -145,6 +145,7 @@ describe('model physics articulation', () => {
             undefined
         ]);
         expect(definition?.segments.at(-1)?.editorName).toBe('Unassigned root references');
+        expect(new Set(definition?.segments.map((segment) => segment.editorGroup)).size).toBe(5);
         expect(definition?.joints).toEqual([]);
     });
 
