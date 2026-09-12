@@ -71,6 +71,32 @@ export const M02_CANDIDATE_MECHANICS_RECORD = {
                 status: 'unresolved'
             }
         ],
+        selectionCandidates: [
+            {
+                partitionId: 'm02-base-and-stand-candidate',
+                modelNumbers: ['SubModel Group 1'],
+                status: 'unresolved',
+                rationale: 'Candidate mapping only; the generic group name does not prove its mission role.'
+            },
+            {
+                partitionId: 'm02-plant-stem-candidate',
+                modelNumbers: ['SubModel Group 2'],
+                status: 'unresolved',
+                rationale: 'Candidate mapping only; the generic group name does not prove its mission role.'
+            },
+            {
+                partitionId: 'm02-seed-assembly-candidate-a',
+                modelNumbers: ['SubModel Group 3', '57539.dat Copy 3'],
+                status: 'unresolved',
+                rationale: 'Candidate mapping only; the group and hose relationship requires visual and physical confirmation.'
+            },
+            {
+                partitionId: 'm02-seed-assembly-candidate-b',
+                modelNumbers: ['SubModel Group 3_Mirrored', '57539.dat Copy 4'],
+                status: 'unresolved',
+                rationale: 'Candidate mapping only; the mirrored group and hose relationship requires visual and physical confirmation.'
+            }
+        ],
         limitation:
             'Generic MPD group names and mirrored/custom hose geometry are candidate evidence only; they do not establish the three scored seed IDs or a physics partition.'
     },

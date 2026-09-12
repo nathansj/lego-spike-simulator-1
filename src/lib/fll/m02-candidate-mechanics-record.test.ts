@@ -17,6 +17,24 @@ describe('M02 candidate mechanics record', () => {
         );
         expect(M02_CANDIDATE_MECHANICS_RECORD.videoEvidence.observations).toHaveLength(2);
         expect(M02_CANDIDATE_MECHANICS_RECORD.mpdCandidates.embeddedGroups).toHaveLength(6);
+        expect(M02_CANDIDATE_MECHANICS_RECORD.mpdCandidates.selectionCandidates).toEqual([
+            expect.objectContaining({
+                partitionId: 'm02-base-and-stand-candidate',
+                modelNumbers: ['SubModel Group 1']
+            }),
+            expect.objectContaining({
+                partitionId: 'm02-plant-stem-candidate',
+                modelNumbers: ['SubModel Group 2']
+            }),
+            expect.objectContaining({
+                partitionId: 'm02-seed-assembly-candidate-a',
+                modelNumbers: ['SubModel Group 3', '57539.dat Copy 3']
+            }),
+            expect.objectContaining({
+                partitionId: 'm02-seed-assembly-candidate-b',
+                modelNumbers: ['SubModel Group 3_Mirrored', '57539.dat Copy 4']
+            })
+        ]);
         expect(
             M02_CANDIDATE_MECHANICS_RECORD.mpdCandidates.candidateRoles.filter(
                 ({ role }) => role === 'flexible-hose-candidate'
