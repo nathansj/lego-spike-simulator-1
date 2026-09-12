@@ -30,6 +30,10 @@
     import { boundaryStore } from '$lib/spike/scene';
     import { Simulation, type PhysicsSensorPose } from '$lib/spike/simulation';
     import { createExplicitModelPhysics } from '$lib/physics/articulation-presets';
+    import {
+        createVirtualReferenceRobotModel,
+        createVirtualReferenceRobotPhysics
+    } from '$lib/fll/virtual-reference-robot';
     import { DroneSurveyMatchController } from '$lib/fll/match-controller';
     import { BioglowMatchClock } from '$lib/fll/match-clock';
     import type { DroneSurveyScore } from '$lib/fll/drone-survey';
@@ -61,6 +65,7 @@
     export let gridScale = 0;
     export let m01ObservationGeometry: DroneSurveyObservationGeometry | undefined = undefined;
     export let m01ObservationProfile: DroneSurveyObservationGeometryProfile | undefined = undefined;
+    export let loadVirtualReferenceRobot = false;
 
     let compiler = new WebGLCompiler();
 
@@ -287,6 +292,22 @@
         connectWheels(hub, robot);
         loadWheelTransforms(hub, robot);
         hub = hub;
+    }
+
+    $: if (loadVirtualReferenceRobot) {
+        const robot = createVirtualReferenceRobotModel();
+        compiledRobot = compiler.compileModel(robot, { rescale: false });
+        updateSceneRobot(robot, compiledRobot);
+        sceneStore.update((old) => ({
+            ...old,
+            robot: { ...old.robot, physics: createVirtualReferenceRobotPhysics() }
+        }));
+        hub.reload();
+        connectPorts(hub, robot);
+        connectWheels(hub, robot);
+        loadWheelTransforms(hub, robot);
+        hub = hub;
+        loadVirtualReferenceRobot = false;
     }
 
     async function loadRobot() {

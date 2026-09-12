@@ -55,6 +55,7 @@
     let m01ProfileError: string | undefined;
     let m01ProfileLoadGeneration = 0;
     let robotModelGeneration = 0;
+    let loadVirtualReferenceRobot = false;
 
     let cameraMenu = buildCameraMenu();
 
@@ -339,6 +340,14 @@
                     </div>
                 </Button>
                 <Tooltip>Load a robot model for use in the simulator</Tooltip>
+                <Button
+                    color="light"
+                    class="!px-3 !py-2 text-xs"
+                    on:click={() => (loadVirtualReferenceRobot = true)}
+                >
+                    Reference robot
+                </Button>
+                <Tooltip>Load the BIOGLOW virtual reference robot design target</Tooltip>
                 <Button color="light" class="!p-2" on:click={connectPorts}>
                     <div class="w-8 h-8 flex flex-col justify-center items-center">
                         <HubIcon />
@@ -480,6 +489,7 @@
                         {gridScale}
                         {m01ObservationGeometry}
                         {m01ObservationProfile}
+                        bind:loadVirtualReferenceRobot
                     />
                 </div>
             {/key}
