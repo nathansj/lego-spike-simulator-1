@@ -49,7 +49,14 @@ describe('BIOGLOW virtual reference robot', () => {
 
         expect(model.name).toBe('bioglow-virtual-reference-robot.ldr');
         expect(model.triangles).toHaveLength(0);
-        expect(model.subparts.slice(-2).map(({ port }) => port?.port)).toEqual(['B', 'C']);
+        expect(model.subparts.filter(({ port }) => port).map(({ port }) => port?.port)).toEqual([
+            'B',
+            'C',
+            'B',
+            'C',
+            'A',
+            'D'
+        ]);
         expect(model.subparts.map(({ modelNumber }) => modelNumber)).toEqual([
             '32555.dat',
             '32555.dat',
@@ -57,7 +64,13 @@ describe('BIOGLOW virtual reference robot', () => {
             '54696.dat',
             '54696.dat',
             '39367p01.dat',
-            '39367p01.dat'
+            '39367p01.dat',
+            '54696.dat',
+            '54696.dat',
+            '32555.dat',
+            '32555.dat',
+            '3895.dat',
+            '3895.dat'
         ]);
         expect(model.subparts.every(({ model }) => model !== undefined)).toBe(true);
     });
