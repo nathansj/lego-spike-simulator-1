@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
     createVirtualReferenceRobotDrive,
+    createVirtualReferenceRobotModel,
     createVirtualReferenceRobotPhysics,
     VIRTUAL_REFERENCE_ROBOT
 } from '$lib/fll/virtual-reference-robot';
@@ -41,5 +42,16 @@ describe('BIOGLOW virtual reference robot', () => {
             leftPort: 'B',
             rightPort: 'C'
         });
+    });
+
+    it('creates a visible chassis with two drive wheel subparts', () => {
+        const model = createVirtualReferenceRobotModel();
+
+        expect(model.name).toBe('bioglow-virtual-reference-robot.ldr');
+        expect(model.triangles).toHaveLength(12);
+        expect(model.subparts.map(({ port }) => port?.port)).toEqual(['B', 'C']);
+        expect(model.subparts.every(({ modelNumber }) => modelNumber === '39367p01.dat')).toBe(
+            true
+        );
     });
 });
