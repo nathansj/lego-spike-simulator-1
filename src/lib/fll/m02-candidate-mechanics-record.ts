@@ -17,6 +17,18 @@ export const M02_CANDIDATE_MECHANICS_RECORD = {
         bookletNumber: instructionResource.bookletNumber,
         pageCount: instructionResource.pageCount
     },
+    videoEvidence: {
+        title: 'BIOGLOW Robot Game Missions Video - Founders Edition',
+        url: 'https://www.youtube.com/watch?v=uhZZ8O1StiQ',
+        locator:
+            'approximately 00:02:07-00:02:26, Mission 02 title, model close-up, and scoring examples',
+        observations: [
+            'The model close-up visibly presents three seed objects associated with the stem and flexible loops.',
+            'The scoring examples show 10 points for each qualifying seed and display three 10-point awards.'
+        ],
+        limitation:
+            'The video does not establish MPD submodel identity mapping, dimensions, masses, joint anchors, travel limits, contact tolerances, or reset repeatability.'
+    },
     status: 'candidate-not-admitted',
     candidatePartitions: [
         {
@@ -38,6 +50,12 @@ export const M02_CANDIDATE_MECHANICS_RECORD = {
             id: 'm02-seed-assembly-candidate-b',
             role: 'seed-assembly-candidate',
             evidence: 'Steps 28-35 construct and attach a second seed/flexible assembly.'
+        },
+        {
+            id: 'm02-third-scored-seed-candidate',
+            role: 'scored-seed-identity-candidate',
+            evidence:
+                'The Mission 02 video close-up visibly presents three scoring seed objects, but does not map the third object to a stable MPD submodel.'
         }
     ],
     candidateRelations: [
@@ -55,7 +73,7 @@ export const M02_CANDIDATE_MECHANICS_RECORD = {
         }
     ],
     unresolved: [
-        'The official scoring source requires three scored seeds; these construction steps visibly describe two seed/flexible assemblies, so semantic identity must not be inferred.',
+        'The video confirms three visible scoring seed objects, but their mapping to stable MPD submodels and the exact stalk relationship remains unresolved.',
         'No pivot or slider axis, joint anchor, travel limit, release trigger, force, mass, friction, damping, or contact tolerance is admitted.',
         'No field placement, coordinate registration, reset trial, or repeatability measurement is admitted.'
     ],
