@@ -135,6 +135,19 @@ describe('model physics articulation', () => {
         }
     });
 
+    it('keeps M02 candidate groups separated from unassigned root references', () => {
+        const definition = findBundledModelPhysics('45832_02.mpd');
+        expect(definition?.segments.map((segment) => segment.selection.modelNumbers)).toEqual([
+            ['SubModel Group 1'],
+            ['SubModel Group 2'],
+            ['SubModel Group 3', '57539.dat Copy 3'],
+            ['SubModel Group 3_Mirrored', '57539.dat Copy 4'],
+            undefined
+        ]);
+        expect(definition?.segments.at(-1)?.editorName).toBe('Unassigned root references');
+        expect(definition?.joints).toEqual([]);
+    });
+
     it.skipIf(!existsSync(realModelPath))('splits the real MPD fixture from sidecar data', () => {
         setStudioMode(true);
         try {
