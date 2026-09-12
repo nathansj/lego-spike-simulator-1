@@ -596,7 +596,15 @@ export function loadModel(name: string, content: string): Model {
     return model;
 }
 
-export async function resolveFromZip(f: Blob) {
+export async function resolveFromZip(f: Blob | ArrayBuffer | Uint8Array) {
+    const load = libraryResolutionQueue.then(() => resolveFromZipInternal(f));
+    libraryResolutionQueue = load.catch(() => undefined);
+    await load;
+}
+
+let libraryResolutionQueue = Promise.resolve();
+
+async function resolveFromZipInternal(f: Blob | ArrayBuffer | Uint8Array) {
     let unresolvedParts = getUnresolvedParts();
     const failedParts: string[] = [];
     const zip = new JSZip();

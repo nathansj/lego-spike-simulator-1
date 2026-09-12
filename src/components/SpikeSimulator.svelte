@@ -350,15 +350,15 @@
         }
     }
 
-    function loadLibrary() {
+    async function loadLibrary() {
         const element = document.getElementById('load_library');
         if (element) {
             const fileElement = element as HTMLInputElement;
             if (fileElement.files) {
                 if (fileElement.files.length > 0) {
                     const first = fileElement.files[0];
+                    await resolveFromZip(first);
                     numberOfLoads++;
-                    resolveFromZip(first);
                 }
             }
         }
