@@ -3,7 +3,9 @@ import {
     createVirtualReferenceRobotDrive,
     createVirtualReferenceRobotModel,
     createVirtualReferenceRobotPhysics,
-    VIRTUAL_REFERENCE_ROBOT
+    VIRTUAL_REFERENCE_ROBOT,
+    VIRTUAL_REFERENCE_ROBOT_LDRAW_PARTS,
+    VIRTUAL_REFERENCE_ROBOT_LIBRARY_VERIFICATION
 } from '$lib/fll/virtual-reference-robot';
 
 describe('BIOGLOW virtual reference robot', () => {
@@ -74,4 +76,19 @@ describe('BIOGLOW virtual reference robot', () => {
         ]);
         expect(model.subparts.every(({ model }) => model !== undefined)).toBe(true);
     });
+
+    it('uses only parts verified in the supplied LDraw and complete libraries', () => {
+        const modelPartIds = new Set(modelPartNames(createVirtualReferenceRobotModel()));
+
+        expect([...modelPartIds].sort()).toEqual([...VIRTUAL_REFERENCE_ROBOT_LDRAW_PARTS].sort());
+        expect(
+            VIRTUAL_REFERENCE_ROBOT_LIBRARY_VERIFICATION.archives.filter(
+                ({ status }) => status === 'all-required-parts-present'
+            )
+        ).toHaveLength(2);
+    });
 });
+
+function modelPartNames(model: ReturnType<typeof createVirtualReferenceRobotModel>): string[] {
+    return [...new Set(model.subparts.map(({ modelNumber }) => modelNumber))];
+}

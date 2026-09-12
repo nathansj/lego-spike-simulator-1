@@ -37,6 +37,34 @@ export const VIRTUAL_REFERENCE_ROBOT = {
     ]
 } as const;
 
+export const VIRTUAL_REFERENCE_ROBOT_LDRAW_PARTS = [
+    '32555.dat',
+    '3895.dat',
+    '54696.dat',
+    '39367p01.dat'
+] as const;
+
+export const VIRTUAL_REFERENCE_ROBOT_LIBRARY_VERIFICATION = {
+    verifiedOn: '2026-09-12',
+    requiredParts: VIRTUAL_REFERENCE_ROBOT_LDRAW_PARTS,
+    archives: [
+        {
+            path: '/Users/Sheldon/Downloads/ldraw.zip',
+            status: 'all-required-parts-present'
+        },
+        {
+            path: '/Users/Sheldon/Downloads/ldrawunf.zip',
+            status: 'required-parts-not-present'
+        },
+        {
+            path: '/Users/Sheldon/Downloads/complete.zip',
+            status: 'all-required-parts-present'
+        }
+    ],
+    resolutionPolicy:
+        'The simulator resolves these part IDs from the loaded LDraw library; fallback geometry is used only when a library component has not been loaded.'
+} as const;
+
 export function createVirtualReferenceRobotPhysics(): PhysicsDefinition {
     const { widthMm, lengthMm, heightMm, massKg } = VIRTUAL_REFERENCE_ROBOT.chassis;
     return {
