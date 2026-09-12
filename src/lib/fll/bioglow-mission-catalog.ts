@@ -193,9 +193,9 @@ export const BIOGLOW_MISSION_CATALOG = [
     },
     {
         id: 'M05',
-        name: 'Reaching Roots',
+        name: 'Reaching Rods',
         readiness: {
-            officialRuleSourceCoverage: ruleCoverage('05', 'Reaching Roots'),
+            officialRuleSourceCoverage: ruleCoverage('05', 'Reaching Rods'),
             repositoryAssetPresence: sidecarAsset('05'),
             mechanics: sidecarMechanics,
             scoring: unimplementedScoring

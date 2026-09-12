@@ -20,8 +20,8 @@
             "mechanicsCalibration": "uncalibrated"
         }
     },
-    "mission": "Reaching Roots",
-    "mechanics": ["slider","travel-limit","trigger"],
+    "mission": "Reaching Rods",
+    "mechanics": ["slider", "travel-limit", "trigger"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
     "segments": [
         {

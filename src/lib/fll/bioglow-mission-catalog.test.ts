@@ -13,7 +13,7 @@ describe('BIOGLOW Founders Edition mission catalog', () => {
             ['M02', 'Exploding Seeds'],
             ['M03', 'Flip the Rock'],
             ['M04', 'Lucky Leaves'],
-            ['M05', 'Reaching Roots'],
+            ['M05', 'Reaching Rods'],
             ['M06', 'Leafcutter Frenzy'],
             ['M07', 'Humongous Fungus'],
             ['M08', 'Tangled'],
