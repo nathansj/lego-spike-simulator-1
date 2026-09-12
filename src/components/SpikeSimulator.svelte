@@ -91,6 +91,7 @@
         ? compiler.compileModel($componentStore.robotModel, { rescale: false })
         : undefined;
     let sensors: SensorView[] = [];
+    let libraryDirectoryStatus = 'not selected';
     let lastFrame: number = 0;
     let scene = copyScene($sceneStore);
     let id = genId();
@@ -364,6 +365,34 @@
         }
     }
 
+    async function selectLibraryDirectory(): Promise<void> {
+        const picker = (
+            window as Window & {
+                showDirectoryPicker?: () => Promise<{
+                    getFileHandle(name: string): Promise<{ getFile(): Promise<File> }>;
+                }>;
+            }
+        ).showDirectoryPicker;
+        if (!picker) {
+            libraryDirectoryStatus = 'folder picker unavailable; use Load library instead';
+            return;
+        }
+
+        try {
+            const directory = await picker();
+            const libraryNames = ['ldraw.zip', 'ldrawunf.zip', 'complete.zip'];
+            for (const name of libraryNames) {
+                const file = await (await directory.getFileHandle(name)).getFile();
+                libraryDirectoryStatus = `loading ${name}`;
+                await resolveFromZip(file);
+            }
+            libraryDirectoryStatus = 'all three libraries loaded for this session';
+            numberOfLoads++;
+        } catch (error) {
+            libraryDirectoryStatus = `library loading stopped: ${String(error)}`;
+        }
+    }
+
     onMount(() => {
         const robot = $componentStore.robotModel;
         if (robot) configureRobot(robot);
@@ -546,7 +575,11 @@
             on:change={loadRobot}
         />
         <input type="file" id="load_library" class="hidden" accept=".zip" on:change={loadLibrary} />
+        <button id="select_library_folder" class="hidden" on:click={selectLibraryDirectory} />
     {/key}
+    <div class="mb-2 rounded border border-gray-300 bg-gray-50 px-2 py-1 text-xs">
+        <span class="font-semibold">LDraw libraries:</span> {libraryDirectoryStatus}
+    </div>
     {#if !compiledRobot && !runSimulation}
         <div class="m-2">
             Use LeoCad (<a href="https://www.leocad.org/" target="_blank">https://www.leocad.org/</a

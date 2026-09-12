@@ -372,6 +372,14 @@
                     </div>
                 </Button>
                 <Tooltip>Load any missing components from the ldraw library (complete.zip)</Tooltip>
+                <Button
+                    color="light"
+                    class="!px-3 !py-2 text-xs"
+                    on:click={() => document.getElementById('select_library_folder')?.click()}
+                >
+                    LDraw folder
+                </Button>
+                <Tooltip>Select the folder containing ldraw.zip, ldrawunf.zip, and complete.zip</Tooltip>
                 <Button color="light" class="!p-2" on:click={saveRobotOrScene}>
                     <div class="w-8 h-8 flex flex-col justify-center items-center">
                         <img alt="save" width="32" height="32" src="icons/SaveMedium.svg" />
