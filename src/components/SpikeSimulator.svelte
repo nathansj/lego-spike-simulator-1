@@ -374,7 +374,8 @@
             }
         ).showDirectoryPicker;
         if (!picker) {
-            libraryDirectoryStatus = 'folder picker unavailable; use Load library instead';
+            libraryDirectoryStatus = 'selecting the three library ZIPs';
+            document.getElementById('select_library_files')?.click();
             return;
         }
 
@@ -385,6 +386,29 @@
                 const file = await (await directory.getFileHandle(name)).getFile();
                 libraryDirectoryStatus = `loading ${name}`;
                 await resolveFromZip(file);
+            }
+            libraryDirectoryStatus = 'all three libraries loaded for this session';
+            numberOfLoads++;
+        } catch (error) {
+            libraryDirectoryStatus = `library loading stopped: ${String(error)}`;
+        }
+    }
+
+    async function loadLibraryFiles(event: Event): Promise<void> {
+        const input = event.currentTarget as HTMLInputElement;
+        const files = Array.from(input.files ?? []);
+        const libraryNames = ['ldraw.zip', 'ldrawunf.zip', 'complete.zip'];
+        const selected = libraryNames.map((name) => files.find((file) => file.name === name));
+        const missing = libraryNames.filter((_, index) => !selected[index]);
+        if (missing.length > 0) {
+            libraryDirectoryStatus = `missing: ${missing.join(', ')}`;
+            return;
+        }
+
+        try {
+            for (const [index, file] of selected.entries()) {
+                libraryDirectoryStatus = `loading ${libraryNames[index]}`;
+                await resolveFromZip(file!);
             }
             libraryDirectoryStatus = 'all three libraries loaded for this session';
             numberOfLoads++;
@@ -576,6 +600,14 @@
         />
         <input type="file" id="load_library" class="hidden" accept=".zip" on:change={loadLibrary} />
         <button id="select_library_folder" class="hidden" on:click={selectLibraryDirectory} />
+        <input
+            type="file"
+            id="select_library_files"
+            class="hidden"
+            accept=".zip"
+            multiple
+            on:change={loadLibraryFiles}
+        />
     {/key}
     <div class="mb-2 rounded border border-gray-300 bg-gray-50 px-2 py-1 text-xs">
         <span class="font-semibold">LDraw libraries:</span> {libraryDirectoryStatus}
