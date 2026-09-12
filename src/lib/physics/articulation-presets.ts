@@ -23,10 +23,17 @@ interface RangeSelection {
     maxExclusive?: number;
 }
 
+interface ModelNumberSelection {
+    modelNumbers?: string[];
+    x?: RangeSelection;
+    y?: RangeSelection;
+    z?: RangeSelection;
+}
+
 export interface ModelPhysicsSegment {
     id: string;
     name: string;
-    selection: { x?: RangeSelection; y?: RangeSelection; z?: RangeSelection };
+    selection: ModelNumberSelection;
     includeRootGeometry?: boolean;
     editorGroup?: string;
     editorName?: string;
@@ -99,8 +106,20 @@ function inRange(value: number, range?: RangeSelection): boolean {
     );
 }
 
+function normalizedModelNumber(modelNumber: string): string {
+    return basename(modelNumber).trim();
+}
+
 function matches(subpart: Subpart, segment: ModelPhysicsSegment): boolean {
+    const modelNumbers = segment.selection.modelNumbers;
+    const matchesModelNumber =
+        modelNumbers === undefined ||
+        modelNumbers.some(
+            (modelNumber) =>
+                normalizedModelNumber(modelNumber) === normalizedModelNumber(subpart.modelNumber)
+        );
     return (
+        matchesModelNumber &&
         inRange(Number(subpart.matrix[12]), segment.selection.x) &&
         inRange(Number(subpart.matrix[13]), segment.selection.y) &&
         inRange(Number(subpart.matrix[14]), segment.selection.z)

@@ -79,6 +79,48 @@ describe('model physics articulation', () => {
         expect(findBundledModelPhysics('45832_01.ldr')).toBeUndefined();
     });
 
+    it('can select subparts by exact MPD model number', () => {
+        const model: Model = {
+            name: 'grouped.ldr',
+            subparts: [
+                { ...subpart(1, 0, 0), modelNumber: 'SubModel Group 1' },
+                { ...subpart(2, 0, 0), modelNumber: 'SubModel Group 2' }
+            ],
+            lines: [],
+            triangles: [],
+            quads: [],
+            optionalLines: []
+        };
+        const body = {
+            bodyType: 'fixed' as const,
+            colliders: [{ shape: 'box' as const, sizeMm: { x: 10, y: 10, z: 10 } }]
+        };
+        const result = createModelPhysicsArticulation(model, { x: 0, y: 0, z: 0 }, {
+            version: 1,
+            model: 'grouped.mpd',
+            segments: [
+                {
+                    id: 'group-one',
+                    name: 'Group One',
+                    selection: { modelNumbers: ['submodel group 1'] },
+                    body
+                },
+                {
+                    id: 'group-two',
+                    name: 'Group Two',
+                    selection: { modelNumbers: ['SubModel Group 2'] },
+                    body
+                }
+            ],
+            joints: []
+        });
+
+        expect(result.objects.map((object) => object.bricks?.subparts[0]?.modelNumber)).toEqual([
+            'SubModel Group 1',
+            'SubModel Group 2'
+        ]);
+    });
+
     it('registers physics sidecars for every BIOGLOW mission model', () => {
         for (let model = 1; model <= 13; model++) {
             const id = String(model).padStart(2, '0');
