@@ -130,6 +130,13 @@ function identityMatrix(): number[] {
     return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
 }
 
+function matrixAt(x: number, y: number, z: number, rotation = identityMatrix()): number[] {
+    return [...rotation.slice(0, 12), x, y, z, 1];
+}
+
+const beamAlongZ = [0, 0, -1, 0, 0, 1, 0, 0, 1, 0, 0, 0];
+const wheelOnSide = [0, 0, 1, 0, 0, 1, 0, 0, -1, 0, 0, 0];
+
 export function createVirtualReferenceRobotModel(): Model {
     const fallbackModels = {
         beam: {
@@ -181,19 +188,79 @@ export function createVirtualReferenceRobotModel(): Model {
     const model: Model = {
         name: 'bioglow-virtual-reference-robot.ldr',
         subparts: [
-            part(-1, '32555.dat', [...identityMatrix().slice(0, 12), 0, 8, -70, 1], fallbackModels.beam, brickColour('7')),
-            part(-2, '32555.dat', [...identityMatrix().slice(0, 12), 0, 8, 70, 1], fallbackModels.beam, brickColour('7')),
-            part(-3, '32555.dat', [...identityMatrix().slice(0, 12), -72, 8, 0, 1], fallbackModels.beam, brickColour('7')),
-            part(-4, '54696.dat', [...identityMatrix().slice(0, 12), -40, 48, 0, 1], fallbackModels.motor, brickColour('1'), 'B'),
-            part(-5, '54696.dat', [...identityMatrix().slice(0, 12), 40, 48, 0, 1], fallbackModels.motor, brickColour('1'), 'C'),
-            part(-6, '39367p01.dat', [...identityMatrix().slice(0, 12), -72, 28, 0, 1], fallbackModels.wheel, brickColour('26'), 'B'),
-            part(-7, '39367p01.dat', [...identityMatrix().slice(0, 12), 72, 28, 0, 1], fallbackModels.wheel, brickColour('26'), 'C'),
-            part(-8, '54696.dat', [...identityMatrix().slice(0, 12), 0, 52, -86, 1], fallbackModels.motor, brickColour('1'), 'A'),
-            part(-9, '54696.dat', [...identityMatrix().slice(0, 12), 0, 52, 86, 1], fallbackModels.motor, brickColour('1'), 'D'),
-            part(-10, '32555.dat', [...identityMatrix().slice(0, 12), 0, 32, -126, 1], fallbackModels.beam, brickColour('4')),
-            part(-11, '32555.dat', [...identityMatrix().slice(0, 12), 0, 68, -126, 1], fallbackModels.beam, brickColour('4')),
-            part(-12, '3895.dat', [...identityMatrix().slice(0, 12), -42, 44, -122, 1], fallbackModels.beam, brickColour('2')),
-            part(-13, '3895.dat', [...identityMatrix().slice(0, 12), 42, 44, -122, 1], fallbackModels.beam, brickColour('2'))
+            part(
+                -1,
+                '3895.dat',
+                matrixAt(-58, 32, 0, beamAlongZ),
+                fallbackModels.beam,
+                brickColour('7')
+            ),
+            part(
+                -2,
+                '3895.dat',
+                matrixAt(58, 32, 0, beamAlongZ),
+                fallbackModels.beam,
+                brickColour('7')
+            ),
+            part(-3, '32555.dat', matrixAt(0, 12, -70), fallbackModels.beam, brickColour('7')),
+            part(-4, '32555.dat', matrixAt(0, 12, 70), fallbackModels.beam, brickColour('7')),
+            part(
+                -5,
+                '54696.dat',
+                matrixAt(-72, 28, 0),
+                fallbackModels.motor,
+                brickColour('1'),
+                'B'
+            ),
+            part(-6, '54696.dat', matrixAt(72, 28, 0), fallbackModels.motor, brickColour('1'), 'C'),
+            part(
+                -7,
+                '39367p01.dat',
+                matrixAt(-72, 28, 0, wheelOnSide),
+                fallbackModels.wheel,
+                brickColour('26'),
+                'B'
+            ),
+            part(
+                -8,
+                '39367p01.dat',
+                matrixAt(72, 28, 0, wheelOnSide),
+                fallbackModels.wheel,
+                brickColour('26'),
+                'C'
+            ),
+            part(
+                -9,
+                '54696.dat',
+                matrixAt(-28, 52, -88, beamAlongZ),
+                fallbackModels.motor,
+                brickColour('1'),
+                'A'
+            ),
+            part(
+                -10,
+                '54696.dat',
+                matrixAt(28, 52, -88, beamAlongZ),
+                fallbackModels.motor,
+                brickColour('1'),
+                'D'
+            ),
+            part(
+                -11,
+                '3895.dat',
+                matrixAt(-28, 42, -126, beamAlongZ),
+                fallbackModels.beam,
+                brickColour('4')
+            ),
+            part(
+                -12,
+                '3895.dat',
+                matrixAt(28, 42, -126, beamAlongZ),
+                fallbackModels.beam,
+                brickColour('4')
+            ),
+            part(-13, '32555.dat', matrixAt(0, 26, -112), fallbackModels.beam, brickColour('4')),
+            part(-14, '3895.dat', matrixAt(0, 50, -142), fallbackModels.beam, brickColour('2'))
         ],
         lines: [],
         triangles: [],

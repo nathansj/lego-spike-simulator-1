@@ -46,7 +46,7 @@ describe('BIOGLOW virtual reference robot', () => {
         });
     });
 
-    it('creates a visible chassis with two drive wheel subparts', () => {
+    it('creates a visible chassis with drive wheels and attachment hardware', () => {
         const model = createVirtualReferenceRobotModel();
 
         expect(model.name).toBe('bioglow-virtual-reference-robot.ldr');
@@ -60,18 +60,19 @@ describe('BIOGLOW virtual reference robot', () => {
             'D'
         ]);
         expect(model.subparts.map(({ modelNumber }) => modelNumber)).toEqual([
-            '32555.dat',
-            '32555.dat',
-            '32555.dat',
-            '54696.dat',
-            '54696.dat',
-            '39367p01.dat',
-            '39367p01.dat',
-            '54696.dat',
-            '54696.dat',
-            '32555.dat',
-            '32555.dat',
             '3895.dat',
+            '3895.dat',
+            '32555.dat',
+            '32555.dat',
+            '54696.dat',
+            '54696.dat',
+            '39367p01.dat',
+            '39367p01.dat',
+            '54696.dat',
+            '54696.dat',
+            '3895.dat',
+            '3895.dat',
+            '32555.dat',
             '3895.dat'
         ]);
         expect(model.subparts.every(({ model }) => model !== undefined)).toBe(true);
