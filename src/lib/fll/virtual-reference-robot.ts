@@ -1,4 +1,4 @@
-import { brickColour, type Model } from '$lib/ldraw/components';
+import { brickColour, resolveSubpart, type Model, type Subpart } from '$lib/ldraw/components';
 import type { DriveDefinition, PhysicsDefinition } from '$lib/physics/types';
 
 export const VIRTUAL_REFERENCE_ROBOT = {
@@ -103,42 +103,68 @@ function identityMatrix(): number[] {
 }
 
 export function createVirtualReferenceRobotModel(): Model {
-    const wheelModel: Model = {
-        name: 'virtual-reference-wheel.ldr',
-        subparts: [],
-        lines: [],
-        triangles: boxTriangles(12, 56, 56, brickColour('26')),
-        quads: [],
-        optionalLines: []
+    const fallbackModels = {
+        beam: {
+            name: 'fallback-technic-liftarm.ldr',
+            subparts: [],
+            lines: [],
+            triangles: boxTriangles(176, 16, 16, brickColour('7')),
+            quads: [],
+            optionalLines: []
+        } as Model,
+        motor: {
+            name: 'fallback-spike-motor.ldr',
+            subparts: [],
+            lines: [],
+            triangles: boxTriangles(32, 28, 48, brickColour('1')),
+            quads: [],
+            optionalLines: []
+        } as Model,
+        wheel: {
+            name: 'fallback-spike-wheel.ldr',
+            subparts: [],
+            lines: [],
+            triangles: boxTriangles(12, 56, 56, brickColour('26')),
+            quads: [],
+            optionalLines: []
+        } as Model
     };
-    return {
+
+    const part = (
+        id: number,
+        modelNumber: string,
+        matrix: number[],
+        fallback: Model,
+        colour: ReturnType<typeof brickColour>,
+        port?: 'B' | 'C'
+    ): Subpart => {
+        const subpart: Subpart = {
+            id,
+            colour,
+            matrix,
+            model: fallback,
+            modelNumber,
+            port: port ? { hub: 'virtual-reference-hub', port } : undefined
+        };
+        resolveSubpart(subpart);
+        return subpart;
+    };
+
+    const model: Model = {
         name: 'bioglow-virtual-reference-robot.ldr',
         subparts: [
-            {
-                id: -1,
-                colour: brickColour('26'),
-                matrix: [...identityMatrix().slice(0, 12), -72, 28, 0, 1],
-                model: wheelModel,
-                modelNumber: '39367p01.dat',
-                port: { hub: 'virtual-reference-hub', port: 'B' }
-            },
-            {
-                id: -2,
-                colour: brickColour('26'),
-                matrix: [...identityMatrix().slice(0, 12), 72, 28, 0, 1],
-                model: wheelModel,
-                modelNumber: '39367p01.dat',
-                port: { hub: 'virtual-reference-hub', port: 'C' }
-            }
+            part(-1, '32555.dat', [...identityMatrix().slice(0, 12), 0, 8, -70, 1], fallbackModels.beam, brickColour('7')),
+            part(-2, '32555.dat', [...identityMatrix().slice(0, 12), 0, 8, 70, 1], fallbackModels.beam, brickColour('7')),
+            part(-3, '32555.dat', [...identityMatrix().slice(0, 12), -72, 8, 0, 1], fallbackModels.beam, brickColour('7')),
+            part(-4, '54696.dat', [...identityMatrix().slice(0, 12), -40, 48, 0, 1], fallbackModels.motor, brickColour('1')),
+            part(-5, '54696.dat', [...identityMatrix().slice(0, 12), 40, 48, 0, 1], fallbackModels.motor, brickColour('1')),
+            part(-6, '39367p01.dat', [...identityMatrix().slice(0, 12), -72, 28, 0, 1], fallbackModels.wheel, brickColour('26'), 'B'),
+            part(-7, '39367p01.dat', [...identityMatrix().slice(0, 12), 72, 28, 0, 1], fallbackModels.wheel, brickColour('26'), 'C')
         ],
         lines: [],
-        triangles: boxTriangles(
-            VIRTUAL_REFERENCE_ROBOT.chassis.widthMm,
-            VIRTUAL_REFERENCE_ROBOT.chassis.heightMm,
-            VIRTUAL_REFERENCE_ROBOT.chassis.lengthMm,
-            brickColour('1')
-        ),
+        triangles: [],
         quads: [],
         optionalLines: []
     };
+    return model;
 }
