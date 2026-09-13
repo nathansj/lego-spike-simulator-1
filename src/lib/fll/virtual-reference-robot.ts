@@ -7,9 +7,9 @@ export const VIRTUAL_REFERENCE_ROBOT = {
     status: 'design-target-uncalibrated',
     purpose: 'A modular simulator reference robot for BIOGLOW mission planning.',
     chassis: {
-        widthMm: 180,
-        lengthMm: 220,
-        heightMm: 120,
+        widthMm: 120,
+        lengthMm: 160,
+        heightMm: 56,
         massKg: 1,
         wheelDiameterMm: 56,
         trackWidthMm: 144,

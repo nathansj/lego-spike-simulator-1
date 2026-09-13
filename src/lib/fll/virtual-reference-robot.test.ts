@@ -32,7 +32,7 @@ describe('BIOGLOW virtual reference robot', () => {
         expect(physics.colliders).toEqual([
             {
                 shape: 'box',
-                sizeMm: { x: 180, y: 120, z: 220 }
+                sizeMm: { x: 120, y: 56, z: 160 }
             }
         ]);
     });
