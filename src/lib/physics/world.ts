@@ -83,13 +83,10 @@ export class PhysicsWorld {
         const body = createRigidBody(this.world, definition);
         this.bodyHandles.set(definition.id, body.handle);
         if (definition.physics.motionMode === 'planarPush' || definition.physics.externalMotionOnly)
-            this.externalMotionOnly.set(
-                definition.id,
-                {
-                    ...(definition.physics.enabledTranslations ?? { x: true, y: true, z: true }),
-                    releaseFrames: definition.physics.motionReleaseFrames ?? 1
-                }
-            );
+            this.externalMotionOnly.set(definition.id, {
+                ...(definition.physics.enabledTranslations ?? { x: true, y: true, z: true }),
+                releaseFrames: definition.physics.motionReleaseFrames ?? 1
+            });
         return body;
     }
 
@@ -162,6 +159,24 @@ export class PhysicsWorld {
             });
         }
         return contacts;
+    }
+
+    contactBodyIdsForBody(id: string): string[] {
+        const body = this.getBody(id);
+        if (!body) return [];
+        const bodyIds = new Set<string>();
+        for (let colliderIndex = 0; colliderIndex < body.numColliders(); colliderIndex++) {
+            const collider = body.collider(colliderIndex);
+            this.world.contactPairsWith(collider, (other) => {
+                const parent = other.parent();
+                if (!parent) return;
+                const otherId = [...this.bodyHandles].find(
+                    ([, handle]) => handle === parent.handle
+                )?.[0];
+                if (otherId && otherId !== id) bodyIds.add(otherId);
+            });
+        }
+        return [...bodyIds];
     }
 
     bodiesAreTouching(firstId: string, secondId: string): boolean {
@@ -464,7 +479,9 @@ export class PhysicsWorld {
             }
             const velocity = body.linvel();
             const previousReleaseFrames = this.externalMotionOnlyReleaseFrames.get(id) ?? 0;
-            const releaseFrames = pushed ? config.releaseFrames : Math.max(0, previousReleaseFrames - 1);
+            const releaseFrames = pushed
+                ? config.releaseFrames
+                : Math.max(0, previousReleaseFrames - 1);
             const released = pushed || releaseFrames > 0;
             body.setEnabledTranslations(released && config.x, config.y, released && config.z, true);
             if (!released) {

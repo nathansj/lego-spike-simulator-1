@@ -136,17 +136,22 @@
         const forceMagnitude = Math.hypot(force.x, force.y, force.z);
         const speedMmPerSecond = Math.hypot(body.linvel().x, body.linvel().z) * 1000;
         const physics = simulation.physics;
-        const modelContacts = scene.objects
-            .filter((object) => object.id && physics.bodiesAreTouching('#robot', object.id))
-            .map((object) => object.name);
-        if (speedMmPerSecond < 1 && modelContacts.length > 0) {
-            return `cause=stationary-in-contact-with:${modelContacts.join(',')}`;
+        const contactBodyIds = physics.contactBodyIdsForBody('#robot');
+        const contactNames = contactBodyIds.map(
+            (bodyId) => scene.objects.find((object) => object.id === bodyId)?.name ?? bodyId
+        );
+        const nonMatContacts = contactNames.filter((name) => name !== '#mat');
+        if (speedMmPerSecond < 1 && forceMagnitude >= 0.01 && nonMatContacts.length > 0) {
+            return `cause=physics-snag-contact=${nonMatContacts.join(',')}`;
+        }
+        if (speedMmPerSecond < 1 && contactNames.length > 0) {
+            return `cause=stationary-in-contact-with:${contactNames.join(',')}`;
         }
         if (speedMmPerSecond < 1 && forceMagnitude < 0.01) {
             return 'cause=zero-applied-force-check-wheel-geometry-and-motor-ports';
         }
         if (speedMmPerSecond < 1) {
-            return `cause=force-not-producing-motion${modelContacts.length > 0 ? `-contacts:${modelContacts.join(',')}` : '-inspect-mat-friction-or-wheel-alignment'}`;
+            return `cause=force-not-producing-motion${nonMatContacts.length > 0 ? `-contacts:${nonMatContacts.join(',')}` : '-inspect-mat-friction-or-wheel-alignment'}`;
         }
         return 'cause=moving';
     }

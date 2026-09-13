@@ -41,6 +41,31 @@ describe('PhysicsWorld', () => {
         world.dispose();
     });
 
+    it('reports the body IDs involved in a contact', async () => {
+        const world = await PhysicsWorld.create({ gravityMps2: { x: 0, y: 0, z: 0 } });
+        world.addBody({
+            id: 'obstacle',
+            positionMm: { x: 90, y: 50, z: 0 },
+            physics: {
+                bodyType: 'fixed',
+                colliders: [{ shape: 'box', sizeMm: { x: 100, y: 100, z: 100 } }]
+            }
+        });
+        world.addBody({
+            id: 'robot',
+            positionMm: { x: 0, y: 50, z: 0 },
+            physics: {
+                bodyType: 'dynamic',
+                massKg: 1,
+                colliders: [{ shape: 'box', sizeMm: { x: 100, y: 100, z: 100 } }]
+            }
+        });
+        world.step();
+
+        expect(world.contactBodyIdsForBody('robot')).toEqual(['obstacle']);
+        world.dispose();
+    });
+
     it('holds a dynamic object at a world hinge while allowing rotation', async () => {
         const world = await PhysicsWorld.create({ gravityMps2: { x: 0, y: 0, z: 0 } });
         const body = world.addBody({
@@ -365,7 +390,9 @@ describe('PhysicsWorld', () => {
         expect(world.isJointBroken('release-latch')).toBe(true);
         const releasedX = world.getTransform('latched')!.positionMm.x;
         for (let index = 0; index < 30; index++) world.step();
-        expect(Math.abs(world.getTransform('latched')!.positionMm.x - releasedX)).toBeGreaterThan(10);
+        expect(Math.abs(world.getTransform('latched')!.positionMm.x - releasedX)).toBeGreaterThan(
+            10
+        );
 
         world.restoreSnapshot(initial);
         expect(world.isJointBroken('release-latch')).toBe(false);
