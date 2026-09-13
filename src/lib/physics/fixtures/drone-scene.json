@@ -40,14 +40,19 @@
             },
             "continuousCollisionDetection": false,
             "colliders": [
-                {
-                    "collisionEnabled": true,
-                    "shape": "box",
-                    "sizeMm": {
-                        "x": 140,
-                        "y": 65,
-                        "z": 170
-                    }
+                    {
+                        "collisionEnabled": true,
+                        "shape": "box",
+                        "sizeMm": {
+                            "x": 176.0007667541504,
+                            "y": 115.14067459106445,
+                            "z": 184.00016021728516
+                        },
+                        "positionMm": {
+                            "x": 0,
+                            "y": 0,
+                            "z": 0
+                        }
                 }
             ]
         },

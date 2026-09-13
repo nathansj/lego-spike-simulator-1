@@ -17,10 +17,7 @@ import {
 import type { SceneStore } from '$lib/spike/scene';
 import * as m4 from '$lib/ldraw/m4';
 
-async function setup(
-    program: 'project5' | 'project6' | false = false,
-    boundaries = false
-) {
+async function setup(program: 'project5' | 'project6' | false = false, boundaries = false) {
     const scene: SceneStore = { ...parseSceneDefinition(fixture), map: undefined };
     for (const [i, obj] of [scene.robot, ...scene.objects].entries()) {
         obj.compiled = [fixture.robot, ...fixture.objects][i].compiled as typeof obj.compiled;
@@ -75,12 +72,7 @@ async function setup(
                       action('steer', '-31', '10', 'rotations'),
                       action('stopMove')
                   ]);
-        const event = new EventStatement(
-            'flipperevents_whenProgramStarts',
-            'start',
-            [],
-            script
-        );
+        const event = new EventStatement('flipperevents_whenProgramStarts', 'start', [], script);
         vm = new VM('robot', hub, {}, new Map([['start', event]]), new Map(), undefined);
     }
 
@@ -88,6 +80,25 @@ async function setup(
 }
 describe('saved drone scene', () => {
     afterEach(() => vi.unstubAllGlobals());
+    it('fits the robot collider to the compiled robot bounds', () => {
+        const robot = fixture.robot;
+        const collider = robot.physics.colliders[0];
+        const bbox = robot.compiled.bbox;
+
+        expect(collider.shape).toBe('box');
+        if (collider.shape !== 'box') return;
+        expect(collider.sizeMm).toEqual({
+            x: bbox.max.x - bbox.min.x,
+            y: bbox.max.y - bbox.min.y,
+            z: bbox.max.z - bbox.min.z
+        });
+        expect(collider.positionMm).toEqual({
+            x: (bbox.min.x + bbox.max.x) / 2,
+            y: (bbox.min.y + bbox.max.y) / 2,
+            z: (bbox.min.z + bbox.max.z) / 2
+        });
+    });
+
     it('holds the linked red foot still under gravity', async () => {
         const { simulation } = await setup();
         const start = simulation.physics.getTransform('45832-01-red-base')!.positionMm;
@@ -177,9 +188,12 @@ describe('saved drone scene', () => {
         );
         expect(Math.abs((simulation.scene.robot.rotation ?? 0) - initialYaw)).toBeGreaterThan(2);
         expect(
-            ['45832-01-red-hinge', '45832-01-white-hinge', '45832-01-white-drone-hinge', '45832-01-red-drone-hinge'].some(
-                (id) => simulation.physics.isJointBroken(id)
-            )
+            [
+                '45832-01-red-hinge',
+                '45832-01-white-hinge',
+                '45832-01-white-drone-hinge',
+                '45832-01-red-drone-hinge'
+            ].some((id) => simulation.physics.isJointBroken(id))
         ).toBe(false);
         expect(hub.ports.A.motor!.on).toBe(false);
         expect(hub.ports.B.motor!.on).toBe(false);

@@ -379,6 +379,11 @@
                                   x: Math.max(1, compiled.bbox.max.x - compiled.bbox.min.x),
                                   y: Math.max(1, compiled.bbox.max.y - compiled.bbox.min.y),
                                   z: Math.max(1, compiled.bbox.max.z - compiled.bbox.min.z)
+                              },
+                              positionMm: {
+                                  x: (compiled.bbox.min.x + compiled.bbox.max.x) / 2,
+                                  y: (compiled.bbox.min.y + compiled.bbox.max.y) / 2,
+                                  z: (compiled.bbox.min.z + compiled.bbox.max.z) / 2
                               }
                           }
                       ]
