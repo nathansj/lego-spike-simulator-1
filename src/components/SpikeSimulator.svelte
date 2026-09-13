@@ -582,98 +582,118 @@
         if (start) {
             clearRunLog();
             appendRunLog('info', 'Starting robot run.');
-            clearDroneSurveyMatch();
-            simulation?.dispose();
-            simulation = undefined;
-            if (vm) {
-                vm.stop();
-                hubImage = '0000000000000000000000000';
-                hubCentreButtonColour = '#ffffff';
-            }
-            const selected = Blockly.common.getSelected();
-            if (selected) {
-                selected.unselect();
-            }
-            hub.setEventHandler(handleHubEvent);
-            hub.reset();
-            let sensorList: SensorView[] = [];
-            if (hub.ports.A.type != 'none') {
-                sensorList.push({ id: hub.ports.A.id(), port: 'A', type: hub.ports.A.type });
-            }
-            if (hub.ports.B.type != 'none') {
-                sensorList.push({ id: hub.ports.B.id(), port: 'B', type: hub.ports.B.type });
-            }
-            if (hub.ports.C.type != 'none') {
-                sensorList.push({ id: hub.ports.C.id(), port: 'C', type: hub.ports.C.type });
-            }
-            if (hub.ports.D.type != 'none') {
-                sensorList.push({ id: hub.ports.D.id(), port: 'D', type: hub.ports.D.type });
-            }
-            if (hub.ports.E.type != 'none') {
-                sensorList.push({ id: hub.ports.E.id(), port: 'E', type: hub.ports.E.type });
-            }
-            if (hub.ports.F.type != 'none') {
-                sensorList.push({ id: hub.ports.F.id(), port: 'F', type: hub.ports.F.type });
-            }
-            sensors = sensorList;
-            const globals: Namespace = {};
-            if (workspace) {
-                let variables = workspace.getVariablesOfType('Number');
-                for (let i = 0; i < variables.length; i++) {
-                    globals[variables[i].name] = new StringValue('0');
+            try {
+                clearDroneSurveyMatch();
+                simulation?.dispose();
+                simulation = undefined;
+                if (vm) {
+                    vm.stop();
+                    hubImage = '0000000000000000000000000';
+                    hubCentreButtonColour = '#ffffff';
                 }
-                variables = workspace.getVariablesOfType('String');
-                for (let i = 0; i < variables.length; i++) {
-                    globals[variables[i].name] = new StringValue('0');
+                const selected = Blockly.common.getSelected();
+                if (selected) {
+                    selected.unselect();
                 }
-                variables = workspace.getVariablesOfType('list');
-                for (let i = 0; i < variables.length; i++) {
-                    globals[variables[i].name] = new ListValue([]);
+                hub.setEventHandler(handleHubEvent);
+                hub.reset();
+                let sensorList: SensorView[] = [];
+                if (hub.ports.A.type != 'none') {
+                    sensorList.push({ id: hub.ports.A.id(), port: 'A', type: hub.ports.A.type });
                 }
-            }
-            hub = hub;
-            scene = copyScene($sceneStore);
-            appendRunLog(
-                'info',
-                `Robot pose=(${scene.robot.position?.x ?? 0}, ${scene.robot.position?.z ?? 0})mm wheels=${hub.wheels.length}`
-            );
-            appendRunLog(
-                'info',
-                `Mission models: ${scene.objects.map((object) => `${object.name}[${object.id ?? 'pending'}]`).join(', ') || 'none'}; joints=${scene.joints?.length ?? 0}; wheel commands=${formatWheelCommands()}`
-            );
-            for (const object of [scene.robot, ...scene.objects]) {
-                if (object.bricks && !object.compiled) {
-                    object.compiled = compiler.compileModel(object.bricks, {
-                        rescale: false,
-                        recenter: !object.preserveOrigin
-                    });
+                if (hub.ports.B.type != 'none') {
+                    sensorList.push({ id: hub.ports.B.id(), port: 'B', type: hub.ports.B.type });
                 }
+                if (hub.ports.C.type != 'none') {
+                    sensorList.push({ id: hub.ports.C.id(), port: 'C', type: hub.ports.C.type });
+                }
+                if (hub.ports.D.type != 'none') {
+                    sensorList.push({ id: hub.ports.D.id(), port: 'D', type: hub.ports.D.type });
+                }
+                if (hub.ports.E.type != 'none') {
+                    sensorList.push({ id: hub.ports.E.id(), port: 'E', type: hub.ports.E.type });
+                }
+                if (hub.ports.F.type != 'none') {
+                    sensorList.push({ id: hub.ports.F.id(), port: 'F', type: hub.ports.F.type });
+                }
+                sensors = sensorList;
+                appendRunLog(
+                    'info',
+                    `Hub prepared: ${sensorList.map((sensor) => `${sensor.port}:${sensor.type}`).join(', ') || 'no sensors'}; wheels=${hub.wheels.length}`
+                );
+                const globals: Namespace = {};
+                if (workspace) {
+                    let variables = workspace.getVariablesOfType('Number');
+                    for (let i = 0; i < variables.length; i++) {
+                        globals[variables[i].name] = new StringValue('0');
+                    }
+                    variables = workspace.getVariablesOfType('String');
+                    for (let i = 0; i < variables.length; i++) {
+                        globals[variables[i].name] = new StringValue('0');
+                    }
+                    variables = workspace.getVariablesOfType('list');
+                    for (let i = 0; i < variables.length; i++) {
+                        globals[variables[i].name] = new ListValue([]);
+                    }
+                }
+                hub = hub;
+                scene = copyScene($sceneStore);
+                appendRunLog(
+                    'info',
+                    `Robot pose=(${scene.robot.position?.x ?? 0}, ${scene.robot.position?.z ?? 0})mm wheels=${hub.wheels.length}`
+                );
+                appendRunLog(
+                    'info',
+                    `Mission models: ${scene.objects.map((object) => `${object.name}[${object.id ?? 'pending'}]`).join(', ') || 'none'}; joints=${scene.joints?.length ?? 0}; wheel commands=${formatWheelCommands()}`
+                );
+                appendRunLog('info', 'Compiling scene models.');
+                for (const object of [scene.robot, ...scene.objects]) {
+                    if (object.bricks && !object.compiled) {
+                        object.compiled = compiler.compileModel(object.bricks, {
+                            rescale: false,
+                            recenter: !object.preserveOrigin
+                        });
+                    }
+                }
+                appendRunLog('info', 'Scene models compiled.');
+                appendRunLog('info', 'Creating robot VM.');
+                vm = new VM(id, hub, globals, $codeStore.events, $codeStore.procedures, workspace);
+                vm.start();
+                appendRunLog('info', `Robot VM started: state=${vm.state}.`);
+                appendRunLog('info', 'Creating physics world.');
+                const newSimulation = await Simulation.create(
+                    scene,
+                    vm,
+                    hub,
+                    $boundaryStore.collisions
+                );
+                if (generation !== simulationGeneration || !runSimulation) {
+                    newSimulation.dispose();
+                    return;
+                }
+                simulation = newSimulation;
+                lastDiagnosticSeconds = 0;
+                appendRunLog(
+                    'info',
+                    `Physics world ready: timestep=${newSimulation.physics.fixedTimeStep.toFixed(5)}s bodies=${scene.objects.length + 1 + ($boundaryStore.collisions ? 4 : 0)}`
+                );
+                newSimulation.setPhysicsSensors(
+                    sensorList.flatMap((sensor) => {
+                        if (sensor.type !== 'distance' && sensor.type !== 'force') return [];
+                        const pose = sensorPose(sensor.id);
+                        return pose ? [{ port: sensor.port, type: sensor.type, pose }] : [];
+                    })
+                );
+                startDroneSurveyMatch();
+                appendRunLog('info', `Simulation running: VM state=${vm.state}.`);
+                lastFrame = 0;
+                requestAnimationFrame(stepVM);
+            } catch (error) {
+                appendRunLog('error', `Run initialization failed: ${String(error)}`);
+                vm?.stop();
+                simulation?.dispose();
+                simulation = undefined;
             }
-            vm = new VM(id, hub, globals, $codeStore.events, $codeStore.procedures, workspace);
-            vm.start();
-            const newSimulation = await Simulation.create(
-                scene,
-                vm,
-                hub,
-                $boundaryStore.collisions
-            );
-            if (generation !== simulationGeneration || !runSimulation) {
-                newSimulation.dispose();
-                return;
-            }
-            simulation = newSimulation;
-            lastDiagnosticSeconds = 0;
-            appendRunLog('info', 'Simulation running.');
-            newSimulation.setPhysicsSensors(
-                sensorList.flatMap((sensor) => {
-                    if (sensor.type !== 'distance' && sensor.type !== 'force') return [];
-                    const pose = sensorPose(sensor.id);
-                    return pose ? [{ port: sensor.port, type: sensor.type, pose }] : [];
-                })
-            );
-            startDroneSurveyMatch();
-            lastFrame = 0;
-            requestAnimationFrame(stepVM);
         } else {
             appendRunLog('info', 'Robot run stopped.');
             simulation?.dispose();
