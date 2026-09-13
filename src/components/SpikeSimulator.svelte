@@ -4,6 +4,7 @@
         type Model,
         componentStore,
         findPartTransform,
+        getUnresolvedParts,
         resolveFromZip,
         setRobotFromFile,
         setRobotFromContent,
@@ -320,6 +321,11 @@
         connectWheels(hub, robot);
         loadWheelTransforms(hub, robot);
         hub = hub;
+        componentStore.update((old) => ({
+            ...old,
+            robotModel: robot,
+            unresolved: getUnresolvedParts()
+        }));
         loadVirtualReferenceRobot = false;
     }
 
