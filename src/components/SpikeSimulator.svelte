@@ -97,6 +97,8 @@
     let libraryDirectoryStatus = 'not selected';
     let lastFrame: number = 0;
     let lastDiagnosticSeconds = 0;
+    let diagnosticElapsedSeconds = 0;
+    let loopFrameCount = 0;
     let lastLoggedVmState: string | undefined;
     let scene = copyScene($sceneStore);
     let id = genId();
@@ -198,13 +200,19 @@
     }
 
     function recordCompletedFixedSteps(steps: number): void {
-        if (steps === 0 || droneSurveyMatchController.state !== 'running' || !simulation) return;
-        bioglowMatchClock.advanceFixedSteps(steps, simulation.physics.fixedTimeStep);
-        droneSurveyMatchController.setElapsedFixedSimulationTime(bioglowMatchClock.elapsedSeconds);
-        droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
-        droneSurveyMatchExpired = bioglowMatchClock.expired;
-        if (droneSurveyElapsedSeconds - lastDiagnosticSeconds >= 0.5) {
-            lastDiagnosticSeconds = droneSurveyElapsedSeconds;
+        if (steps === 0 || !simulation) return;
+        diagnosticElapsedSeconds += steps * simulation.physics.fixedTimeStep;
+        if (droneSurveyMatchController.state === 'running') {
+            bioglowMatchClock.advanceFixedSteps(steps, simulation.physics.fixedTimeStep);
+            droneSurveyMatchController.setElapsedFixedSimulationTime(
+                bioglowMatchClock.elapsedSeconds
+            );
+            droneSurveyElapsedSeconds =
+                droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
+            droneSurveyMatchExpired = bioglowMatchClock.expired;
+        }
+        if (diagnosticElapsedSeconds - lastDiagnosticSeconds >= 0.5) {
+            lastDiagnosticSeconds = diagnosticElapsedSeconds;
             const body = simulation.physics.getBody('#robot');
             const activeMotors = (['A', 'B', 'C', 'D', 'E', 'F'] as const).filter(
                 (port) => hub.ports[port].motor?.on
@@ -216,7 +224,7 @@
             );
             appendRunLog(
                 level,
-                `t=${droneSurveyElapsedSeconds.toFixed(1)}s ${motionDiagnosis()} motors=${activeMotors.join(',') || 'none'} wheels=${formatWheelCommands()} robot=${formatBodyDiagnostics('#robot', 'Robot')} models=${modelDiagnostics.join(' | ') || 'none'}`
+                `t=${diagnosticElapsedSeconds.toFixed(1)}s fixedSteps=${steps} ${motionDiagnosis()} motors=${activeMotors.join(',') || 'none'} wheels=${formatWheelCommands()} robot=${formatBodyDiagnostics('#robot', 'Robot')} models=${modelDiagnostics.join(' | ') || 'none'}`
             );
         }
         if (droneSurveyMatchExpired) {
@@ -592,6 +600,13 @@
                 lastLoggedVmState = 'running';
             }
             const frameTime = timestamp - lastFrame;
+            loopFrameCount++;
+            if (loopFrameCount % 60 === 0) {
+                appendRunLog(
+                    'info',
+                    `VM loop heartbeat: frames=${loopFrameCount} frameDelta=${frameTime.toFixed(1)}ms fixedTime=${diagnosticElapsedSeconds.toFixed(2)}s simulation=${simulation ? 'ready' : 'missing'}`
+                );
+            }
             if (vm.state == 'running') {
                 if (lastFrame > 0) {
                     const seconds = frameTime / 1000.0;
@@ -626,6 +641,8 @@
             appendRunLog('info', 'Starting robot run.');
             try {
                 lastLoggedVmState = undefined;
+                diagnosticElapsedSeconds = 0;
+                loopFrameCount = 0;
                 clearDroneSurveyMatch();
                 simulation?.dispose();
                 simulation = undefined;
