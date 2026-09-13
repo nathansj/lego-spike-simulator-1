@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Button } from 'flowbite-svelte';
+    import { afterUpdate } from 'svelte';
     import { clearRunLog, runLogStore } from '$lib/spike/run-log';
 
     const levelClasses = {
@@ -7,6 +8,12 @@
         warn: 'text-amber-700',
         error: 'text-red-700'
     } as const;
+
+    let logContainer: HTMLDivElement;
+
+    afterUpdate(() => {
+        logContainer?.scrollTo({ top: logContainer.scrollHeight });
+    });
 </script>
 
 <section class="mx-3 mt-3 w-72 rounded border border-gray-300 bg-white text-xs shadow-sm">
@@ -14,7 +21,11 @@
         <h2 class="font-semibold text-gray-800">Robot run log</h2>
         <Button color="light" size="xs" on:click={clearRunLog}>Clear</Button>
     </div>
-    <div class="max-h-56 overflow-y-auto p-2 font-mono" aria-live="polite">
+    <div
+        bind:this={logContainer}
+        class="max-h-56 overflow-y-auto break-all p-2 font-mono"
+        aria-live="polite"
+    >
         {#if $runLogStore.length === 0}
             <p class="text-gray-500">Run the robot to capture diagnostics.</p>
         {:else}
