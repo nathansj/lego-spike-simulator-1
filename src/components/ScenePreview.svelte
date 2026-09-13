@@ -17,6 +17,7 @@
     export let unresolved: string[] = [];
     export let dimMap = false;
     export let gridScale = 0;
+    export let showPhysicsDebug = false;
 
     let canRender = false;
     let gl: WebGL | undefined;
@@ -36,7 +37,13 @@
         surface: { r: 0.5, g: 0.56, b: 0.58, a: 1.0 },
         edge: { r: 0.5, g: 0.56, b: 0.58, a: 1.0 }
     };
-    const physicsDebugColour = brickColour('4');
+    const physicsDebugColour = {
+        code: 'physics-debug',
+        inheritSurface: false,
+        inheritEdge: false,
+        surface: { r: 1, g: 0.1, b: 0.9, a: 1 },
+        edge: { r: 1, g: 0.1, b: 0.9, a: 1 }
+    };
 
     function debugBoxLines(x: number, y: number, z: number): Line[] {
         const hx = x / 2;
@@ -74,7 +81,7 @@
     }
 
     function drawPhysicsDebug(object: SceneObject) {
-        if (!gl || !$boundaryStore.debugPhysics) return;
+        if (!gl || (!$boundaryStore.debugPhysics && !showPhysicsDebug)) return;
         gl.setBrightness(1.0);
         gl.setDepthTest(false);
         gl.setLineWidth(3);

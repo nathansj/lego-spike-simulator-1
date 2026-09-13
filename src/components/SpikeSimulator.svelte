@@ -960,6 +960,7 @@
                         {gridScale}
                         select="#all"
                         dimMap={true}
+                        showPhysicsDebug={true}
                         {hub}
                     />
                 {:else}
