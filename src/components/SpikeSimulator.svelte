@@ -53,6 +53,8 @@
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
     import { onDestroy, onMount } from 'svelte';
+    import RunLogConsole from '$components/RunLogConsole.svelte';
+    import { appendRunLog, clearRunLog } from '$lib/spike/run-log';
 
     export let runSimulation: boolean = false;
     export let workspace: Blockly.WorkspaceSvg | undefined;
@@ -94,6 +96,7 @@
     let sensors: SensorView[] = [];
     let libraryDirectoryStatus = 'not selected';
     let lastFrame: number = 0;
+    let lastDiagnosticSeconds = 0;
     let scene = copyScene($sceneStore);
     let id = genId();
 
@@ -131,6 +134,24 @@
         droneSurveyMatchController.setElapsedFixedSimulationTime(bioglowMatchClock.elapsedSeconds);
         droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
         droneSurveyMatchExpired = bioglowMatchClock.expired;
+        if (droneSurveyElapsedSeconds - lastDiagnosticSeconds >= 0.5) {
+            lastDiagnosticSeconds = droneSurveyElapsedSeconds;
+            const body = simulation.physics.getBody('#robot');
+            if (body) {
+                const velocity = body.linvel();
+                const speedMmPerSecond = Math.hypot(velocity.x, velocity.z) * 1000;
+                const position = body.translation();
+                const contacts = simulation.physics.contactsForBody('#robot').length;
+                const activeMotors = (['A', 'B', 'C', 'D', 'E', 'F'] as const).filter(
+                    (port) => hub.ports[port].motor?.on
+                );
+                const level = activeMotors.length > 0 && speedMmPerSecond < 1 ? 'warn' : 'info';
+                appendRunLog(
+                    level,
+                    `t=${droneSurveyElapsedSeconds.toFixed(1)}s pos=(${(position.x * 1000).toFixed(0)}, ${(position.z * 1000).toFixed(0)})mm speed=${speedMmPerSecond.toFixed(1)}mm/s contacts=${contacts} motors=${activeMotors.join(',') || 'none'}`
+                );
+            }
+        }
         if (droneSurveyMatchExpired) {
             vm?.stop();
             if (m01ObservationGeometry) finishDroneSurveyMatch();
@@ -499,6 +520,8 @@
     async function startOrPauseSimulation(start: boolean) {
         const generation = ++simulationGeneration;
         if (start) {
+            clearRunLog();
+            appendRunLog('info', 'Starting robot run.');
             clearDroneSurveyMatch();
             simulation?.dispose();
             simulation = undefined;
@@ -550,6 +573,10 @@
             }
             hub = hub;
             scene = copyScene($sceneStore);
+            appendRunLog(
+                'info',
+                `Robot pose=(${scene.robot.position?.x ?? 0}, ${scene.robot.position?.z ?? 0})mm wheels=${hub.wheels.length}`
+            );
             for (const object of [scene.robot, ...scene.objects]) {
                 if (object.bricks && !object.compiled) {
                     object.compiled = compiler.compileModel(object.bricks, {
@@ -571,6 +598,8 @@
                 return;
             }
             simulation = newSimulation;
+            lastDiagnosticSeconds = 0;
+            appendRunLog('info', 'Simulation running.');
             newSimulation.setPhysicsSensors(
                 sensorList.flatMap((sensor) => {
                     if (sensor.type !== 'distance' && sensor.type !== 'force') return [];
@@ -582,6 +611,7 @@
             lastFrame = 0;
             requestAnimationFrame(stepVM);
         } else {
+            appendRunLog('info', 'Robot run stopped.');
             simulation?.dispose();
             simulation = undefined;
             if (vm) {
@@ -770,6 +800,7 @@
                         {/if}
                     {/each}
                 {/if}
+                <RunLogConsole />
             </div>
             <div class="overflow-hidden w-full h-full">
                 {#if runSimulation}
