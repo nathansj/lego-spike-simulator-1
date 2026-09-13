@@ -138,12 +138,19 @@ function modelSegment(source: Model, segment: ModelPhysicsSegment, subparts: Sub
     };
 }
 
-function explicitPhysicsForSegment(segmentModel: Model, body: PhysicsDefinition): PhysicsDefinition {
+function explicitPhysicsForSegment(
+    segmentModel: Model,
+    body: PhysicsDefinition
+): PhysicsDefinition {
     if (!body.autoCollider && body.colliders.length > 0) {
         return body;
     }
 
-    const bbox = new WebGLCompiler().computeBoundingBox(segmentModel);
+    const compiled = new WebGLCompiler().compileModel(segmentModel, {
+        rescale: false,
+        recenter: false
+    });
+    const bbox = compiled.vertices.length > 0 ? compiled.bbox : undefined;
     const colliders =
         bbox && Number.isFinite(bbox.max.x - bbox.min.x) && Number.isFinite(bbox.max.y - bbox.min.y)
             ? [

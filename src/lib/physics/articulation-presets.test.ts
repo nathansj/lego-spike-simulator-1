@@ -8,6 +8,7 @@ import {
     type Subpart
 } from '$lib/ldraw/components';
 import {
+    createExplicitModelPhysics,
     createModelPhysicsArticulation,
     findBundledModelPhysics
 } from '$lib/physics/articulation-presets';
@@ -51,23 +52,27 @@ describe('model physics articulation', () => {
 
         const result = createModelPhysicsArticulation(model, { x: 10, y: 20, z: 30 }, sidecar);
         expect(result.objects).toHaveLength(6);
-            expect(result.objects.map((object) => object.bricks?.subparts.length)).toEqual([
-                1, 1, 1, 1, 1, 1
-            ]);
-            expect(result.objects[0].physics?.bodyType).toBe('fixed');
-            expect(result.objects[0].physics?.autoCollider).toBe(false);
-            expect(result.objects[0].physics?.colliders.length).toBeGreaterThan(0);
-            expect(result.objects[1].physics?.bodyType).toBe('dynamic');
-            expect(result.objects[3].physics?.bodyType).toBe('dynamic');
-            expect(
-                result.objects
-                    .filter((object) => object.id !== '45832-01-fixed-scenery')
+        expect(result.objects.map((object) => object.bricks?.subparts.length)).toEqual([
+            1, 1, 1, 1, 1, 1
+        ]);
+        expect(result.objects[0].physics?.bodyType).toBe('fixed');
+        expect(result.objects[0].physics?.autoCollider).toBe(false);
+        expect(result.objects[0].physics?.colliders.length).toBeGreaterThan(0);
+        expect(result.objects[1].physics?.bodyType).toBe('dynamic');
+        expect(result.objects[3].physics?.bodyType).toBe('dynamic');
+        expect(
+            result.objects
+                .filter((object) => object.id !== '45832-01-fixed-scenery')
                 .map((object) => object.editorGroup)
         ).toEqual(Array(5).fill('45832-01-mechanism'));
         // The red base is a planar body: it is held to the mat by its locked
         // vertical/rotational axes, while the drone carriage remains rail-bound.
         expect(result.joints).toHaveLength(1);
-        expect(result.objects[1].physics?.enabledTranslations).toEqual({ x: true, y: false, z: true });
+        expect(result.objects[1].physics?.enabledTranslations).toEqual({
+            x: true,
+            y: false,
+            z: true
+        });
         expect(result.joints[0]).toMatchObject({
             type: 'slider',
             parentId: '#world',
@@ -98,30 +103,60 @@ describe('model physics articulation', () => {
             bodyType: 'fixed' as const,
             colliders: [{ shape: 'box' as const, sizeMm: { x: 10, y: 10, z: 10 } }]
         };
-        const result = createModelPhysicsArticulation(model, { x: 0, y: 0, z: 0 }, {
-            version: 1,
-            model: 'grouped.mpd',
-            segments: [
-                {
-                    id: 'group-one',
-                    name: 'Group One',
-                    selection: { modelNumbers: ['submodel group 1'] },
-                    body
-                },
-                {
-                    id: 'group-two',
-                    name: 'Group Two',
-                    selection: { modelNumbers: ['SubModel Group 2'] },
-                    body
-                }
-            ],
-            joints: []
-        });
+        const result = createModelPhysicsArticulation(
+            model,
+            { x: 0, y: 0, z: 0 },
+            {
+                version: 1,
+                model: 'grouped.mpd',
+                segments: [
+                    {
+                        id: 'group-one',
+                        name: 'Group One',
+                        selection: { modelNumbers: ['submodel group 1'] },
+                        body
+                    },
+                    {
+                        id: 'group-two',
+                        name: 'Group Two',
+                        selection: { modelNumbers: ['SubModel Group 2'] },
+                        body
+                    }
+                ],
+                joints: []
+            }
+        );
 
         expect(result.objects.map((object) => object.bricks?.subparts[0]?.modelNumber)).toEqual([
             'SubModel Group 1',
             'SubModel Group 2'
         ]);
+    });
+
+    it('fits automatic colliders in the renderer coordinate frame', () => {
+        const model: Model = {
+            name: 'scaled.ldr',
+            subparts: [],
+            lines: [
+                {
+                    colour: brickColour('16'),
+                    p1: { x: 0, y: 0, z: 0 },
+                    p2: { x: 100, y: 200, z: 300 }
+                }
+            ],
+            triangles: [],
+            quads: [],
+            optionalLines: []
+        };
+
+        const physics = createExplicitModelPhysics(model, { bodyType: 'fixed' });
+        const collider = physics.colliders[0];
+
+        expect(collider).toEqual({
+            shape: 'box',
+            sizeMm: { x: 40, y: 80, z: 120 },
+            positionMm: { x: 20, y: -40, z: -60 }
+        });
     });
 
     it('registers physics sidecars for every BIOGLOW mission model', () => {
@@ -159,17 +194,16 @@ describe('model physics articulation', () => {
         setStudioMode(true);
         try {
             const model = loadModel('45832_02.mpd', readFileSync(realM02ModelPath, 'utf8'));
-            const result = createModelPhysicsArticulation(
-                model,
-                { x: 0, y: 0, z: 0 },
-                sidecar02
-            );
+            const result = createModelPhysicsArticulation(model, { x: 0, y: 0, z: 0 }, sidecar02);
             expect(result.objects).toHaveLength(5);
-            expect(result.objects.slice(0, 4).every((object) => object.bricks?.subparts.length)).toBe(
-                true
-            );
             expect(
-                result.objects.reduce((total, object) => total + (object.bricks?.subparts.length ?? 0), 0)
+                result.objects.slice(0, 4).every((object) => object.bricks?.subparts.length)
+            ).toBe(true);
+            expect(
+                result.objects.reduce(
+                    (total, object) => total + (object.bricks?.subparts.length ?? 0),
+                    0
+                )
             ).toBe(model.subparts.length);
         } finally {
             setStudioMode(false);
@@ -191,9 +225,7 @@ describe('model physics articulation', () => {
             ]);
             expect(
                 result.objects.every((object) => (object.physics?.colliders?.length ?? 0) > 0)
-            ).toBe(
-                true
-            );
+            ).toBe(true);
             expect(result.objects.every((object) => object.physics?.autoCollider === false)).toBe(
                 true
             );
