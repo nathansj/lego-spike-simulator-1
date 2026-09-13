@@ -119,6 +119,49 @@
         return `${label}[${bodyId}] pos=(${(position.x * 1000).toFixed(0)},${(position.y * 1000).toFixed(0)},${(position.z * 1000).toFixed(0)})mm vel=(${(velocity.x * 1000).toFixed(1)},${(velocity.y * 1000).toFixed(1)},${(velocity.z * 1000).toFixed(1)})mm/s ang=(${angularVelocity.x.toFixed(2)},${angularVelocity.y.toFixed(2)},${angularVelocity.z.toFixed(2)})rad/s contacts=${contacts.length}${contactSummary ? ` [${contactSummary}]` : ''} force=(${force.x.toFixed(2)},${force.y.toFixed(2)},${force.z.toFixed(2)})N sleeping=${body.isSleeping()} colliders=${body.numColliders()}`;
     }
 
+    function motionDiagnosis(): string {
+        if (!simulation) return 'cause=simulation-missing';
+        const body = simulation.physics.getBody('#robot');
+        if (!body) return 'cause=robot-body-missing';
+        if (hub.wheels.length === 0) return 'cause=no-wheel-definitions';
+        const drivenWheels = hub.wheels.filter((wheel) => hub.ports[wheel.port].type === 'motor');
+        if (drivenWheels.length === 0) return 'cause=no-motor-connected-wheels';
+        const activeMotors = drivenWheels.filter((wheel) => hub.ports[wheel.port].motor?.on);
+        if (activeMotors.length === 0) return 'cause=driven-motors-off';
+        if (activeMotors.every((wheel) => (hub.ports[wheel.port].motor?.rpm ?? 0) === 0)) {
+            return 'cause=driven-motor-command-zero-rpm';
+        }
+        if (!body.isDynamic()) return 'cause=robot-body-not-dynamic';
+        const force = body.userForce();
+        const forceMagnitude = Math.hypot(force.x, force.y, force.z);
+        const speedMmPerSecond = Math.hypot(body.linvel().x, body.linvel().z) * 1000;
+        const physics = simulation.physics;
+        const modelContacts = scene.objects
+            .filter((object) => object.id && physics.bodiesAreTouching('#robot', object.id))
+            .map((object) => object.name);
+        if (speedMmPerSecond < 1 && modelContacts.length > 0) {
+            return `cause=stationary-in-contact-with:${modelContacts.join(',')}`;
+        }
+        if (speedMmPerSecond < 1 && forceMagnitude < 0.01) {
+            return 'cause=zero-applied-force-check-wheel-geometry-and-motor-ports';
+        }
+        if (speedMmPerSecond < 1) {
+            return `cause=force-not-producing-motion${modelContacts.length > 0 ? `-contacts:${modelContacts.join(',')}` : '-inspect-mat-friction-or-wheel-alignment'}`;
+        }
+        return 'cause=moving';
+    }
+
+    function formatWheelCommands(): string {
+        return (
+            hub.wheels
+                .map((wheel) => {
+                    const motor = hub.ports[wheel.port].motor;
+                    return `${wheel.port}:${motor?.on ? `${motor.rpm}rpm` : 'off'}@(${wheel.position.x.toFixed(0)},${wheel.position.y.toFixed(0)},${wheel.position.z.toFixed(0)})mm dir=(${wheel.direction.x.toFixed(2)},${wheel.direction.z.toFixed(2)})`;
+                })
+                .join(';') || 'none'
+        );
+    }
+
     function createDroneSurveyMatchController(): DroneSurveyMatchController {
         return new DroneSurveyMatchController(() => {
             if (!simulation || !m01ObservationGeometry) {
@@ -166,7 +209,7 @@
             );
             appendRunLog(
                 level,
-                `t=${droneSurveyElapsedSeconds.toFixed(1)}s motors=${activeMotors.join(',') || 'none'} robot=${formatBodyDiagnostics('#robot', 'Robot')} models=${modelDiagnostics.join(' | ') || 'none'}`
+                `t=${droneSurveyElapsedSeconds.toFixed(1)}s ${motionDiagnosis()} motors=${activeMotors.join(',') || 'none'} wheels=${formatWheelCommands()} robot=${formatBodyDiagnostics('#robot', 'Robot')} models=${modelDiagnostics.join(' | ') || 'none'}`
             );
         }
         if (droneSurveyMatchExpired) {
@@ -596,7 +639,7 @@
             );
             appendRunLog(
                 'info',
-                `Mission models: ${scene.objects.map((object) => `${object.name}[${object.id ?? 'pending'}]`).join(', ') || 'none'}; joints=${scene.joints?.length ?? 0}`
+                `Mission models: ${scene.objects.map((object) => `${object.name}[${object.id ?? 'pending'}]`).join(', ') || 'none'}; joints=${scene.joints?.length ?? 0}; wheel commands=${formatWheelCommands()}`
             );
             for (const object of [scene.robot, ...scene.objects]) {
                 if (object.bricks && !object.compiled) {
