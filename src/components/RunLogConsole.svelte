@@ -10,9 +10,10 @@
     } as const;
 
     let logContainer: HTMLDivElement;
+    $: visibleEntries = [...$runLogStore].reverse();
 
     afterUpdate(() => {
-        logContainer?.scrollTo({ top: logContainer.scrollHeight });
+        logContainer?.scrollTo({ top: 0 });
     });
 </script>
 
@@ -29,7 +30,7 @@
         {#if $runLogStore.length === 0}
             <p class="text-gray-500">Run the robot to capture diagnostics.</p>
         {:else}
-            {#each $runLogStore as entry (entry.id)}
+            {#each visibleEntries as entry (entry.id)}
                 <p class={levelClasses[entry.level]}>
                     <span class="text-gray-500">[{entry.timestamp}]</span>
                     <span class="font-semibold">{entry.level.toUpperCase()}</span>
