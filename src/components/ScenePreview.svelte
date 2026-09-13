@@ -75,6 +75,9 @@
 
     function drawPhysicsDebug(object: SceneObject) {
         if (!gl || !$boundaryStore.debugPhysics) return;
+        gl.setBrightness(1.0);
+        gl.setDepthTest(false);
+        gl.setLineWidth(3);
         for (const collider of object.physics?.colliders ?? []) {
             const size =
                 collider.shape === 'box'
@@ -115,6 +118,8 @@
                 }
             ]);
         }
+        gl.setLineWidth(1);
+        gl.setDepthTest(true);
     }
 
     function doRender(timestamp: number) {

@@ -1099,6 +1099,15 @@ export class WebGL extends WebGLCompiler {
         this.brightness = brightness;
     }
 
+    setDepthTest(enabled: boolean) {
+        if (enabled) this.gl.enable(this.gl.DEPTH_TEST);
+        else this.gl.disable(this.gl.DEPTH_TEST);
+    }
+
+    setLineWidth(width: number) {
+        this.gl.lineWidth(Math.max(1, width));
+    }
+
     drawBox(width: number, height: number, depth: number) {
         if (!this.vertexBuffer) {
             return;
