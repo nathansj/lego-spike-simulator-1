@@ -97,6 +97,7 @@
     let libraryDirectoryStatus = 'not selected';
     let lastFrame: number = 0;
     let lastDiagnosticSeconds = 0;
+    let lastLoggedVmState: string | undefined;
     let scene = copyScene($sceneStore);
     let id = genId();
 
@@ -108,6 +109,7 @@
         const velocity = body.linvel();
         const angularVelocity = body.angvel();
         const contacts = simulation.physics.contactsForBody(bodyId);
+        const contactBodyIds = simulation.physics.contactBodyIdsForBody(bodyId);
         const contactSummary = contacts
             .slice(0, 2)
             .map(
@@ -116,7 +118,7 @@
             )
             .join(';');
         const force = body.userForce();
-        return `${label}[${bodyId}] pos=(${(position.x * 1000).toFixed(0)},${(position.y * 1000).toFixed(0)},${(position.z * 1000).toFixed(0)})mm vel=(${(velocity.x * 1000).toFixed(1)},${(velocity.y * 1000).toFixed(1)},${(velocity.z * 1000).toFixed(1)})mm/s ang=(${angularVelocity.x.toFixed(2)},${angularVelocity.y.toFixed(2)},${angularVelocity.z.toFixed(2)})rad/s contacts=${contacts.length}${contactSummary ? ` [${contactSummary}]` : ''} force=(${force.x.toFixed(2)},${force.y.toFixed(2)},${force.z.toFixed(2)})N sleeping=${body.isSleeping()} colliders=${body.numColliders()}`;
+        return `${label}[${bodyId}] pos=(${(position.x * 1000).toFixed(0)},${(position.y * 1000).toFixed(0)},${(position.z * 1000).toFixed(0)})mm vel=(${(velocity.x * 1000).toFixed(1)},${(velocity.y * 1000).toFixed(1)},${(velocity.z * 1000).toFixed(1)})mm/s ang=(${angularVelocity.x.toFixed(2)},${angularVelocity.y.toFixed(2)},${angularVelocity.z.toFixed(2)})rad/s contacts=${contacts.length} bodies=${contactBodyIds.join(',') || 'none'}${contactSummary ? ` [${contactSummary}]` : ''} force=(${force.x.toFixed(2)},${force.y.toFixed(2)},${force.z.toFixed(2)})N sleeping=${body.isSleeping()} colliders=${body.numColliders()}`;
     }
 
     function motionDiagnosis(): string {
@@ -565,7 +567,25 @@
             return;
         }
         if (vm.id != vm.hub.id) {
+            if (lastLoggedVmState !== 'id-mismatch') {
+                appendRunLog(
+                    'error',
+                    `VM loop stopped: VM id ${vm.id} does not match hub id ${vm.hub.id}.`
+                );
+                lastLoggedVmState = 'id-mismatch';
+            }
             return;
+        }
+        if (vm.state != 'running') {
+            if (lastLoggedVmState !== vm.state) {
+                appendRunLog('warn', `VM loop stopped: state=${vm.state}; ${motionDiagnosis()}`);
+                lastLoggedVmState = vm.state;
+            }
+            return;
+        }
+        if (lastLoggedVmState !== 'running') {
+            appendRunLog('info', 'VM animation loop active.');
+            lastLoggedVmState = 'running';
         }
         const frameTime = timestamp - lastFrame;
         if (vm.state == 'running') {
@@ -593,6 +613,7 @@
             clearRunLog();
             appendRunLog('info', 'Starting robot run.');
             try {
+                lastLoggedVmState = undefined;
                 clearDroneSurveyMatch();
                 simulation?.dispose();
                 simulation = undefined;
