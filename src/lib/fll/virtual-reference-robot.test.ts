@@ -7,6 +7,7 @@ import {
     VIRTUAL_REFERENCE_ROBOT_LDRAW_PARTS,
     VIRTUAL_REFERENCE_ROBOT_LIBRARY_VERIFICATION
 } from '$lib/fll/virtual-reference-robot';
+import { WebGLCompiler } from '$lib/ldraw/gl';
 
 describe('BIOGLOW virtual reference robot', () => {
     it('defines a modular chassis and attachment interface', () => {
@@ -86,6 +87,15 @@ describe('BIOGLOW virtual reference robot', () => {
                 ({ status }) => status === 'all-required-parts-present'
             )
         ).toHaveLength(2);
+    });
+
+    it('has a finite compiled height for ground placement', () => {
+        const compiled = new WebGLCompiler().compileModel(createVirtualReferenceRobotModel(), {
+            rescale: false
+        });
+
+        expect(compiled.bbox.max.y - compiled.bbox.min.y).toBeGreaterThan(0);
+        expect(compiled.bbox.min.y).toBeLessThan(0);
     });
 });
 

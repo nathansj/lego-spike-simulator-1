@@ -150,9 +150,15 @@ export class Simulation {
             const robot = index === 0;
             const id = robot ? '#robot' : (object.id ?? `object-${index}`);
             object.id = id;
+            const position = { ...(object.position ?? { x: 0, y: 0, z: 0 }) };
+            if (robot && object.compiled && !object.preserveOrigin) {
+                const groundOffset = -object.compiled.bbox.min.y;
+                if (Number.isFinite(groundOffset)) position.y = groundOffset;
+            }
+            object.position = position;
             physics.addBody({
                 id,
-                positionMm: object.position ?? { x: 0, y: 0, z: 0 },
+                positionMm: position,
                 rotation: object.rotationQuaternion ?? yawDegreesToQuaternion(object.rotation ?? 0),
                 physics: runtimePhysics(object)
             });
