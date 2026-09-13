@@ -138,7 +138,7 @@ describe('model physics articulation', () => {
         }
     });
 
-    it('keeps M02 candidate groups separated from unassigned root references', () => {
+    it('groups all M02 model pieces under one editor selection', () => {
         const definition = findBundledModelPhysics('45832_02.mpd');
         expect(definition?.segments.map((segment) => segment.selection.modelNumbers)).toEqual([
             ['SubModel Group 1'],
@@ -147,8 +147,11 @@ describe('model physics articulation', () => {
             ['SubModel Group 3_Mirrored', '57539.dat Copy 4'],
             undefined
         ]);
-        expect(definition?.segments.at(-1)?.editorName).toBe('Unassigned root references');
-        expect(new Set(definition?.segments.map((segment) => segment.editorGroup)).size).toBe(5);
+        expect(definition?.segments.at(-1)?.editorName).toBe('M02 Exploding Seeds model');
+        expect(new Set(definition?.segments.map((segment) => segment.editorGroup)).size).toBe(1);
+        expect(new Set(definition?.segments.map((segment) => segment.editorName))).toEqual(
+            new Set(['M02 Exploding Seeds model'])
+        );
         expect(definition?.joints).toEqual([]);
     });
 

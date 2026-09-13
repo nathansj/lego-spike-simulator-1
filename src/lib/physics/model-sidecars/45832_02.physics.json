@@ -21,15 +21,15 @@
         }
     },
     "mission": "Exploding Seeds",
-    "mechanics": ["release","dynamic-pieces","latch"],
+    "mechanics": ["release", "dynamic-pieces", "latch"],
     "tuningStatus": "candidate-inspection-only; anchors and limits require measured model calibration",
     "segments": [
         {
             "id": "45832-02-group-1-candidate",
             "name": "M02 candidate group 1",
             "selection": { "modelNumbers": ["SubModel Group 1"] },
-            "editorGroup": "M02 candidate group 1",
-            "editorName": "SubModel Group 1",
+            "editorGroup": "45832-02-mechanism",
+            "editorName": "M02 Exploding Seeds model",
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
@@ -42,8 +42,8 @@
             "id": "45832-02-group-2-candidate",
             "name": "M02 candidate group 2",
             "selection": { "modelNumbers": ["SubModel Group 2"] },
-            "editorGroup": "M02 candidate group 2",
-            "editorName": "SubModel Group 2",
+            "editorGroup": "45832-02-mechanism",
+            "editorName": "M02 Exploding Seeds model",
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
@@ -56,8 +56,8 @@
             "id": "45832-02-group-3-candidate",
             "name": "M02 candidate group 3",
             "selection": { "modelNumbers": ["SubModel Group 3", "57539.dat Copy 3"] },
-            "editorGroup": "M02 candidate group 3",
-            "editorName": "SubModel Group 3 + hose copy 3",
+            "editorGroup": "45832-02-mechanism",
+            "editorName": "M02 Exploding Seeds model",
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
@@ -72,8 +72,8 @@
             "selection": {
                 "modelNumbers": ["SubModel Group 3_Mirrored", "57539.dat Copy 4"]
             },
-            "editorGroup": "M02 candidate mirrored group",
-            "editorName": "SubModel Group 3 mirrored + hose copy 4",
+            "editorGroup": "45832-02-mechanism",
+            "editorName": "M02 Exploding Seeds model",
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
@@ -87,8 +87,8 @@
             "name": "M02 unassigned root geometry",
             "selection": {},
             "includeRootGeometry": true,
-            "editorGroup": "M02 unassigned root geometry",
-            "editorName": "Unassigned root references",
+            "editorGroup": "45832-02-mechanism",
+            "editorName": "M02 Exploding Seeds model",
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
