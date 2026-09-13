@@ -278,21 +278,38 @@
 
     function updateSceneRobot(robot: Model, compiled: CompiledModel | undefined) {
         sceneStore.update((old) => {
+            const physics =
+                old.robot.physics ??
+                createExplicitModelPhysics(robot, {
+                    bodyType: 'dynamic',
+                    massKg: 0.95,
+                    friction: 0.7,
+                    restitution: 0,
+                    enabledRotations: { x: false, y: true, z: false }
+                });
+            const fittedPhysics = compiled
+                ? {
+                      ...physics,
+                      autoCollider: false,
+                      colliders: [
+                          {
+                              shape: 'box' as const,
+                              sizeMm: {
+                                  x: Math.max(1, compiled.bbox.max.x - compiled.bbox.min.x),
+                                  y: Math.max(1, compiled.bbox.max.y - compiled.bbox.min.y),
+                                  z: Math.max(1, compiled.bbox.max.z - compiled.bbox.min.z)
+                              }
+                          }
+                      ]
+                  }
+                : physics;
             return {
                 ...old,
                 robot: {
                     ...old.robot,
                     bricks: robot,
                     compiled,
-                    physics:
-                        old.robot.physics ??
-                        createExplicitModelPhysics(robot, {
-                            bodyType: 'dynamic',
-                            massKg: 0.95,
-                            friction: 0.7,
-                            restitution: 0,
-                            enabledRotations: { x: false, y: true, z: false }
-                        })
+                    physics: fittedPhysics
                 }
             };
         });

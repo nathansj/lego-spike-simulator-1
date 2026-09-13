@@ -113,6 +113,26 @@
         });
     }
 
+    function fitRobotPhysicsToModel(
+        model: Model,
+        physics: NonNullable<SceneObject['physics']>
+    ): NonNullable<SceneObject['physics']> {
+        const bounds = new WebGLCompiler().compileModel(model, {
+            rescale: false,
+            recenter: true
+        }).bbox;
+        const sizeMm = {
+            x: Math.max(1, bounds.max.x - bounds.min.x),
+            y: Math.max(1, bounds.max.y - bounds.min.y),
+            z: Math.max(1, bounds.max.z - bounds.min.z)
+        };
+        return {
+            ...physics,
+            autoCollider: false,
+            colliders: [{ shape: 'box', sizeMm }]
+        };
+    }
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function updateObjectsFromLibrary(unresolved: string[]) {
         sceneStore.update((old) => {
@@ -497,7 +517,19 @@
                         rotation: scene.robot.rotation,
                         name: scene.robot.name,
                         bricks: loadedRobot,
-                        physics: scene.robot.physics,
+                        physics: loadedRobot
+                            ? fitRobotPhysicsToModel(
+                                  loadedRobot,
+                                  scene.robot.physics ?? {
+                                      bodyType: 'dynamic',
+                                      massKg: 0.95,
+                                      friction: 0.7,
+                                      restitution: 0,
+                                      enabledRotations: { x: false, y: true, z: false },
+                                      colliders: []
+                                  }
+                              )
+                            : scene.robot.physics,
                         drive: scene.robot.drive,
                         hinge: scene.robot.hinge,
                         rotationQuaternion: scene.robot.rotationQuaternion,
