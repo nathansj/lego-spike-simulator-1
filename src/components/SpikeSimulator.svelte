@@ -100,6 +100,25 @@
     let scene = copyScene($sceneStore);
     let id = genId();
 
+    function formatBodyDiagnostics(bodyId: string, label: string): string {
+        if (!simulation) return `${label}[${bodyId}]=missing`;
+        const body = simulation.physics.getBody(bodyId);
+        if (!body) return `${label}[${bodyId}]=missing`;
+        const position = body.translation();
+        const velocity = body.linvel();
+        const angularVelocity = body.angvel();
+        const contacts = simulation.physics.contactsForBody(bodyId);
+        const contactSummary = contacts
+            .slice(0, 2)
+            .map(
+                (contact) =>
+                    `(${contact.pointMm.x.toFixed(0)},${contact.pointMm.y.toFixed(0)},${contact.pointMm.z.toFixed(0)})mm/${contact.impulseNewtonSeconds.toFixed(3)}Ns`
+            )
+            .join(';');
+        const force = body.userForce();
+        return `${label}[${bodyId}] pos=(${(position.x * 1000).toFixed(0)},${(position.y * 1000).toFixed(0)},${(position.z * 1000).toFixed(0)})mm vel=(${(velocity.x * 1000).toFixed(1)},${(velocity.y * 1000).toFixed(1)},${(velocity.z * 1000).toFixed(1)})mm/s ang=(${angularVelocity.x.toFixed(2)},${angularVelocity.y.toFixed(2)},${angularVelocity.z.toFixed(2)})rad/s contacts=${contacts.length}${contactSummary ? ` [${contactSummary}]` : ''} force=(${force.x.toFixed(2)},${force.y.toFixed(2)},${force.z.toFixed(2)})N sleeping=${body.isSleeping()} colliders=${body.numColliders()}`;
+    }
+
     function createDroneSurveyMatchController(): DroneSurveyMatchController {
         return new DroneSurveyMatchController(() => {
             if (!simulation || !m01ObservationGeometry) {
@@ -137,20 +156,18 @@
         if (droneSurveyElapsedSeconds - lastDiagnosticSeconds >= 0.5) {
             lastDiagnosticSeconds = droneSurveyElapsedSeconds;
             const body = simulation.physics.getBody('#robot');
-            if (body) {
-                const velocity = body.linvel();
-                const speedMmPerSecond = Math.hypot(velocity.x, velocity.z) * 1000;
-                const position = body.translation();
-                const contacts = simulation.physics.contactsForBody('#robot').length;
-                const activeMotors = (['A', 'B', 'C', 'D', 'E', 'F'] as const).filter(
-                    (port) => hub.ports[port].motor?.on
-                );
-                const level = activeMotors.length > 0 && speedMmPerSecond < 1 ? 'warn' : 'info';
-                appendRunLog(
-                    level,
-                    `t=${droneSurveyElapsedSeconds.toFixed(1)}s pos=(${(position.x * 1000).toFixed(0)}, ${(position.z * 1000).toFixed(0)})mm speed=${speedMmPerSecond.toFixed(1)}mm/s contacts=${contacts} motors=${activeMotors.join(',') || 'none'}`
-                );
-            }
+            const activeMotors = (['A', 'B', 'C', 'D', 'E', 'F'] as const).filter(
+                (port) => hub.ports[port].motor?.on
+            );
+            const speedMmPerSecond = body ? Math.hypot(body.linvel().x, body.linvel().z) * 1000 : 0;
+            const level = activeMotors.length > 0 && speedMmPerSecond < 1 ? 'warn' : 'info';
+            const modelDiagnostics = scene.objects.map((object, index) =>
+                formatBodyDiagnostics(object.id ?? `object-${index + 1}`, object.name)
+            );
+            appendRunLog(
+                level,
+                `t=${droneSurveyElapsedSeconds.toFixed(1)}s motors=${activeMotors.join(',') || 'none'} robot=${formatBodyDiagnostics('#robot', 'Robot')} models=${modelDiagnostics.join(' | ') || 'none'}`
+            );
         }
         if (droneSurveyMatchExpired) {
             vm?.stop();
@@ -576,6 +593,10 @@
             appendRunLog(
                 'info',
                 `Robot pose=(${scene.robot.position?.x ?? 0}, ${scene.robot.position?.z ?? 0})mm wheels=${hub.wheels.length}`
+            );
+            appendRunLog(
+                'info',
+                `Mission models: ${scene.objects.map((object) => `${object.name}[${object.id ?? 'pending'}]`).join(', ') || 'none'}; joints=${scene.joints?.length ?? 0}`
             );
             for (const object of [scene.robot, ...scene.objects]) {
                 if (object.bricks && !object.compiled) {
