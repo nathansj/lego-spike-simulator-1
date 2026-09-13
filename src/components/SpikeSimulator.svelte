@@ -566,45 +566,57 @@
         if (!vm) {
             return;
         }
-        if (vm.id != vm.hub.id) {
-            if (lastLoggedVmState !== 'id-mismatch') {
-                appendRunLog(
-                    'error',
-                    `VM loop stopped: VM id ${vm.id} does not match hub id ${vm.hub.id}.`
-                );
-                lastLoggedVmState = 'id-mismatch';
+        try {
+            if (vm.id != vm.hub.id) {
+                if (lastLoggedVmState !== 'id-mismatch') {
+                    appendRunLog(
+                        'error',
+                        `VM loop stopped: VM id ${vm.id} does not match hub id ${vm.hub.id}.`
+                    );
+                    lastLoggedVmState = 'id-mismatch';
+                }
+                return;
             }
-            return;
-        }
-        if (vm.state != 'running') {
-            if (lastLoggedVmState !== vm.state) {
-                appendRunLog('warn', `VM loop stopped: state=${vm.state}; ${motionDiagnosis()}`);
-                lastLoggedVmState = vm.state;
+            if (vm.state != 'running') {
+                if (lastLoggedVmState !== vm.state) {
+                    appendRunLog(
+                        'warn',
+                        `VM loop stopped: state=${vm.state}; ${motionDiagnosis()}`
+                    );
+                    lastLoggedVmState = vm.state;
+                }
+                return;
             }
-            return;
-        }
-        if (lastLoggedVmState !== 'running') {
-            appendRunLog('info', 'VM animation loop active.');
-            lastLoggedVmState = 'running';
-        }
-        const frameTime = timestamp - lastFrame;
-        if (vm.state == 'running') {
-            if (lastFrame > 0) {
-                const seconds = frameTime / 1000.0;
-                if (simulation) {
-                    const boundedSeconds = Math.min(seconds, bioglowMatchClock.remainingSeconds);
-                    if (boundedSeconds > 0) {
-                        recordCompletedFixedSteps(simulation.advance(boundedSeconds));
+            if (lastLoggedVmState !== 'running') {
+                appendRunLog('info', 'VM animation loop active.');
+                lastLoggedVmState = 'running';
+            }
+            const frameTime = timestamp - lastFrame;
+            if (vm.state == 'running') {
+                if (lastFrame > 0) {
+                    const seconds = frameTime / 1000.0;
+                    if (simulation) {
+                        const boundedSeconds = Math.min(
+                            seconds,
+                            bioglowMatchClock.remainingSeconds
+                        );
+                        if (boundedSeconds > 0) {
+                            recordCompletedFixedSteps(simulation.advance(boundedSeconds));
+                        }
+                    } else {
+                        vm.step(Math.min(seconds, 0.1), scene);
                     }
                 } else {
-                    vm.step(Math.min(seconds, 0.1), scene);
+                    vm.step(0.0, scene);
                 }
-            } else {
-                vm.step(0.0, scene);
+                requestAnimationFrame(stepVM);
             }
-            requestAnimationFrame(stepVM);
+            lastFrame = timestamp;
+        } catch (error) {
+            appendRunLog('error', `VM loop error: ${String(error)}`);
+            vm.stop();
+            lastLoggedVmState = 'error';
         }
-        lastFrame = timestamp;
     }
 
     async function startOrPauseSimulation(start: boolean) {
