@@ -1,4 +1,4 @@
-# BIOGLOW simulator development team
+# FLL simulator development team
 
 ## Working target
 
@@ -6,6 +6,12 @@ A student or coach can load the BIOGLOW field, configure a SPIKE robot and its
 attachments, import or create a block program, run missions, inspect sensor and
 score explanations, reset, and save/reload the project. A complete release needs
 all official missions and applicable match rules, not just visible mission models.
+
+The app must adapt to multiple FLL seasons while retaining BIOGLOW as its current
+delivery target. The participant experience, expert setup, and developer diagnostics
+share a reusable shell; season/edition packages provide their content and rules.
+The [design brief](./design/fll-experience-brief.md) defines this product direction
+and the design agent's first assignment; it does not claim these features exist yet.
 
 Provisional scope: 2026–27 BIOGLOW Founders Edition Challenge, SPIKE Prime,
 Blockly first, local browser execution. The owner has no physical reference robot
@@ -23,23 +29,43 @@ and current updates before implementation. [FIRST season materials][season]
 ## Roster
 
 The primary conversation coordinates the team. These are reusable role definitions,
-not seven permanently running processes. Expertise is enforced through bounded
+not eight permanently running processes. Expertise is enforced through bounded
 ownership, evidence, tests, and independent review.
 
-| Agent            | Responsibility                                                          | Default ownership                                                                     | First bounded assignment                                                          |
-| ---------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| `fll_lead`       | Architecture, task sequencing, interfaces, integration                  | Shared contracts, integration wiring, project documentation                           | Turn baseline findings into small tasks; agree simulation/mission interfaces      |
-| `fll_rules`      | Official rules, mission state, explainable scoring                      | Proposed `src/lib/fll/`, rule-source records, scoring tests                           | Verify M01 and global match rules; write a sourced scoring specification          |
-| `fll_physics`    | Robot motion, contacts, joints, sensors, calibration                    | `src/lib/physics/` except model sidecars; `src/lib/spike/simulation*`                 | Reproduce encoder/sensor issues, then validate M01 mechanics with measured inputs |
-| `fll_runtime`    | SPIKE block semantics and project compatibility                         | `src/lib/spike/vm.ts`, `src/lib/blockly/`, `src/lib/scratch/`                         | Add VM conformance regressions for motor duration and program cancellation        |
-| `fll_assets`     | LDraw ingestion, field placement, mechanism sidecars, scene persistence | `src/lib/ldraw/`, model sidecars, `scene.ts`, `scene-schema*`, scoped asset additions | Inventory mission models and provenance; fix geometry persistence by stable ID    |
-| `fll_experience` | Student/coach workflows, views, diagnostics, accessibility              | `src/components/`, `src/pages/`, `src/app.css`                                        | Define and test load → configure → run → inspect → reset workflow                 |
-| `fll_qa`         | Independent review, reproducible scenarios, release evidence            | Assigned test/fixture paths and validation reports                                    | Reproduce baseline defects; propose a full mission acceptance matrix              |
+| Agent            | Responsibility                                                                    | Default ownership                                                                     | First bounded assignment                                                           |
+| ---------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `fll_lead`       | Architecture, task sequencing, interfaces, integration                            | Shared contracts, integration wiring, project documentation                           | Turn baseline findings into small tasks; agree simulation/mission interfaces       |
+| `fll_rules`      | Official rules, mission state, explainable scoring                                | Proposed `src/lib/fll/`, rule-source records, scoring tests                           | Verify M01 and global match rules; write a sourced scoring specification           |
+| `fll_physics`    | Robot motion, contacts, joints, sensors, calibration                              | `src/lib/physics/` except model sidecars; `src/lib/spike/simulation*`                 | Reproduce encoder/sensor issues, then validate M01 mechanics with measured inputs  |
+| `fll_runtime`    | SPIKE block semantics and project compatibility                                   | `src/lib/spike/vm.ts`, `src/lib/blockly/`, `src/lib/scratch/`                         | Add VM conformance regressions for motor duration and program cancellation         |
+| `fll_assets`     | LDraw ingestion, field placement, mechanism sidecars, scene persistence           | `src/lib/ldraw/`, model sidecars, `scene.ts`, `scene-schema*`, scoped asset additions | Inventory mission models and provenance; fix geometry persistence by stable ID     |
+| `fll_design`     | Participant UX, visual/interaction design, expert tools, seasonal adaptability    | `docs/design/`, explicitly assigned wireframes/prototypes                             | Audit the practice flow; specify Practice, Expert Setup, and Developer Diagnostics |
+| `fll_experience` | Implement student/coach views, diagnostics, and accessibility from agreed designs | `src/components/`, `src/pages/`, `src/app.css`                                        | Implement and browser-test a bounded design handoff                                |
+| `fll_qa`         | Independent review, reproducible scenarios, release evidence                      | Assigned test/fixture paths and validation reports                                    | Reproduce baseline defects; propose a full mission acceptance matrix               |
 
 Ownership is a coordination default, not a security boundary. The lead assigns
 shared files such as `SpikeSimulator.svelte`, `LoadScene.svelte`, `SaveSimulation.svelte`,
 `physics/types.ts`, and package/configuration files to one writer per task.
 QA tests next to production code must also have explicit ownership.
+
+### Team review and design handoff
+
+The September 13, 2026 review found that engineering coverage already spans rules,
+physics, runtime, assets, implementation, and independent QA. Design decisions were
+bundled into `fll_experience`, with no dedicated owner for participant usability,
+the separation of practice from technical setup, or consistent season switching.
+`fll_design` fills that gap. This is a review of role definitions and current UI
+code, not evidence of usability testing with participants.
+
+The designer specifies workflows, states, language, accessibility, and visual
+hierarchy; the experience engineer implements them. The lead agrees contracts and
+assigns shared files. Rules verifies mission wording and edition/version behavior;
+assets verifies board/model/package setup; physics and runtime verify diagnostic
+meaning. QA checks browser flows and saved-project behavior independently.
+The designer reviews implemented screens against the agreed specification.
+
+Keep design work bounded: one flow, one prototype, observable acceptance scenarios,
+then implementation. Do not launch all eight specialists for every UI change.
 
 ## How to use the team
 
@@ -63,6 +89,15 @@ For a smaller task:
 
 > Use fll_runtime to reproduce the stop-other-stacks behavior, fix it, and add a
 > regression with two running stacks. Have fll_qa independently review the patch.
+
+For participant UI design:
+
+> Use fll_design. Read docs/design/fll-experience-brief.md and complete DESIGN-01.
+> Inspect the existing UI, produce annotated wireframes and settings scopes for
+> Practice, Expert Setup, and Developer Diagnostics, and demonstrate a second
+> synthetic season with different mission counts. Label proposed capabilities.
+> Give fll_experience bounded implementation tasks and fll_qa acceptance scenarios.
+> Keep production changes outside this design assignment.
 
 If the session does not expose named custom agents, ask the primary agent to read
 the relevant TOML instructions and include them in ordinary subagent assignments.

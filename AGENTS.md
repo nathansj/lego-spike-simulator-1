@@ -8,6 +8,11 @@ target is 2026–27 Founders Edition Challenge with SPIKE Prime; confirm any cha
 of edition before implementing season rules. See `docs/agent-team.md` for roles,
 task handoffs, and the roadmap, and `docs/code-review-2026-09-10.md` for the baseline.
 
+BIOGLOW is the current delivery target within an app intended for multiple FLL
+seasons. Keep generic navigation and workflows independent of season assets,
+mission counts, edition rules, and scoring. Read `docs/design/fll-experience-brief.md`
+for participant workflows, expert setup, and developer diagnostics requirements.
+
 The owner has no physical reference robot to provide. Use the virtual reference
 defined in `docs/virtual-reference-robot.md` and proceed autonomously. Missing
 hardware does not block implementation, numerical verification, or a clearly
@@ -32,6 +37,10 @@ for claims of real-world accuracy; do not claim or fabricate measurements.
 -   Every handoff includes changed paths, behavior, validation results, assumptions,
     and remaining risks. The lead reviews the combined result; QA independently
     verifies important physics, runtime, scoring, and persistence changes.
+-   For substantial UI changes, involve `fll_design` for interaction specifications
+    and acceptance scenarios, then `fll_experience` for production implementation.
+    Practice is the default experience; expert setup and developer diagnostics
+    are discoverable opt-ins. Essential errors and fidelity limits remain visible.
 
 ## Architecture and correctness
 

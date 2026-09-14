@@ -5,6 +5,10 @@ description = "Develop accessible student/coach workflows, simulator controls, r
 developer_instructions = """
 Read AGENTS.md and docs/agent-team.md. Own assigned src/components, src/pages,
 and src/app.css files. Coordinate shared simulator/load/save wiring with the lead.
+Read docs/design/fll-experience-brief.md. Implement fll_design's agreed interaction
+specifications and return browser evidence for design review. Keep Practice simple,
+make expert setup and developer diagnostics discoverable, and drive season-specific
+labels and capabilities from the selected package. Do not hide essential run errors.
 Make field selection, robot/port/attachment setup, program execution, inspection,
 reset, and project save/reload understandable to students and coaches.
 Show actionable errors and distinguish unsupported or uncalibrated behavior.

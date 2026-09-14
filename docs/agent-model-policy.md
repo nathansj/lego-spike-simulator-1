@@ -24,20 +24,31 @@ capabilities and this repository's defects, not measured proof of optimal cost.
 
 ## Configured defaults
 
-| Agent            | Model           | Effort | Reason                                                   |
-| ---------------- | --------------- | ------ | -------------------------------------------------------- |
-| `fll_lead`       | `gpt-5.6-sol`   | medium | Cross-module planning, contracts, and integration        |
-| `fll_physics`    | `gpt-5.6-sol`   | high   | Coupled mechanics, feedback timing, units, and replay    |
-| `fll_runtime`    | `gpt-5.6-sol`   | high   | Scheduler/cancellation semantics and concurrent commands |
-| `fll_rules`      | `gpt-5.6-terra` | high   | Bounded source-backed scoring with edge-case review      |
-| `fll_assets`     | `gpt-5.6-terra` | medium | Scoped model/persistence changes with explicit checks    |
-| `fll_experience` | `gpt-5.6-terra` | medium | Focused Svelte workflows with browser verification       |
-| `fll_qa`         | `gpt-5.6-terra` | high   | Independent bounded review and regression reproduction   |
+| Agent            | Model           | Effort | Reason                                                       |
+| ---------------- | --------------- | ------ | ------------------------------------------------------------ |
+| `fll_lead`       | `gpt-5.6-sol`   | medium | Cross-module planning, contracts, and integration            |
+| `fll_physics`    | `gpt-5.6-sol`   | high   | Coupled mechanics, feedback timing, units, and replay        |
+| `fll_runtime`    | `gpt-5.6-sol`   | high   | Scheduler/cancellation semantics and concurrent commands     |
+| `fll_rules`      | `gpt-5.6-terra` | high   | Bounded source-backed scoring with edge-case review          |
+| `fll_assets`     | `gpt-5.6-terra` | medium | Scoped model/persistence changes with explicit checks        |
+| `fll_experience` | `gpt-5.6-terra` | medium | Focused Svelte workflows with browser verification           |
+| `fll_design`     | `gpt-5.6-terra` | medium | Bounded workflow design, annotated prototypes, and UI review |
+| `fll_qa`         | `gpt-5.6-terra` | high   | Independent bounded review and regression reproduction       |
 
 `.codex/config.toml` selects Sol/medium for new primary sessions and Terra/medium
 for unspecified subagents, with at most three concurrent spawned threads. Custom
 agent files set both model and effort to avoid inheriting an expensive effort.
 Global settings and permissions are unchanged; no Fast mode is enabled here.
+
+The `fll_design` role was added September 13, 2026 using the same worker tier as
+`fll_experience`. The local model catalog and this session's spawning tool list
+Terra with medium reasoning support. The standalone role format was checked
+against [official custom-agent documentation](https://learn.chatgpt.com/docs/agent-configuration/subagents).
+This is a practical starting assignment under the existing cost policy, not a
+design-quality benchmark or a fresh verification of the historical price table
+below. No paid model trial was run. Scope routine work to one flow or prototype;
+use the existing Sol escalation policy for unresolved cross-workspace interaction
+or season/persistence design conflicts and record the reason.
 
 Project configuration must be loaded by the client; explicit launch/model choices
 can override project defaults. Existing conversations keep their active model.
