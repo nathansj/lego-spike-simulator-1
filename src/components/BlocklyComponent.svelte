@@ -72,8 +72,8 @@
     let droneSurveyElapsedSeconds = 0;
     let runPauseDisabled = false;
     let blocklyCodeOpen = true;
-    let hubSectionOpen = true;
-    let diagnosticsSectionOpen = true;
+    let hubSectionOpen = false;
+    let diagnosticsSectionOpen = false;
     let numberOfLoads = 0;
     let variableType = '';
     let audioDialogOpen = false;
