@@ -151,7 +151,6 @@
     const defaultSeasonPackage = getDefaultSeasonPackage();
     let activeSeasonPackage: SeasonPackage | undefined = defaultSeasonPackage;
     let selectedSeasonId = defaultSeasonPackage.id;
-    let selectedMissionId = defaultSeasonPackage.missions[0]?.id ?? '';
     let seasonSelectionConfirmationOpen = false;
     let seasonSelectionOpen = false;
     let pendingSeasonId: string | undefined;
@@ -295,10 +294,6 @@
 
     function closeWindow() {
         modalOpen = false;
-    }
-
-    function openBlockly() {
-        blocklyOpen = true;
     }
 
     function askForRobot() {
@@ -559,7 +554,6 @@
         }
         activeSeasonPackage = seasonPackage;
         selectedSeasonId = seasonPackage?.id ?? '';
-        selectedMissionId = seasonPackage?.missions[0]?.id ?? '';
         projectRestoreStatus = seasonPackage
             ? `${seasonPackage.name} selected. Current scene was not replaced.`
             : 'No season selected. Choose a package before running a practice program.';
@@ -742,17 +736,14 @@
             if (restoredSeasonPackage) {
                 activeSeasonPackage = restoredSeasonPackage;
                 selectedSeasonId = restoredSeasonPackage.id;
-                selectedMissionId = restoredSeasonPackage.missions[0]?.id ?? '';
                 projectRestoreStatus = `Project restored for ${reference.name}. Season assets remain app-provided; the archive does not embed a season package.`;
             } else if (payload.project.season.status === 'unselected') {
                 activeSeasonPackage = undefined;
                 selectedSeasonId = '';
-                selectedMissionId = '';
                 projectRestoreStatus = 'Project restored without a selected season package.';
             } else {
                 activeSeasonPackage = undefined;
                 selectedSeasonId = '';
-                selectedMissionId = '';
                 projectRestoreStatus = `Project scene restored, but season "${reference.name}" is not available in this app build.`;
             }
         } catch (error) {
@@ -1193,7 +1184,6 @@
                         {robotFocus}
                         {gridScale}
                         {m01ObservationGeometry}
-                        {m01ObservationProfile}
                         bind:loadVirtualReferenceRobot
                     />
                 </div>

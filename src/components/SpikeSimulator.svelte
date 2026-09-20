@@ -37,18 +37,15 @@
     } from '$lib/fll/virtual-reference-robot';
     import { DroneSurveyMatchController } from '$lib/fll/match-controller';
     import { BioglowMatchClock } from '$lib/fll/match-clock';
-    import type { DroneSurveyScore } from '$lib/fll/drone-survey';
     import {
         observeDroneSurvey,
         type DroneSurveyObservationGeometry
     } from '$lib/fll/drone-survey-observations';
-    import type { DroneSurveyObservationGeometryProfile } from '$lib/fll/drone-survey-observation-geometry-profile';
     import RobotPreview from '$components/RobotPreview.svelte';
     import ScenePreview from '$components/ScenePreview.svelte';
     import ColourSensor from '$components/ColourSensor.svelte';
     import DistanceSensor from '$components/DistanceSensor.svelte';
     import ForceCheckSensor from '$components/ForceCheckSensor.svelte';
-    import DroneSurveyScoreFeedback from '$components/DroneSurveyScoreFeedback.svelte';
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
     import { onDestroy, onMount } from 'svelte';
@@ -68,7 +65,6 @@
     export let tilt = true;
     export let gridScale = 0;
     export let m01ObservationGeometry: DroneSurveyObservationGeometry | undefined = undefined;
-    export let m01ObservationProfile: DroneSurveyObservationGeometryProfile | undefined = undefined;
     export let loadVirtualReferenceRobot = false;
     export let practiceReady = true;
 
@@ -92,8 +88,6 @@
     let simulationGeneration = 0;
     let bioglowMatchClock = new BioglowMatchClock();
     let droneSurveyMatchController = createDroneSurveyMatchController();
-    let droneSurveyScore: DroneSurveyScore | undefined;
-    let droneSurveyMatchState = droneSurveyMatchController.state;
     let droneSurveyMatchExpired = false;
     export let hubImage = '0000000000000000000000000';
     export let hubCentreButtonColour = '#ffffff';
@@ -248,9 +242,7 @@
     function clearDroneSurveyMatch(): void {
         bioglowMatchClock.reset();
         droneSurveyMatchController.reset();
-        droneSurveyScore = undefined;
         droneSurveyMatchExpired = false;
-        droneSurveyMatchState = droneSurveyMatchController.state;
         droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
     }
 
@@ -258,9 +250,7 @@
         bioglowMatchClock.reset();
         droneSurveyMatchController = createDroneSurveyMatchController();
         droneSurveyMatchController.start();
-        droneSurveyScore = undefined;
         droneSurveyMatchExpired = false;
-        droneSurveyMatchState = droneSurveyMatchController.state;
         droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
     }
 
@@ -301,8 +291,7 @@
     function finishDroneSurveyMatch(): void {
         if (droneSurveyMatchController.state !== 'running') return;
         if (m01ObservationGeometry) {
-            droneSurveyScore = droneSurveyMatchController.finish();
-            droneSurveyMatchState = droneSurveyMatchController.state;
+            droneSurveyMatchController.finish();
             vm?.stop();
         }
     }
@@ -933,33 +922,6 @@
     >
         <div class="flex h-full min-h-0 min-w-0 w-full flex-row">
             <div class="min-h-0 min-w-0 flex flex-col">
-                {#if runSimulation}
-                    <div class="mx-3 mt-3 space-y-2">
-                        <p class="text-sm">
-                            M01 elapsed simulation time: {droneSurveyElapsedSeconds.toFixed(2)} seconds
-                        </p>
-                        {#if droneSurveyMatchExpired}
-                            <p class="text-sm font-medium text-amber-700">
-                                Official 2.5-minute match time reached. Finish the frozen match to
-                                evaluate M01.
-                            </p>
-                        {/if}
-                        <button
-                            type="button"
-                            class="rounded bg-blue-700 px-3 py-2 text-sm font-medium text-white disabled:cursor-not-allowed disabled:bg-gray-400"
-                            on:click={finishDroneSurveyMatch}
-                            disabled={droneSurveyMatchState !== 'running' ||
-                                m01ObservationGeometry === undefined}
-                        >
-                            Finish M01 practice match
-                        </button>
-                        <DroneSurveyScoreFeedback
-                            score={droneSurveyScore}
-                            observationGeometryAvailable={m01ObservationGeometry !== undefined}
-                            profile={m01ObservationProfile}
-                        />
-                    </div>
-                {/if}
                 {#if runSimulation}
                     {#each sensors as sensor}
                         {#if sensor.type == 'light'}
