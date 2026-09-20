@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from 'svelte';
     import { Modal, Radio } from 'flowbite-svelte';
     import { componentStore, findParts, type PartMatch } from '$lib/ldraw/components';
     import {
@@ -16,6 +17,7 @@
 
     export let modalOpen = false;
     export let hub: Hub;
+    const dispatch = createEventDispatcher<{ change: void }>();
     const matchCodes = ['54696', '54696p01', '68488', '54675', '37308', '37316', '37312'];
     const partNames: Record<string, string> = {
         '54696': 'Medium motor',
@@ -79,6 +81,7 @@
                     }
                 }
             }
+            dispatch('change');
         }
     }
 
@@ -92,7 +95,7 @@
 <Modal
     backdropClass="fixed inset-0 z-[80] bg-gray-900 bg-opacity-50 dark:bg-opacity-80"
     dialogClass="fixed top-0 start-0 end-0 h-modal md:inset-0 md:h-full z-[90] w-full p-4 flex"
-    title="Connect robot ports"
+    title="Expert Setup: robot ports"
     size="xl"
     bind:open={modalOpen}
 >
@@ -108,7 +111,10 @@
                 on:F={() => selectPort('F')}
             />
             <div class="flex flex-col gap-2">
-                <span>Click on a port on the hub to determine the connection for the port.</span>
+                <span
+                    >Choose a hub port, then choose the attached robot part. This saved setup change
+                    applies after Reset run.</span
+                >
                 <span class="text-black font-bold">Port {port}:</span>
                 {#key port}
                     <Radio

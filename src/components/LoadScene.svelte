@@ -27,7 +27,19 @@
         type M01ObservationProfileLoadedCallback
     } from '$lib/spike/m01-observation-profile-archive';
     import { parseSceneDefinition } from '$lib/spike/scene-schema';
+    import {
+        loadProjectArchive,
+        type ProjectArchivePayload,
+        type ProjectArchiveProjectPayload
+    } from '$lib/spike/project-archive';
+    import { sceneFromProjectPayload } from '$lib/spike/project-restore';
     import { WebGLCompiler } from '$lib/ldraw/gl';
+    import UnsavedChangesModal from '$components/UnsavedChangesModal.svelte';
+    import {
+        canProceedWithDestructiveAction,
+        projectDirtyStore,
+        shouldConfirmDestructiveAction
+    } from '$lib/spike/project-dirty-state';
     import {
         createModelPhysicsArticulation,
         findBundledModelPhysics,
@@ -40,6 +52,12 @@
         undefined;
     /** Called after an archived robot has been restored and the scene commit succeeds. */
     export let onRobotModelLoaded: ((robot: Model) => void) | undefined = undefined;
+    /** Called after a project archive has committed its scene and model assets. */
+    export let onProjectArchiveLoaded:
+        | ((payload: ProjectArchiveProjectPayload) => void | Promise<void>)
+        | undefined = undefined;
+    /** Called after a legacy scene archive has successfully replaced the current scene. */
+    export let onSceneLoaded: (() => void) | undefined = undefined;
     let numberOfLoads = 0;
     let mapFile: Blob | undefined = $sceneStore.map;
     let camera: 'top' | 'left' | 'right' | 'front' | 'back' = 'front';
@@ -53,6 +71,10 @@
     let customSizeVisible = false;
     let customHeight = 1000;
     let customWidth = 1000;
+    let projectLoadStatus = '';
+    let projectLoadError: string | undefined;
+    let unsavedChangesOpen = false;
+    let pendingFileInput: 'load_scene_file' | 'load_project_file' | undefined;
 
     let menu = prepareMenu(rotate, tilt, camera, select, $sceneStore);
     $: menu = prepareMenu(rotate, tilt, camera, select, $sceneStore);
@@ -241,6 +263,10 @@
             } else {
                 renameObject.name = newName;
             }
+            sceneStore.update((old) => ({
+                ...old,
+                objects: [...old.objects]
+            }));
             renameObject = undefined;
             menu = prepareMenu(rotate, tilt, camera, select, $sceneStore);
             if (select == oldKey) {
@@ -303,7 +329,8 @@
             actions: [
                 { name: 'Load mat', action: () => loadBackgroundMap() },
                 { name: 'Load object', action: () => loadObject() },
-                { name: 'Load full scene', action: () => loadScene() },
+                { name: 'Load legacy scene setup (.spk)', action: () => loadScene() },
+                { name: 'Restore saved project (.lsp-project)', action: () => loadProject() },
                 { name: 'Load missing parts', action: () => loadLibrary() }
             ]
         });
@@ -441,11 +468,38 @@
         }
     }
 
-    function loadScene() {
-        const element = document.getElementById('load_scene_file');
-        if (element) {
-            element.click();
+    function clickFileInput(id: 'load_scene_file' | 'load_project_file'): void {
+        document.getElementById(id)?.click();
+    }
+
+    function requestFileLoad(id: 'load_scene_file' | 'load_project_file'): void {
+        if (shouldConfirmDestructiveAction($projectDirtyStore)) {
+            pendingFileInput = id;
+            unsavedChangesOpen = true;
+            return;
         }
+        clickFileInput(id);
+    }
+
+    function loadScene() {
+        requestFileLoad('load_scene_file');
+    }
+
+    function loadProject() {
+        requestFileLoad('load_project_file');
+    }
+
+    function cancelPendingFileLoad(): void {
+        pendingFileInput = undefined;
+        unsavedChangesOpen = false;
+    }
+
+    function confirmPendingFileLoad(): void {
+        const input = pendingFileInput;
+        if (!input || !canProceedWithDestructiveAction($projectDirtyStore, 'discard')) return;
+        pendingFileInput = undefined;
+        unsavedChangesOpen = false;
+        clickFileInput(input);
     }
 
     function loadObject() {
@@ -590,10 +644,49 @@
                     });
                     onM01ObservationProfileLoaded?.(loadedM01ObservationProfile);
                     if (robotContent && loadedRobot) onRobotModelLoaded?.(loadedRobot);
+                    onSceneLoaded?.();
                 } catch (error) {
                     console.error('Failed to load scene archive:', error);
                 }
             }
+        }
+    }
+
+    async function loadProjectFromFile() {
+        const element = document.getElementById('load_project_file');
+        const file = (element as HTMLInputElement | null)?.files?.[0];
+        if (!file) return;
+        projectLoadError = undefined;
+        projectLoadStatus = 'Loading project archive…';
+        try {
+            const payload: ProjectArchivePayload = await loadProjectArchive(file);
+            if (payload.sourceFormat !== 'project') {
+                throw new Error(
+                    'This file is a legacy scene setup. Use Load legacy scene setup instead.'
+                );
+            }
+            const loadedRobot = setRobotFromContent(payload.robot.content);
+            const map = payload.map ? new Blob([payload.map], { type: 'image/jpeg' }) : undefined;
+            const restoredScene = sceneFromProjectPayload(payload, loadedRobot, map, loadModel);
+            updateUnresolvedParts();
+            sceneStore.set(restoredScene);
+            mapFile = map;
+            numberOfLoads++;
+            setSelected('#all');
+            onM01ObservationProfileLoaded?.(payload.calibration?.m01ObservationProfile);
+            onRobotModelLoaded?.(loadedRobot);
+            await onProjectArchiveLoaded?.(payload);
+            projectLoadStatus = `Saved project restored: ${payload.project.season.reference.name}. Field, robot setup, program, and supported settings were loaded.`;
+            if (payload.missingModelIds.length > 0) {
+                projectLoadStatus += ` ${payload.missingModelIds.length} model(s) are missing from the archive.`;
+            }
+        } catch (error) {
+            projectLoadError =
+                error instanceof Error ? error.message : 'The project could not be loaded.';
+            projectLoadStatus = 'Project restore failed. The current scene was kept unchanged.';
+        } finally {
+            const input = element as HTMLInputElement | null;
+            if (input) input.value = '';
         }
     }
 
@@ -815,16 +908,35 @@
         accept=".spk"
         on:change={loadSceneFromFile}
     />
+    <input
+        type="file"
+        id="load_project_file"
+        class="hidden"
+        accept=".lsp-project,application/zip"
+        on:change={loadProjectFromFile}
+    />
 {/key}
 <Modal
     backdropClass="fixed inset-0 z-[80] bg-gray-900 bg-opacity-50 dark:bg-opacity-80"
     dialogClass="fixed top-0 start-0 end-0 h-modal md:inset-0 md:h-full z-[90] w-full p-4 flex"
-    title="Scene editor"
+    title="Expert Setup: table and launch"
     size="xl"
     bind:open={modalOpen}
 >
     <div class="flex flex-col gap-1 h-[75dvh] relative overflow-hidden">
         <Menu {menu} class="absolute z-50" />
+        {#if projectLoadStatus}
+            <div
+                class="absolute left-2 right-2 top-2 z-[60] rounded border bg-white px-3 py-2 text-sm shadow"
+                class:border-red-300={projectLoadError}
+                class:bg-red-50={projectLoadError}
+                role={projectLoadError ? 'alert' : 'status'}
+                aria-live="polite"
+            >
+                <p>{projectLoadStatus}</p>
+                {#if projectLoadError}<p class="mt-1 text-red-700">{projectLoadError}</p>{/if}
+            </div>
+        {/if}
         <div class="flex flex-row flex-1 relative overflow-hidden">
             <div class="flex-1 h-full relative">
                 {#if selectedText && $componentStore.unresolved.length == 0}
@@ -950,3 +1062,9 @@
         </div>
     </div>
 </Modal>
+<UnsavedChangesModal
+    open={unsavedChangesOpen}
+    actionLabel={pendingFileInput === 'load_project_file' ? 'load this project' : 'load this scene'}
+    on:cancel={cancelPendingFileLoad}
+    on:discard={confirmPendingFileLoad}
+/>
