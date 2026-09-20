@@ -658,160 +658,6 @@
                     title={simulatorToggleLabel}
                     on:click={toggleRobot}
                 >
-                    <section
-                        class="shrink-0 border-t border-slate-200 bg-white"
-                        aria-labelledby="hub-runtime-title"
-                    >
-                        <button
-                            type="button"
-                            class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
-                            aria-expanded={hubSectionOpen}
-                            aria-controls="hub-runtime-section"
-                        >
-                            <span id="hub-runtime-title">Hub runtime</span>
-                            {#if hubSectionOpen}
-                                <ChevronDownOutline size="sm" aria-hidden="true" />
-                            {:else}
-                                <ChevronRightOutline size="sm" aria-hidden="true" />
-                            {/if}
-                        </button>
-                        {#if hubSectionOpen}
-                            <div id="hub-runtime-section" class="px-3 pb-3">
-                                <HubWidget
-                                    image={hubImage}
-                                    centreButtonColour={hubCentreButtonColour}
-                                    on:leftPress={() => (hub.leftPressed = true)}
-                                    on:rightPress={() => (hub.rightPressed = true)}
-                                    on:leftRelease={() => (hub.leftPressed = false)}
-                                    on:rightRelease={() => (hub.rightPressed = false)}
-                                />
-                            </div>
-                        {/if}
-                    </section>
-                    <section
-                        class="shrink-0 border-t border-slate-200 bg-white"
-                        aria-labelledby="diagnostics-section-title"
-                    >
-                        <button
-                            type="button"
-                            class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
-                            aria-expanded={diagnosticsSectionOpen}
-                            aria-controls="diagnostics-section-body"
-                        >
-                            <span id="diagnostics-section-title">Diagnostics</span>
-                            {#if diagnosticsSectionOpen}
-                                <ChevronDownOutline size="sm" aria-hidden="true" />
-                            {:else}
-                                <ChevronRightOutline size="sm" aria-hidden="true" />
-                            {/if}
-                        </button>
-                        {#if diagnosticsSectionOpen}
-                            <div
-                                id="diagnostics-section-body"
-                                class="max-h-72 overflow-y-auto px-3 pb-3"
-                            >
-                                {#if runSimulation || practiceResult}
-                                    <section
-                                        class="mb-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm"
-                                        aria-labelledby="practice-run-status"
-                                    >
-                                        <div
-                                            class="flex flex-wrap items-center justify-between gap-2"
-                                        >
-                                            <h2
-                                                id="practice-run-status"
-                                                class="font-semibold text-slate-900"
-                                            >
-                                                {#if practiceResult}
-                                                    Run result
-                                                {:else if simulationPaused}
-                                                    Paused
-                                                {:else if programExecutionIdle}
-                                                    Program activity is idle
-                                                {:else}
-                                                    Running · {droneSurveyElapsedSeconds.toFixed(1)}
-                                                    s
-                                                {/if}
-                                            </h2>
-                                            <div class="flex flex-wrap gap-2">
-                                                {#if runSimulation}
-                                                    <button
-                                                        type="button"
-                                                        class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
-                                                        on:click={() =>
-                                                            simulatorWindow?.pauseOrResumeRun()}
-                                                        disabled={runPauseDisabled}
-                                                    >
-                                                        {simulationPaused ? 'Resume' : 'Pause'}
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        class="rounded border border-red-300 bg-white px-2 py-1 font-medium text-red-800"
-                                                        on:click={() =>
-                                                            simulatorWindow?.stopCurrentRun()}
-                                                    >
-                                                        Stop
-                                                    </button>
-                                                {/if}
-                                                <button
-                                                    type="button"
-                                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
-                                                    on:click={() =>
-                                                        simulatorWindow?.resetCurrentRun()}
-                                                >
-                                                    Reset run
-                                                </button>
-                                            </div>
-                                        </div>
-                                        {#if practiceResult}
-                                            <p
-                                                class="mt-2 text-slate-800"
-                                                role="status"
-                                                aria-live="polite"
-                                            >
-                                                {practiceResult.message}
-                                            </p>
-                                            <p class="mt-1 text-xs text-slate-600">
-                                                Check diagnostics for the detailed error, then reset
-                                                and try again.
-                                            </p>
-                                            <div class="mt-3 flex flex-wrap gap-2">
-                                                <button
-                                                    type="button"
-                                                    class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800"
-                                                    on:click={() =>
-                                                        simulatorWindow?.resetCurrentRun()}
-                                                >
-                                                    Run again
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
-                                                    on:click={() =>
-                                                        simulatorWindow?.openDiagnosticsMode()}
-                                                >
-                                                    Open diagnostics
-                                                </button>
-                                            </div>
-                                        {:else if programExecutionIdle}
-                                            <p class="mt-2 text-xs text-slate-700" role="status">
-                                                Program activity is idle. The simulator cannot
-                                                confirm whether the program finished; stop or reset
-                                                the run when you are ready.
-                                            </p>
-                                        {:else}
-                                            <p class="mt-2 text-xs text-slate-700">
-                                                Pause holds the program. Stop keeps the scene
-                                                available for inspection. Reset returns the robot to
-                                                the saved setup.
-                                            </p>
-                                        {/if}
-                                    </section>
-                                {/if}
-                                <RunLogConsole />
-                            </div>
-                        {/if}
-                    </section>
                     {#if simulatorOpen}
                         <EyeSlashOutline size="sm" aria-hidden="true" />
                     {:else}
@@ -890,6 +736,145 @@
                     {/if}
                 </div>
             </div>
+            <section
+                class="shrink-0 border-t border-slate-200 bg-white"
+                aria-labelledby="hub-runtime-title"
+            >
+                <button
+                    type="button"
+                    class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                    aria-expanded={hubSectionOpen}
+                    aria-controls="hub-runtime-section"
+                >
+                    <span id="hub-runtime-title">Hub runtime</span>
+                    {#if hubSectionOpen}
+                        <ChevronDownOutline size="sm" aria-hidden="true" />
+                    {:else}
+                        <ChevronRightOutline size="sm" aria-hidden="true" />
+                    {/if}
+                </button>
+                {#if hubSectionOpen}
+                    <div id="hub-runtime-section" class="px-3 pb-3">
+                        <HubWidget
+                            image={hubImage}
+                            centreButtonColour={hubCentreButtonColour}
+                            on:leftPress={() => (hub.leftPressed = true)}
+                            on:rightPress={() => (hub.rightPressed = true)}
+                            on:leftRelease={() => (hub.leftPressed = false)}
+                            on:rightRelease={() => (hub.rightPressed = false)}
+                        />
+                    </div>
+                {/if}
+            </section>
+            <section
+                class="shrink-0 border-t border-slate-200 bg-white"
+                aria-labelledby="diagnostics-section-title"
+            >
+                <button
+                    type="button"
+                    class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                    aria-expanded={diagnosticsSectionOpen}
+                    aria-controls="diagnostics-section-body"
+                >
+                    <span id="diagnostics-section-title">Diagnostics</span>
+                    {#if diagnosticsSectionOpen}
+                        <ChevronDownOutline size="sm" aria-hidden="true" />
+                    {:else}
+                        <ChevronRightOutline size="sm" aria-hidden="true" />
+                    {/if}
+                </button>
+                {#if diagnosticsSectionOpen}
+                    <div id="diagnostics-section-body" class="max-h-72 overflow-y-auto px-3 pb-3">
+                        {#if runSimulation || practiceResult}
+                            <section
+                                class="mb-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm"
+                                aria-labelledby="practice-run-status"
+                            >
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <h2
+                                        id="practice-run-status"
+                                        class="font-semibold text-slate-900"
+                                    >
+                                        {#if practiceResult}
+                                            Run result
+                                        {:else if simulationPaused}
+                                            Paused
+                                        {:else if programExecutionIdle}
+                                            Program activity is idle
+                                        {:else}
+                                            Running · {droneSurveyElapsedSeconds.toFixed(1)}
+                                            s
+                                        {/if}
+                                    </h2>
+                                    <div class="flex flex-wrap gap-2">
+                                        {#if runSimulation}
+                                            <button
+                                                type="button"
+                                                class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                                on:click={() => simulatorWindow?.pauseOrResumeRun()}
+                                                disabled={runPauseDisabled}
+                                            >
+                                                {simulationPaused ? 'Resume' : 'Pause'}
+                                            </button>
+                                            <button
+                                                type="button"
+                                                class="rounded border border-red-300 bg-white px-2 py-1 font-medium text-red-800"
+                                                on:click={() => simulatorWindow?.stopCurrentRun()}
+                                            >
+                                                Stop
+                                            </button>
+                                        {/if}
+                                        <button
+                                            type="button"
+                                            class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
+                                            on:click={() => simulatorWindow?.resetCurrentRun()}
+                                        >
+                                            Reset run
+                                        </button>
+                                    </div>
+                                </div>
+                                {#if practiceResult}
+                                    <p class="mt-2 text-slate-800" role="status" aria-live="polite">
+                                        {practiceResult.message}
+                                    </p>
+                                    <p class="mt-1 text-xs text-slate-600">
+                                        Check diagnostics for the detailed error, then reset and try
+                                        again.
+                                    </p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <button
+                                            type="button"
+                                            class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800"
+                                            on:click={() => simulatorWindow?.resetCurrentRun()}
+                                        >
+                                            Run again
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
+                                            on:click={() => simulatorWindow?.openDiagnosticsMode()}
+                                        >
+                                            Open diagnostics
+                                        </button>
+                                    </div>
+                                {:else if programExecutionIdle}
+                                    <p class="mt-2 text-xs text-slate-700" role="status">
+                                        Program activity is idle. The simulator cannot confirm
+                                        whether the program finished; stop or reset the run when you
+                                        are ready.
+                                    </p>
+                                {:else}
+                                    <p class="mt-2 text-xs text-slate-700">
+                                        Pause holds the program. Stop keeps the scene available for
+                                        inspection. Reset returns the robot to the saved setup.
+                                    </p>
+                                {/if}
+                            </section>
+                        {/if}
+                        <RunLogConsole />
+                    </div>
+                {/if}
+            </section>
             {#if simulatorOpen}
                 <div
                     class="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 bg-white px-3 py-2 lg:hidden"
