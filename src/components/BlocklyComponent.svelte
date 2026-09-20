@@ -398,7 +398,7 @@
     }
 
     let paneContainer: HTMLDivElement | undefined;
-    let splitRatio = 0.5;
+    let splitRatio = 0.25;
     let splitDragging = false;
     let splitResizeHandle: number | undefined;
 
