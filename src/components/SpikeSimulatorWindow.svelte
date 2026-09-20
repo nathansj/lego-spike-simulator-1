@@ -5,6 +5,7 @@
         AdjustmentsHorizontalOutline,
         AdjustmentsVerticalOutline,
         BugOutline,
+        CalendarMonthOutline,
         ChevronDownOutline,
         CloseOutline,
         CogOutline,
@@ -26,14 +27,12 @@
     import MenuDropdown from '$components/MenuDropdown.svelte';
     import { type MenuAction } from '$components/Menu.svelte';
     import SeasonSelection from '$components/SeasonSelection.svelte';
-    import SeasonMissionReadiness from '$components/SeasonMissionReadiness.svelte';
     import SpikeSimulator from '$components/SpikeSimulator.svelte';
     import SaveSimulation from '$components/SaveSimulation.svelte';
     import SimulatorSettings from '$components/SimulatorSettings.svelte';
     import PortConnector from '$components/PortConnector.svelte';
     import WheelConnector from '$components/WheelConnector.svelte';
     import LoadScene from '$components/LoadScene.svelte';
-    import PracticeReadinessShell from '$components/PracticeReadinessShell.svelte';
     import type { DroneSurveyObservationGeometry } from '$lib/fll/drone-survey-observations';
     import {
         parseDroneSurveyObservationGeometryProfile,
@@ -128,6 +127,7 @@
     let selectedSeasonId = defaultSeasonPackage.id;
     let selectedMissionId = defaultSeasonPackage.missions[0]?.id ?? '';
     let seasonSelectionConfirmationOpen = false;
+    let seasonSelectionOpen = false;
     let pendingSeasonId: string | undefined;
     let projectRestoreStatus = `${defaultSeasonPackage.name} selected. Complete the setup items to run a practice program.`;
     let projectRestoreError: string | undefined;
@@ -510,9 +510,7 @@
     }
 
     function openSeasonSelection(): void {
-        workspaceMode = 'expert';
-        const element = document.getElementById('season-selection-title');
-        element?.scrollIntoView({ block: 'nearest' });
+        seasonSelectionOpen = true;
     }
 
     function handleSeasonSelect(event: CustomEvent<string>): void {
@@ -845,6 +843,19 @@
                                 </button>
                             </div>
                             <div class="h-5 w-px bg-slate-300" aria-hidden="true"></div>
+                            <button
+                                type="button"
+                                class="icon-btn rounded p-1 {seasonSelectionOpen
+                                    ? 'bg-blue-700 text-white'
+                                    : 'text-slate-700 hover:bg-slate-100'}"
+                                aria-haspopup="dialog"
+                                aria-expanded={seasonSelectionOpen}
+                                aria-label="Choose season"
+                                title="Choose season"
+                                on:click={() => (seasonSelectionOpen = !seasonSelectionOpen)}
+                            >
+                                <CalendarMonthOutline size="sm" aria-hidden="true" />
+                            </button>
                             {#if workspaceMode === 'practice'}
                                 <div class="min-w-0">
                                     <p
@@ -971,38 +982,12 @@
                         </p>
                     {/if}
                 </div>
-                {#if workspaceMode !== 'practice'}
-                    <PracticeReadinessShell
-                        {runSimulation}
-                        seasonReady={activeSeasonPackage !== undefined}
-                        seasonLabel={activeSeasonPackage?.name ?? 'No season selected'}
-                        missionLabel={activeSeasonPackage?.missions.find(
-                            (mission) => mission.id === selectedMissionId
-                        )?.name ?? 'No mission selected'}
-                        missionCount={activeSeasonPackage?.missions.length ?? 0}
-                        {workspaceMode}
-                        robotReady={$componentStore.robotModel !== undefined}
-                        fieldReady={$sceneStore.objects.length > 0}
-                        driveReady={hub.wheels.length >= 2 &&
-                            hub.wheels.every((wheel) => hub.ports[wheel.port].type === 'motor')}
-                        {programReady}
-                        on:robot={askForRobot}
-                        on:drive={connectWheels}
-                        on:field={openPracticeField}
-                        on:program={openBlockly}
-                        on:season={openSeasonSelection}
-                    />
-                {/if}
-                {#if workspaceMode === 'expert'}
+                {#if seasonSelectionOpen}
                     <SeasonSelection
                         packages={listSeasonPackages()}
                         selectedId={selectedSeasonId}
                         selectedPackage={activeSeasonPackage}
                         on:select={handleSeasonSelect}
-                    />
-                    <SeasonMissionReadiness
-                        seasonPackage={activeSeasonPackage}
-                        bind:selectedMissionId
                     />
                 {/if}
                 {#if workspaceMode === 'expert'}

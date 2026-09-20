@@ -3,6 +3,16 @@
 Task: `ui-icons-04` / `icon-button-design`; Phase B finalized by `ui-icons-05` / `phase-b-design`
 Owner: `fll_design`
 Status: proposed design and implementation handoff; no production source changed
+Changelog: 2026-09-20 (run `ui-shell-07`, lead-implemented) — removed the
+`PracticeReadinessShell` ("Build, run, and improve your robot" header, season/mission
+summary, readiness chips, guidance, per-mode notes), the inline `SeasonSelection` section,
+and the `SeasonMissionReadiness` section from all workspace modes; deleted the two unused
+component files. Season switching remains reachable through a new iconified `Choose season`
+toggle (`CalendarMonthOutline`, `aria-haspopup="dialog"`, `aria-expanded`) in the simulator
+top bar after the mode group; it opens the same `SeasonSelection` dialog in every mode and
+preserves the unsaved-work confirmation flow. Mission readiness/selection is no longer shown
+anywhere (owner decision); `selectedMissionId` state is retained for restore/scoring. These
+changes are implemented but not browser-verified.
 Changelog: 2026-09-20 (run `ui-modes-06`) — added Surface 8, the persistent iconified mode bar
 and the unified simulator top-bar run/stop control, per a new owner decision that supersedes
 exception A2 for the three mode controls (Practice, Expert Setup, Developer Diagnostics).
