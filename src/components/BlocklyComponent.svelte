@@ -745,6 +745,7 @@
                     class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
                     aria-expanded={hubSectionOpen}
                     aria-controls="hub-runtime-section"
+                    on:click={() => (hubSectionOpen = !hubSectionOpen)}
                 >
                     <span id="hub-runtime-title">Hub runtime</span>
                     {#if hubSectionOpen}
@@ -775,6 +776,7 @@
                     class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
                     aria-expanded={diagnosticsSectionOpen}
                     aria-controls="diagnostics-section-body"
+                    on:click={() => (diagnosticsSectionOpen = !diagnosticsSectionOpen)}
                 >
                     <span id="diagnostics-section-title">Diagnostics</span>
                     {#if diagnosticsSectionOpen}
