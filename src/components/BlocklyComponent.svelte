@@ -401,6 +401,69 @@
         split = 2 - split + 1;
     }
 
+    let paneContainer: HTMLDivElement | undefined;
+    let splitRatio = 0.5;
+    let splitDragging = false;
+    let splitResizeHandle: number | undefined;
+
+    function queueSplitResize(): void {
+        if (splitResizeHandle !== undefined) return;
+        splitResizeHandle = requestAnimationFrame(() => {
+            splitResizeHandle = undefined;
+            if (workspace) {
+                Blockly.svgResize(workspace);
+            }
+        });
+    }
+
+    function splitFromPointer(event: PointerEvent): void {
+        if (!paneContainer) return;
+        const rect = paneContainer.getBoundingClientRect();
+        if (rect.width <= 0) return;
+        const ratio = (event.clientX - rect.left) / rect.width;
+        splitRatio = Math.min(0.85, Math.max(0.15, ratio));
+        queueSplitResize();
+    }
+
+    function splitterDown(event: PointerEvent): void {
+        splitDragging = true;
+        (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+        splitFromPointer(event);
+    }
+
+    function splitterMove(event: PointerEvent): void {
+        if (splitDragging) {
+            splitFromPointer(event);
+        }
+    }
+
+    function splitterUp(event: PointerEvent): void {
+        if (!splitDragging) return;
+        splitDragging = false;
+        (event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
+        if (workspace) {
+            Blockly.svgResize(workspace);
+        }
+    }
+
+    function splitterKey(event: KeyboardEvent): void {
+        if (event.key === 'ArrowLeft') {
+            splitRatio = Math.max(0.15, splitRatio - 0.05);
+        } else if (event.key === 'ArrowRight') {
+            splitRatio = Math.min(0.85, splitRatio + 0.05);
+        } else {
+            return;
+        }
+        event.preventDefault();
+        queueSplitResize();
+    }
+
+    onDestroy(() => {
+        if (splitResizeHandle !== undefined) {
+            cancelAnimationFrame(splitResizeHandle);
+        }
+    });
+
     function resizeWorkspace(open: boolean) {
         if (!open && !blocklyOpen) {
             blocklyOpen = true;
@@ -566,7 +629,11 @@
             Simulator
         </button>
     </div>
-    <div class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:flex-row">
+    <div
+        bind:this={paneContainer}
+        class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:flex-row"
+        style="--split-ratio: {splitRatio}"
+    >
         <div
             class="relative min-h-0 min-w-0 w-full flex-col overflow-hidden {blocklyOpen
                 ? simulatorOpen
@@ -574,7 +641,7 @@
                         ? 'flex h-full lg:flex-1'
                         : 'hidden lg:flex lg:flex-1'
                     : 'flex h-full'
-                : 'hidden'}"
+                : 'hidden'} {blocklyOpen && simulatorOpen ? 'program-split-active' : ''}"
         >
             <div
                 class="z-10 flex shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3 py-2"
@@ -902,6 +969,23 @@
                 </div>
             {/if}
         </div>
+        {#if blocklyOpen && simulatorOpen}
+            <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-no-noninteractive-tabindex -->
+            <div
+                class="pane-split"
+                role="separator"
+                aria-orientation="vertical"
+                aria-label="Resize code and simulator panes"
+                aria-valuemin={15}
+                aria-valuemax={85}
+                aria-valuenow={Math.round(splitRatio * 100)}
+                tabindex="0"
+                on:pointerdown={splitterDown}
+                on:pointermove={splitterMove}
+                on:pointerup={splitterUp}
+                on:keydown={splitterKey}
+            ></div>
+        {/if}
         <SpikeSimulatorWindow
             bind:this={simulatorWindow}
             bind:hub
@@ -925,6 +1009,30 @@
 
 {#if !print || printColour}
     <style scoped>
+        .pane-split {
+            display: none;
+        }
+        .program-split-active {
+            min-width: 0;
+        }
+        @media (min-width: 1024px) {
+            .pane-split {
+                display: flex;
+                flex: 0 0 8px;
+                width: 8px;
+                align-self: stretch;
+                cursor: col-resize;
+                touch-action: none;
+                background: transparent;
+            }
+            .pane-split:hover,
+            .pane-split:focus-visible {
+                background: rgb(147 197 253);
+            }
+            .program-split-active {
+                flex: 0 0 calc((100% - 8px) * var(--split-ratio));
+            }
+        }
         #blocklyDiv {
             height: 100%;
             width: 100%;
@@ -945,6 +1053,30 @@
     </style>
 {:else}
     <style>
+        .pane-split {
+            display: none;
+        }
+        .program-split-active {
+            min-width: 0;
+        }
+        @media (min-width: 1024px) {
+            .pane-split {
+                display: flex;
+                flex: 0 0 8px;
+                width: 8px;
+                align-self: stretch;
+                cursor: col-resize;
+                touch-action: none;
+                background: transparent;
+            }
+            .pane-split:hover,
+            .pane-split:focus-visible {
+                background: rgb(147 197 253);
+            }
+            .program-split-active {
+                flex: 0 0 calc((100% - 8px) * var(--split-ratio));
+            }
+        }
         #blocklyDiv {
             height: 100%;
             width: 100%;
