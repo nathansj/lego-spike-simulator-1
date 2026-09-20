@@ -57,6 +57,7 @@
         shouldConfirmDestructiveAction
     } from '$lib/spike/project-dirty-state';
     import { Hub } from '$lib/spike/vm';
+    import type { PracticeResult } from '$lib/spike/practice-result';
     import HubWidget from '$components/HubWidget.svelte';
     import RunLogConsole from '$components/RunLogConsole.svelte';
 
@@ -65,6 +66,11 @@
     let hub = new Hub();
     let hubImage = '0000000000000000000000000';
     let hubCentreButtonColour = '#ffffff';
+    let practiceResult: PracticeResult | undefined = undefined;
+    let simulationPaused = false;
+    let programExecutionIdle = false;
+    let droneSurveyElapsedSeconds = 0;
+    let runPauseDisabled = false;
     let blocklyCodeOpen = true;
     let hubSectionOpen = true;
     let diagnosticsSectionOpen = true;
@@ -704,6 +710,104 @@
                                 id="diagnostics-section-body"
                                 class="max-h-72 overflow-y-auto px-3 pb-3"
                             >
+                                {#if runSimulation || practiceResult}
+                                    <section
+                                        class="mb-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm"
+                                        aria-labelledby="practice-run-status"
+                                    >
+                                        <div
+                                            class="flex flex-wrap items-center justify-between gap-2"
+                                        >
+                                            <h2
+                                                id="practice-run-status"
+                                                class="font-semibold text-slate-900"
+                                            >
+                                                {#if practiceResult}
+                                                    Run result
+                                                {:else if simulationPaused}
+                                                    Paused
+                                                {:else if programExecutionIdle}
+                                                    Program activity is idle
+                                                {:else}
+                                                    Running · {droneSurveyElapsedSeconds.toFixed(1)}
+                                                    s
+                                                {/if}
+                                            </h2>
+                                            <div class="flex flex-wrap gap-2">
+                                                {#if runSimulation}
+                                                    <button
+                                                        type="button"
+                                                        class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                                        on:click={() =>
+                                                            simulatorWindow?.pauseOrResumeRun()}
+                                                        disabled={runPauseDisabled}
+                                                    >
+                                                        {simulationPaused ? 'Resume' : 'Pause'}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        class="rounded border border-red-300 bg-white px-2 py-1 font-medium text-red-800"
+                                                        on:click={() =>
+                                                            simulatorWindow?.stopCurrentRun()}
+                                                    >
+                                                        Stop
+                                                    </button>
+                                                {/if}
+                                                <button
+                                                    type="button"
+                                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
+                                                    on:click={() =>
+                                                        simulatorWindow?.resetCurrentRun()}
+                                                >
+                                                    Reset run
+                                                </button>
+                                            </div>
+                                        </div>
+                                        {#if practiceResult}
+                                            <p
+                                                class="mt-2 text-slate-800"
+                                                role="status"
+                                                aria-live="polite"
+                                            >
+                                                {practiceResult.message}
+                                            </p>
+                                            <p class="mt-1 text-xs text-slate-600">
+                                                Check diagnostics for the detailed error, then reset
+                                                and try again.
+                                            </p>
+                                            <div class="mt-3 flex flex-wrap gap-2">
+                                                <button
+                                                    type="button"
+                                                    class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800"
+                                                    on:click={() =>
+                                                        simulatorWindow?.resetCurrentRun()}
+                                                >
+                                                    Run again
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
+                                                    on:click={() =>
+                                                        simulatorWindow?.openDiagnosticsMode()}
+                                                >
+                                                    Open diagnostics
+                                                </button>
+                                            </div>
+                                        {:else if programExecutionIdle}
+                                            <p class="mt-2 text-xs text-slate-700" role="status">
+                                                Program activity is idle. The simulator cannot
+                                                confirm whether the program finished; stop or reset
+                                                the run when you are ready.
+                                            </p>
+                                        {:else}
+                                            <p class="mt-2 text-xs text-slate-700">
+                                                Pause holds the program. Stop keeps the scene
+                                                available for inspection. Reset returns the robot to
+                                                the saved setup.
+                                            </p>
+                                        {/if}
+                                    </section>
+                                {/if}
                                 <RunLogConsole />
                             </div>
                         {/if}
@@ -816,6 +920,11 @@
             bind:hub
             bind:hubImage
             bind:hubCentreButtonColour
+            bind:practiceResult
+            bind:simulationPaused
+            bind:programExecutionIdle
+            bind:droneSurveyElapsedSeconds
+            bind:runPauseDisabled
             bind:modalOpen={simulatorOpen}
             bind:blocklyOpen
             bind:activePane

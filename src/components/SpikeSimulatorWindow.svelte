@@ -33,6 +33,7 @@
     import WheelConnector from '$components/WheelConnector.svelte';
     import LoadScene from '$components/LoadScene.svelte';
     import type { DroneSurveyObservationGeometry } from '$lib/fll/drone-survey-observations';
+    import type { PracticeResult } from '$lib/spike/practice-result';
     import {
         parseDroneSurveyObservationGeometryProfile,
         type DroneSurveyObservationGeometryProfile
@@ -92,6 +93,29 @@
     export let hub: Hub = new Hub();
     export let hubImage = '0000000000000000000000000';
     export let hubCentreButtonColour = '#ffffff';
+    export let practiceResult: PracticeResult | undefined = undefined;
+    export let simulationPaused = false;
+    export let programExecutionIdle = false;
+    export let droneSurveyElapsedSeconds = 0;
+    export let runPauseDisabled = false;
+
+    let simulatorComponent: SpikeSimulator;
+
+    export function pauseOrResumeRun(): void {
+        simulatorComponent?.togglePause();
+    }
+
+    export function stopCurrentRun(): void {
+        simulatorComponent?.stopRun();
+    }
+
+    export function resetCurrentRun(): void {
+        simulatorComponent?.resetRun();
+    }
+
+    export function openDiagnosticsMode(): void {
+        workspaceMode = 'diagnostics';
+    }
     let observedWorkspace: Blockly.WorkspaceSvg | undefined;
     let workspaceReadinessListener: ((event: Blockly.Events.Abstract) => void) | undefined;
     let programReady = false;
@@ -1149,6 +1173,7 @@
             {#key `${blocklyOpen}-${robotModelGeneration}`}
                 <div class="min-h-0 min-w-0 flex-1 w-full overflow-hidden">
                     <SpikeSimulator
+                        bind:this={simulatorComponent}
                         bind:runSimulation
                         {practiceReady}
                         {workspace}
@@ -1156,6 +1181,11 @@
                         bind:hub
                         bind:hubImage
                         bind:hubCentreButtonColour
+                        bind:practiceResult
+                        bind:simulationPaused
+                        bind:programExecutionIdle
+                        bind:droneSurveyElapsedSeconds
+                        bind:runPauseDisabled
                         bind:sceneOpen
                         bind:wheelsOpen
                         {camera}
@@ -1165,7 +1195,6 @@
                         {m01ObservationGeometry}
                         {m01ObservationProfile}
                         bind:loadVirtualReferenceRobot
-                        on:openDiagnostics={() => (workspaceMode = 'diagnostics')}
                     />
                 </div>
             {/key}

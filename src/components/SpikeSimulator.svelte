@@ -51,9 +51,10 @@
     import DroneSurveyScoreFeedback from '$components/DroneSurveyScoreFeedback.svelte';
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
-    import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+    import { onDestroy, onMount } from 'svelte';
     import { appendRunLog, clearRunLog } from '$lib/spike/run-log';
     import { shouldStartResetRun } from '$lib/fll/practice-run-gate';
+    import type { PracticeResult } from '$lib/spike/practice-result';
 
     export let runSimulation: boolean = false;
     export let workspace: Blockly.WorkspaceSvg | undefined;
@@ -71,15 +72,13 @@
     export let loadVirtualReferenceRobot = false;
     export let practiceReady = true;
 
-    type PracticeResultKind = 'stopped' | 'startup-failure' | 'runtime-failure';
-
-    interface PracticeResult {
-        kind: PracticeResultKind;
-        message: string;
-    }
+    export let practiceResult: PracticeResult | undefined = undefined;
+    export let simulationPaused = false;
+    export let programExecutionIdle = false;
+    export let droneSurveyElapsedSeconds = 0;
+    export let runPauseDisabled = false;
 
     let compiler = new WebGLCompiler();
-    const dispatch = createEventDispatcher<{ openDiagnostics: void }>();
 
     interface SensorView {
         id: number | 'none';
@@ -91,13 +90,10 @@
     let vm: VM | undefined;
     let simulation: Simulation | undefined;
     let simulationGeneration = 0;
-    let simulationPaused = false;
-    let practiceResult: PracticeResult | undefined;
     let bioglowMatchClock = new BioglowMatchClock();
     let droneSurveyMatchController = createDroneSurveyMatchController();
     let droneSurveyScore: DroneSurveyScore | undefined;
     let droneSurveyMatchState = droneSurveyMatchController.state;
-    let droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
     let droneSurveyMatchExpired = false;
     export let hubImage = '0000000000000000000000000';
     export let hubCentreButtonColour = '#ffffff';
@@ -111,7 +107,6 @@
     let diagnosticElapsedSeconds = 0;
     let loopFrameCount = 0;
     let lastLoggedVmState: string | undefined;
-    let programExecutionIdle = false;
     let runAttemptActive = false;
     let scene = copyScene($sceneStore);
     let id = genId();
@@ -173,7 +168,7 @@
         return 'cause=moving';
     }
 
-    function stopRun(): void {
+    export function stopRun(): void {
         if (runSimulation) {
             practiceResult = {
                 kind: 'stopped',
@@ -183,7 +178,7 @@
         }
     }
 
-    function togglePause(): void {
+    export function togglePause(): void {
         if (!vm || !runSimulation) return;
         if (simulationPaused) {
             vm.unpause();
@@ -198,7 +193,7 @@
         }
     }
 
-    function resetRun(): void {
+    export function resetRun(): void {
         if (simulation) {
             simulation.reset();
             vm?.stop();
@@ -866,6 +861,7 @@
     }
 
     $: startOrPauseSimulation(runSimulation);
+    $: runPauseDisabled = !vm || vm.state === 'stopped';
 
     onDestroy(() => {
         simulationGeneration++;
@@ -937,86 +933,6 @@
     >
         <div class="flex h-full min-h-0 min-w-0 w-full flex-row">
             <div class="min-h-0 min-w-0 flex flex-col">
-                {#if runSimulation || practiceResult}
-                    <section
-                        class="mx-3 mt-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm"
-                        aria-labelledby="practice-run-status"
-                    >
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <h2 id="practice-run-status" class="font-semibold text-slate-900">
-                                {#if practiceResult}
-                                    Run result
-                                {:else if simulationPaused}
-                                    Paused
-                                {:else if programExecutionIdle}
-                                    Program activity is idle
-                                {:else}
-                                    Running · {droneSurveyElapsedSeconds.toFixed(1)} s
-                                {/if}
-                            </h2>
-                            <div class="flex flex-wrap gap-2">
-                                {#if runSimulation}
-                                    <button
-                                        type="button"
-                                        class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
-                                        on:click={togglePause}
-                                        disabled={!vm || vm.state === 'stopped'}
-                                    >
-                                        {simulationPaused ? 'Resume' : 'Pause'}
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="rounded border border-red-300 bg-white px-2 py-1 font-medium text-red-800"
-                                        on:click={stopRun}
-                                    >
-                                        Stop
-                                    </button>
-                                {/if}
-                                <button
-                                    type="button"
-                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
-                                    on:click={resetRun}
-                                >
-                                    Reset run
-                                </button>
-                            </div>
-                        </div>
-                        {#if practiceResult}
-                            <p class="mt-2 text-slate-800" role="status" aria-live="polite">
-                                {practiceResult.message}
-                            </p>
-                            <p class="mt-1 text-xs text-slate-600">
-                                Check diagnostics for the detailed error, then reset and try again.
-                            </p>
-                            <div class="mt-3 flex flex-wrap gap-2">
-                                <button
-                                    type="button"
-                                    class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800"
-                                    on:click={resetRun}
-                                >
-                                    Run again
-                                </button>
-                                <button
-                                    type="button"
-                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
-                                    on:click={() => dispatch('openDiagnostics')}
-                                >
-                                    Open diagnostics
-                                </button>
-                            </div>
-                        {:else if programExecutionIdle}
-                            <p class="mt-2 text-xs text-slate-700" role="status">
-                                Program activity is idle. The simulator cannot confirm whether the
-                                program finished; stop or reset the run when you are ready.
-                            </p>
-                        {:else}
-                            <p class="mt-2 text-xs text-slate-700">
-                                Pause holds the program. Stop keeps the scene available for
-                                inspection. Reset returns the robot to the saved setup.
-                            </p>
-                        {/if}
-                    </section>
-                {/if}
                 {#if runSimulation}
                     <div class="mx-3 mt-3 space-y-2">
                         <p class="text-sm">
