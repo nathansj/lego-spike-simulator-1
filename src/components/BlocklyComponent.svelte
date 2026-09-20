@@ -397,10 +397,6 @@
         print = !print;
     }
 
-    function toggleSize() {
-        split = 2 - split + 1;
-    }
-
     let paneContainer: HTMLDivElement | undefined;
     let splitRatio = 0.5;
     let splitDragging = false;
@@ -473,10 +469,6 @@
                 Blockly.svgResize(workspace);
             }
         }, 50);
-    }
-
-    function closeWindow() {
-        blocklyOpen = false;
     }
 
     function openCommands(pinned = true): void {
