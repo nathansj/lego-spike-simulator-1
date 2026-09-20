@@ -56,9 +56,18 @@
         projectDirtyStore,
         shouldConfirmDestructiveAction
     } from '$lib/spike/project-dirty-state';
+    import { Hub } from '$lib/spike/vm';
+    import HubWidget from '$components/HubWidget.svelte';
+    import RunLogConsole from '$components/RunLogConsole.svelte';
 
     let workspace: Blockly.WorkspaceSvg | undefined;
     let zoomToFit: ZoomToFitControl | undefined;
+    let hub = new Hub();
+    let hubImage = '0000000000000000000000000';
+    let hubCentreButtonColour = '#ffffff';
+    let blocklyCodeOpen = true;
+    let hubSectionOpen = true;
+    let diagnosticsSectionOpen = true;
     let numberOfLoads = 0;
     let variableType = '';
     let audioDialogOpen = false;
@@ -491,6 +500,13 @@
     }
 
     $: resizeWorkspace(simulatorOpen);
+    $: if (workspace && blocklyCodeOpen) {
+        setTimeout(() => {
+            if (workspace) {
+                Blockly.svgResize(workspace);
+            }
+        }, 50);
+    }
     $: setPrintMode(print);
     $: simulatorToggleLabel = simulatorOpen ? 'Hide simulator' : 'Show simulator';
     $: stripRunLabel = runSimulation ? 'Stop run' : practiceReady ? 'Run program' : 'Fix setup';
@@ -557,7 +573,22 @@
             <div
                 class="z-10 flex shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3 py-2"
             >
-                <span class="text-sm font-semibold text-slate-800">Blockly</span>
+                <span class="text-sm font-semibold text-slate-800">Blockly code</span>
+                <button
+                    type="button"
+                    class="icon-btn p-1 text-slate-700 hover:bg-slate-100"
+                    aria-expanded={blocklyCodeOpen}
+                    aria-controls="blockly-code-section"
+                    aria-label={blocklyCodeOpen ? 'Collapse Blockly code' : 'Expand Blockly code'}
+                    title={blocklyCodeOpen ? 'Collapse Blockly code' : 'Expand Blockly code'}
+                    on:click={() => (blocklyCodeOpen = !blocklyCodeOpen)}
+                >
+                    {#if blocklyCodeOpen}
+                        <ChevronDownOutline size="sm" aria-hidden="true" />
+                    {:else}
+                        <ChevronRightOutline size="sm" aria-hidden="true" />
+                    {/if}
+                </button>
                 <div class="relative">
                     <button
                         type="button"
@@ -621,6 +652,62 @@
                     title={simulatorToggleLabel}
                     on:click={toggleRobot}
                 >
+                    <section
+                        class="shrink-0 border-t border-slate-200 bg-white"
+                        aria-labelledby="hub-runtime-title"
+                    >
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                            aria-expanded={hubSectionOpen}
+                            aria-controls="hub-runtime-section"
+                        >
+                            <span id="hub-runtime-title">Hub runtime</span>
+                            {#if hubSectionOpen}
+                                <ChevronDownOutline size="sm" aria-hidden="true" />
+                            {:else}
+                                <ChevronRightOutline size="sm" aria-hidden="true" />
+                            {/if}
+                        </button>
+                        {#if hubSectionOpen}
+                            <div id="hub-runtime-section" class="px-3 pb-3">
+                                <HubWidget
+                                    image={hubImage}
+                                    centreButtonColour={hubCentreButtonColour}
+                                    on:leftPress={() => (hub.leftPressed = true)}
+                                    on:rightPress={() => (hub.rightPressed = true)}
+                                    on:leftRelease={() => (hub.leftPressed = false)}
+                                    on:rightRelease={() => (hub.rightPressed = false)}
+                                />
+                            </div>
+                        {/if}
+                    </section>
+                    <section
+                        class="shrink-0 border-t border-slate-200 bg-white"
+                        aria-labelledby="diagnostics-section-title"
+                    >
+                        <button
+                            type="button"
+                            class="flex w-full items-center justify-between gap-2 px-3 py-2 text-left text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                            aria-expanded={diagnosticsSectionOpen}
+                            aria-controls="diagnostics-section-body"
+                        >
+                            <span id="diagnostics-section-title">Diagnostics</span>
+                            {#if diagnosticsSectionOpen}
+                                <ChevronDownOutline size="sm" aria-hidden="true" />
+                            {:else}
+                                <ChevronRightOutline size="sm" aria-hidden="true" />
+                            {/if}
+                        </button>
+                        {#if diagnosticsSectionOpen}
+                            <div
+                                id="diagnostics-section-body"
+                                class="max-h-72 overflow-y-auto px-3 pb-3"
+                            >
+                                <RunLogConsole />
+                            </div>
+                        {/if}
+                    </section>
                     {#if simulatorOpen}
                         <EyeSlashOutline size="sm" aria-hidden="true" />
                     {:else}
@@ -629,7 +716,9 @@
                 </button>
             </div>
             <div
+                id="blockly-code-section"
                 class="relative min-h-0 min-w-0 flex-1 w-full overflow-hidden"
+                class:hidden={!blocklyCodeOpen}
                 on:pointerdown={() => commandsOpen && closeCommands()}
             >
                 <div id="blocklyDiv" />
@@ -724,6 +813,9 @@
         </div>
         <SpikeSimulatorWindow
             bind:this={simulatorWindow}
+            bind:hub
+            bind:hubImage
+            bind:hubCentreButtonColour
             bind:modalOpen={simulatorOpen}
             bind:blocklyOpen
             bind:activePane

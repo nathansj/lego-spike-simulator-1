@@ -9,7 +9,7 @@
         type RunLogLevel
     } from '$lib/spike/run-log';
 
-    export let onOpenDiagnostics: (() => void) | undefined;
+    export let onOpenDiagnostics: (() => void) | undefined = undefined;
 
     const levelClasses = {
         info: 'text-gray-700',

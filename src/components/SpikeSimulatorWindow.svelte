@@ -89,7 +89,9 @@
     export let workspace: Blockly.WorkspaceSvg | undefined;
     export let split = 2;
     export let activePane: 'program' | 'simulator' = 'program';
-    let hub = new Hub();
+    export let hub: Hub = new Hub();
+    export let hubImage = '0000000000000000000000000';
+    export let hubCentreButtonColour = '#ffffff';
     let observedWorkspace: Blockly.WorkspaceSvg | undefined;
     let workspaceReadinessListener: ((event: Blockly.Events.Abstract) => void) | undefined;
     let programReady = false;
@@ -1152,6 +1154,8 @@
                         {workspace}
                         bind:connectorOpen
                         bind:hub
+                        bind:hubImage
+                        bind:hubCentreButtonColour
                         bind:sceneOpen
                         bind:wheelsOpen
                         {camera}

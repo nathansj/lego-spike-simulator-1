@@ -43,7 +43,6 @@
         type DroneSurveyObservationGeometry
     } from '$lib/fll/drone-survey-observations';
     import type { DroneSurveyObservationGeometryProfile } from '$lib/fll/drone-survey-observation-geometry-profile';
-    import HubWidget from '$components/HubWidget.svelte';
     import RobotPreview from '$components/RobotPreview.svelte';
     import ScenePreview from '$components/ScenePreview.svelte';
     import ColourSensor from '$components/ColourSensor.svelte';
@@ -53,7 +52,6 @@
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
     import { createEventDispatcher, onDestroy, onMount } from 'svelte';
-    import RunLogConsole from '$components/RunLogConsole.svelte';
     import { appendRunLog, clearRunLog } from '$lib/spike/run-log';
     import { shouldStartResetRun } from '$lib/fll/practice-run-gate';
 
@@ -101,8 +99,8 @@
     let droneSurveyMatchState = droneSurveyMatchController.state;
     let droneSurveyElapsedSeconds = droneSurveyMatchController.elapsedFixedSimulationTimeSeconds;
     let droneSurveyMatchExpired = false;
-    let hubImage = '0000000000000000000000000';
-    let hubCentreButtonColour = '#ffffff';
+    export let hubImage = '0000000000000000000000000';
+    export let hubCentreButtonColour = '#ffffff';
     let compiledRobot: CompiledModel | undefined = $componentStore.robotModel
         ? compiler.compileModel($componentStore.robotModel, { rescale: false })
         : undefined;
@@ -641,7 +639,6 @@
             hubCentreButtonColour = value;
         }
     }
-
     function stepVM(timestamp: number, generation: number) {
         if (generation !== simulationGeneration || !runSimulation) return;
         if (!vm) {
@@ -868,30 +865,6 @@
         }
     }
 
-    function hubLeftPress() {
-        if (vm) {
-            vm.hub.leftPressed = true;
-        }
-    }
-
-    function hubRightPress() {
-        if (vm) {
-            vm.hub.rightPressed = true;
-        }
-    }
-
-    function hubLeftRelease() {
-        if (vm) {
-            vm.hub.leftPressed = false;
-        }
-    }
-
-    function hubRightRelease() {
-        if (vm) {
-            vm.hub.rightPressed = false;
-        }
-    }
-
     $: startOrPauseSimulation(runSimulation);
 
     onDestroy(() => {
@@ -964,16 +937,6 @@
     >
         <div class="flex h-full min-h-0 min-w-0 w-full flex-row">
             <div class="min-h-0 min-w-0 flex flex-col">
-                <div class="mx-3 my-0 h-min">
-                    <HubWidget
-                        image={hubImage}
-                        centreButtonColour={hubCentreButtonColour}
-                        on:leftPress={hubLeftPress}
-                        on:rightPress={hubRightPress}
-                        on:leftRelease={hubLeftRelease}
-                        on:rightRelease={hubRightRelease}
-                    />
-                </div>
                 {#if runSimulation || practiceResult}
                     <section
                         class="mx-3 mt-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm"
@@ -1128,7 +1091,6 @@
                         {/if}
                     {/each}
                 {/if}
-                <RunLogConsole onOpenDiagnostics={() => dispatch('openDiagnostics')} />
             </div>
             <div class="min-h-0 min-w-0 h-full w-full overflow-hidden">
                 {#if runSimulation}
