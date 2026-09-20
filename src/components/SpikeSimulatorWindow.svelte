@@ -3,7 +3,10 @@
     import { Button, Tooltip } from 'flowbite-svelte';
     import {
         AdjustmentsHorizontalOutline,
+        AdjustmentsVerticalOutline,
+        BugOutline,
         ChevronDownOutline,
+        CloseOutline,
         CogOutline,
         DatabaseOutline,
         EyeOutline,
@@ -11,6 +14,7 @@
         FolderOpenOutline,
         FolderPlusOutline,
         GridOutline,
+        HomeOutline,
         MapPinAltOutline,
         PlayOutline,
         ShareNodesOutline,
@@ -511,10 +515,6 @@
         element?.scrollIntoView({ block: 'nearest' });
     }
 
-    function selectWorkspace(event: CustomEvent<'practice' | 'expert' | 'diagnostics'>): void {
-        workspaceMode = event.detail;
-    }
-
     function handleSeasonSelect(event: CustomEvent<string>): void {
         requestSeasonSelection(event.detail);
     }
@@ -797,125 +797,162 @@
                     ? 'shrink-0'
                     : 'min-h-0 max-h-[45%]'} overflow-y-auto overscroll-contain"
             >
-                {#if workspaceMode === 'practice'}
-                    <section
-                        class="border-b border-slate-200 bg-white px-3 py-2"
-                        aria-labelledby="practice-title"
-                    >
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <div class="min-w-0">
-                                <p id="practice-title" class="text-sm font-semibold text-slate-900">
-                                    Practice
-                                </p>
-                                <p class="truncate text-xs text-slate-600">
-                                    {activeSeasonPackage
-                                        ? `${activeSeasonPackage.name} · ${activeSeasonPackage.edition} · rev ${activeSeasonPackage.revision}`
-                                        : 'No season selected'}
-                                </p>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span
-                                    class="text-xs font-medium {$projectDirtyStore.dirty
-                                        ? 'text-amber-800'
-                                        : 'text-slate-600'}"
+                <div class="border-b border-slate-200 bg-white px-3 py-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <div
+                                role="group"
+                                aria-label="Workspace mode"
+                                class="flex items-center gap-1"
+                            >
+                                <button
+                                    type="button"
+                                    class="icon-btn rounded p-1 {workspaceMode === 'practice'
+                                        ? 'bg-blue-700 text-white'
+                                        : 'text-slate-700 hover:bg-slate-100'}"
+                                    aria-current={workspaceMode === 'practice' ? 'page' : undefined}
+                                    aria-label="Practice"
+                                    title="Practice"
+                                    on:click={() => (workspaceMode = 'practice')}
                                 >
-                                    {$projectDirtyStore.dirty ? 'Unsaved changes' : 'Saved'}
-                                </span>
-                                <div class="relative">
-                                    <button
-                                        type="button"
-                                        class="icon-btn border border-slate-300 px-2 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                                        aria-haspopup="menu"
-                                        aria-expanded={simulatorMenuOpen}
-                                        aria-label="Simulator view"
-                                        title="Simulator view"
-                                        on:click={() => (simulatorMenuOpen = !simulatorMenuOpen)}
-                                        on:keydown={closeSimulatorMenu}
+                                    <HomeOutline size="sm" aria-hidden="true" />
+                                </button>
+                                <button
+                                    type="button"
+                                    class="icon-btn rounded p-1 {workspaceMode === 'expert'
+                                        ? 'bg-blue-700 text-white'
+                                        : 'text-slate-700 hover:bg-slate-100'}"
+                                    aria-current={workspaceMode === 'expert' ? 'page' : undefined}
+                                    aria-label="Expert Setup"
+                                    title="Expert Setup"
+                                    on:click={() => (workspaceMode = 'expert')}
+                                >
+                                    <AdjustmentsVerticalOutline size="sm" aria-hidden="true" />
+                                </button>
+                                <button
+                                    type="button"
+                                    class="icon-btn rounded p-1 {workspaceMode === 'diagnostics'
+                                        ? 'bg-blue-700 text-white'
+                                        : 'text-slate-700 hover:bg-slate-100'}"
+                                    aria-current={workspaceMode === 'diagnostics'
+                                        ? 'page'
+                                        : undefined}
+                                    aria-label="Developer Diagnostics"
+                                    title="Developer Diagnostics"
+                                    on:click={() => (workspaceMode = 'diagnostics')}
+                                >
+                                    <BugOutline size="sm" aria-hidden="true" />
+                                </button>
+                            </div>
+                            <div class="h-5 w-px bg-slate-300" aria-hidden="true"></div>
+                            {#if workspaceMode === 'practice'}
+                                <div class="min-w-0">
+                                    <p
+                                        id="practice-title"
+                                        class="text-sm font-semibold text-slate-900"
                                     >
-                                        <GridOutline size="sm" aria-hidden="true" />
-                                        <ChevronDownOutline size="xs" aria-hidden="true" />
-                                    </button>
-                                    {#if simulatorMenuOpen}
-                                        <div
-                                            class="absolute right-0 top-full z-30 mt-1 w-56 rounded border border-slate-200 bg-white p-1 shadow-lg"
-                                            role="menu"
-                                        >
-                                            <button
-                                                type="button"
-                                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
-                                                role="menuitem"
-                                                on:click={() => {
-                                                    robotFocus = true;
-                                                    camera = 'back';
-                                                    tilt = true;
-                                                    cameraMenu = buildCameraMenu();
-                                                    simulatorMenuOpen = false;
-                                                }}>Focus robot</button
-                                            >
-                                            <button
-                                                type="button"
-                                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
-                                                role="menuitem"
-                                                on:click={() => {
-                                                    camera = 'adaptive';
-                                                    tilt = true;
-                                                    robotFocus = false;
-                                                    cameraMenu = buildCameraMenu();
-                                                    simulatorMenuOpen = false;
-                                                }}>Default view</button
-                                            >
-                                            <div class="my-1 border-t border-slate-200"></div>
-                                            <button
-                                                type="button"
-                                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
-                                                role="menuitem"
-                                                on:click={() => {
-                                                    workspaceMode = 'expert';
-                                                    simulatorMenuOpen = false;
-                                                }}>Expert Setup</button
-                                            >
-                                            <button
-                                                type="button"
-                                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
-                                                role="menuitem"
-                                                on:click={() => {
-                                                    workspaceMode = 'diagnostics';
-                                                    simulatorMenuOpen = false;
-                                                }}>Developer Diagnostics</button
-                                            >
-                                        </div>
-                                    {/if}
+                                        Practice
+                                    </p>
+                                    <p class="truncate text-xs text-slate-600">
+                                        {activeSeasonPackage
+                                            ? `${activeSeasonPackage.name} · ${activeSeasonPackage.edition} · rev ${activeSeasonPackage.revision}`
+                                            : 'No season selected'}
+                                    </p>
                                 </div>
-                                <Button
-                                    color="light"
-                                    size="xs"
-                                    aria-label="Save project"
-                                    title="Save project"
-                                    on:click={saveRobotOrScene}
-                                >
-                                    <FloppyDiskOutline size="sm" aria-hidden="true" />
-                                </Button>
-                                <Button
-                                    color={runSimulation
-                                        ? 'red'
-                                        : practiceReady
-                                          ? 'green'
-                                          : 'light'}
-                                    size="sm"
-                                    aria-label={practiceRunLabel}
-                                    title={practiceRunLabel}
-                                    on:click={runOrCorrect}
-                                >
-                                    {#if runSimulation}
-                                        <StopOutline size="md" aria-hidden="true" />
-                                    {:else if practiceReady}
-                                        <PlayOutline size="md" aria-hidden="true" />
-                                    {:else}
-                                        <ToolsOutline size="md" aria-hidden="true" />
-                                    {/if}
-                                </Button>
-                            </div>
+                            {/if}
                         </div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <Button
+                                color={runSimulation ? 'red' : practiceReady ? 'green' : 'light'}
+                                size="sm"
+                                aria-label={practiceRunLabel}
+                                title={practiceRunLabel}
+                                on:click={runOrCorrect}
+                            >
+                                {#if runSimulation}
+                                    <StopOutline size="md" aria-hidden="true" />
+                                {:else if practiceReady}
+                                    <PlayOutline size="md" aria-hidden="true" />
+                                {:else}
+                                    <ToolsOutline size="md" aria-hidden="true" />
+                                {/if}
+                            </Button>
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Save project"
+                                title="Save project"
+                                on:click={saveRobotOrScene}
+                            >
+                                <FloppyDiskOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <span
+                                class="text-xs font-medium {$projectDirtyStore.dirty
+                                    ? 'text-amber-800'
+                                    : 'text-slate-600'}"
+                            >
+                                {$projectDirtyStore.dirty ? 'Unsaved changes' : 'Saved'}
+                            </span>
+                            <div class="relative">
+                                <button
+                                    type="button"
+                                    class="icon-btn border border-slate-300 px-2 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                                    aria-haspopup="menu"
+                                    aria-expanded={simulatorMenuOpen}
+                                    aria-label="Simulator view"
+                                    title="Simulator view"
+                                    on:click={() => (simulatorMenuOpen = !simulatorMenuOpen)}
+                                    on:keydown={closeSimulatorMenu}
+                                >
+                                    <GridOutline size="sm" aria-hidden="true" />
+                                    <ChevronDownOutline size="xs" aria-hidden="true" />
+                                </button>
+                                {#if simulatorMenuOpen}
+                                    <div
+                                        class="absolute right-0 top-full z-30 mt-1 w-56 rounded border border-slate-200 bg-white p-1 shadow-lg"
+                                        role="menu"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                            role="menuitem"
+                                            on:click={() => {
+                                                robotFocus = true;
+                                                camera = 'back';
+                                                tilt = true;
+                                                cameraMenu = buildCameraMenu();
+                                                simulatorMenuOpen = false;
+                                            }}>Focus robot</button
+                                        >
+                                        <button
+                                            type="button"
+                                            class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                            role="menuitem"
+                                            on:click={() => {
+                                                camera = 'adaptive';
+                                                tilt = true;
+                                                robotFocus = false;
+                                                cameraMenu = buildCameraMenu();
+                                                simulatorMenuOpen = false;
+                                            }}>Default view</button
+                                        >
+                                    </div>
+                                {/if}
+                            </div>
+                            {#if blocklyOpen}
+                                <button
+                                    type="button"
+                                    class="icon-btn p-1 text-slate-600 hover:bg-slate-100"
+                                    aria-label="Close simulator"
+                                    title="Close simulator"
+                                    on:click={closeWindow}
+                                >
+                                    <CloseOutline size="sm" aria-hidden="true" />
+                                </button>
+                            {/if}
+                        </div>
+                    </div>
+                    {#if workspaceMode === 'practice'}
                         <p
                             class="mt-2 text-sm {practiceReady
                                 ? 'text-green-800'
@@ -932,8 +969,8 @@
                                     : 'Fix setup in Expert Setup.'}
                             {/if}
                         </p>
-                    </section>
-                {/if}
+                    {/if}
+                </div>
                 {#if workspaceMode !== 'practice'}
                     <PracticeReadinessShell
                         {runSimulation}
@@ -944,7 +981,6 @@
                         )?.name ?? 'No mission selected'}
                         missionCount={activeSeasonPackage?.missions.length ?? 0}
                         {workspaceMode}
-                        canClose={blocklyOpen}
                         robotReady={$componentStore.robotModel !== undefined}
                         fieldReady={$sceneStore.objects.length > 0}
                         driveReady={hub.wheels.length >= 2 &&
@@ -955,11 +991,6 @@
                         on:field={openPracticeField}
                         on:program={openBlockly}
                         on:season={openSeasonSelection}
-                        on:run={startRobot}
-                        on:stop={stopRobot}
-                        on:save={saveRobotOrScene}
-                        on:close={closeWindow}
-                        on:mode={selectWorkspace}
                     />
                 {/if}
                 {#if workspaceMode === 'expert'}

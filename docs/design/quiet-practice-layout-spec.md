@@ -4,6 +4,11 @@ Task: `ui-layout-03` / `quiet-two-pane-design`
 Owner: `fll_design`  
 Status: proposed design and implementation handoff; no production source changed
 
+Amended 2026-09-20, run `ui-modes-06`: the mode routes (`Practice`, `Expert Setup`,
+`Developer Diagnostics`) become persistent iconified controls in the simulator top menu
+bar, and the run/stop control moves to that bar in all modes, per an owner decision that
+supersedes the menu-based routes below. See `docs/design/icon-button-spec.md` Surface 8.
+
 ## Decision
 
 Practice is a quiet, stable work surface with **exactly two primary content panes**:
@@ -61,8 +66,8 @@ technical setup.
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────────────────┐
-│ Practice · {season display name, edition, revision}  [Blockly view ▾] [Simulator view ▾] │
-│ {Saved | Unsaved changes | Saving… | Save unavailable}       [Run program] [Save project]│
+│ [⌂][⚙][✳] Practice · {season name, edition, revision}   [Simulator view ▾] [▶ Run] [Save]│
+│ {Saved | Unsaved changes | Saving… | Save unavailable}                    [Reset run]    │
 ├────────────────────────────────────────────┬─────────────────────────────────────────────┤
 │ BLOCKLY                                    │ SIMULATOR                                   │
 │ [Commands ▸]  {program name / readiness}   │ {mission name} · {setup/result summary}     │
@@ -70,16 +75,24 @@ technical setup.
 │ │ category/command overlay, when open    │ │ │ field, robot, and participant-safe view │ │
 │ │ [Motion] [Events] [Sound] …            │ │ │                                         │ │
 │ └────────────────────────────────────────┘ │ └─────────────────────────────────────────┘ │
-│                                              │ [Run program] [Reset run]                  │
+│                                              │ [Reset run]                                │
 │ Blockly workspace                            │ {short state / next action}                │
 └────────────────────────────────────────────┴─────────────────────────────────────────────┘
 ```
 
 Annotations:
 
+-   `[⌂][⚙][✳]` are the persistent iconified mode controls — `Practice`, `Expert Setup`,
+    `Developer Diagnostics`, in that order, identical in every mode (`HomeOutline`,
+    `AdjustmentsVerticalOutline`, `BugOutline`; see `icon-button-spec.md` Surface 8a).
+    They are icon-only per the 2026-09-20 owner decision; active mode gets a filled
+    treatment plus `aria-current="page"`.
+-   `[▶ Run]` is the single run/stop control in the simulator top menu bar in ALL modes
+    (Surface 8b); the simulator pane's inner run strip below is no longer a second primary
+    control.
 -   Toolbar controls in these wireframes render as icon-only buttons whose accessible name
     and hover/`title` text equal the label shown; see `docs/design/icon-button-spec.md`.
-    The `Program`/`Simulator` tabs and mode routes keep visible text by exception.
+    The `Program`/`Simulator` tabs keep visible text by exception.
 -   The header is one compact row that may wrap only its metadata/status on medium widths;
     it must not push a third persistent panel above either work pane.
 -   On desktop, Blockly starts at 50% of usable width and the simulator receives the other
@@ -99,20 +112,23 @@ Annotations:
 ### Header toolbar
 
 Toolbar buttons are icon-first: the visible text label is replaced by an icon, and the
-current text label is exposed verbatim as both `aria-label` and hover/`title` text. Route
-tabs, mode indicators, readiness chips, and modal confirmation buttons keep visible text.
+current text label is exposed verbatim as both `aria-label` and hover/`title` text. The
+`Program`/`Simulator` tabs, readiness chips, and modal confirmation buttons keep visible
+text. (Amended 2026-09-20: the three mode routes are iconified in the top bar by owner
+decision — see the Mode bar row below; their in-content mode notes keep text.)
 Menu buttons use `aria-haspopup="menu"`, expose expanded state, support Escape, and return
 focus to their trigger after dismissal. The complete icon inventory, state contract, and
 non-negotiables are defined in `docs/design/icon-button-spec.md`; this document's
 wireframe labels now name those accessible names rather than required visible text.
 
-| Control            | Proposed contents and behavior                                                                                                                                                                                                                                     |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Season summary     | `{season display name} · {edition} · rev {revision}`. It opens season selection only when that contract is available. It never displays a fixed mission count, BIOGLOW name, filename, or score in generic shell text.                                             |
-| `Blockly view ▾`   | `Show commands`, `Hide commands` when pinned open, `Open program`, `Import program`, `Save program`, and `Print program` only where existing functionality supports them. These are program actions, not simulator actions.                                        |
-| `Simulator view ▾` | Participant-safe camera choices and `Focus robot` where implemented. `Expert Setup` and `Developer Diagnostics` appear after a separator as routes with explanatory text; collider/contact overlays, timing, and raw telemetry do not appear in the Practice menu. |
-| Run control        | `Run program` when ready; the first corrective action when not ready; `Stop run` while running; `Resume` while truly paused. It is visually persistent and never hidden in an overflow menu.                                                                       |
-| Reset and save     | `Reset run` is visible when an existing run can be reset; `Save project` shows its current save status. `Restore saved setup` belongs in an explicit confirmation path, not this compact toolbar.                                                                  |
+| Control            | Proposed contents and behavior                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mode bar           | Amended 2026-09-20 (`ui-modes-06`): `Practice`, `Expert Setup`, `Developer Diagnostics` are ALWAYS visible as iconified controls at the leading edge of the simulator top menu bar, in every mode and at every width, with verbatim `aria-label`/`title`, filled active treatment, and `aria-current="page"`. This replaces the earlier menu-based routes and the shell's text mode buttons; see `icon-button-spec.md` Surface 8.     |
+| Season summary     | `{season display name} · {edition} · rev {revision}`. It opens season selection only when that contract is available. It never displays a fixed mission count, BIOGLOW name, filename, or score in generic shell text.                                                                                                                                                                                                                |
+| `Blockly view ▾`   | `Show commands`, `Hide commands` when pinned open, `Open program`, `Import program`, `Save program`, and `Print program` only where existing functionality supports them. These are program actions, not simulator actions.                                                                                                                                                                                                           |
+| `Simulator view ▾` | Participant-safe camera choices and `Focus robot` where implemented. Amended 2026-09-20: the `Expert Setup` and `Developer Diagnostics` menu items are REMOVED (the mode bar replaces them); the menu keeps camera-only items. Collider/contact overlays, timing, and raw telemetry do not appear here.                                                                                                                               |
+| Run control        | `Run program` when ready; the first corrective action when not ready; `Stop run` while running; `Resume` while truly paused. Amended 2026-09-20: it lives in the simulator top menu bar in ALL modes, right of the mode group, before `Save project`; it is visually persistent and never hidden in an overflow menu. The only sanctioned duplicate is the narrow run strip when the simulator pane is hidden behind the Program tab. |
+| Reset and save     | `Reset run` is visible when an existing run can be reset; `Save project` shows its current save status. `Restore saved setup` belongs in an explicit confirmation path, not this compact toolbar.                                                                                                                                                                                                                                     |
 
 The header exposes no technical setup toolbar. `Load missing parts`, port and wheel editing,
 field/model transforms, attachment mechanics, calibration profiles, and simulation settings
@@ -165,7 +181,7 @@ usable Blockly and board areas. Show a compact two-tab switcher immediately belo
 
 ```text
 ┌──────────────────────────────────────────────┐
-│ Practice · {season summary}       [Unsaved]   │
+│ [⌂][⚙][✳] Practice · {season summary} [Unsaved]│
 │ [Blockly view ▾] [Simulator view ▾] [Save]    │
 │ [Program] [Simulator]                         │
 ├──────────────────────────────────────────────┤
@@ -179,14 +195,17 @@ usable Blockly and board areas. Show a compact two-tab switcher immediately belo
 
 -   `Program` and `Simulator` are native tabs or labelled buttons with selected state; they
     replace the active work area without reinitializing Blockly or the simulator.
--   The run control is visible in the simulator tab and duplicated as a compact persistent
-    narrow run strip when the program tab is active. During a run, `Stop run` replaces it and
-    remains reachable without opening an overflow menu.
+-   Amended 2026-09-20: the run control's primary home is the simulator top menu bar, which
+    stays visible in every mode and tab. The narrow run strip below the Program pane is
+    KEPT as the sanctioned duplicate because the simulator pane itself is hidden while the
+    Program tab is active; it mirrors the bar control's label/icon/state exactly. During a
+    run, `Stop run` replaces it and remains reachable without opening an overflow menu.
 -   The command overlay becomes a full-width sheet _inside the active Program pane_ on narrow
     screens. It does not cover the entire app or hide the header, Stop, save status, or close
     control.
--   `Expert Setup` and `Developer Diagnostics` remain in the two view menus or an explicit
-    `More practice tools` menu, never as a third tab and never required for a normal program
+-   Amended 2026-09-20: `Expert Setup` and `Developer Diagnostics` live in the persistent
+    iconified mode group in the top bar at every width — never in a per-mode menu
+    arrangement and never as a third tab; they are not required for a normal program
     edit/run/retry.
 -   At no width may the page rely on drag resizing, clipped horizontal controls, or an
     unlabeled canvas gesture. Browser zoom is treated as a narrow layout trigger.
@@ -249,14 +268,14 @@ This is a bounded proposal for `fll_experience`; it does not authorize an applic
 rewrite. `fll_lead` must confirm state contracts and one writer for shared components before
 implementation.
 
-| Owner                         | Allowed path / responsibility                | Bounded handoff                                                                                                                                                                                                                                                                 |
-| ----------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `fll_experience`              | `src/components/BlocklyComponent.svelte`     | Make the existing split stable and default to two simultaneous desktop panes. Replace icon-first top controls with the proposed low-noise header integration boundary; implement a keyboard-operable command disclosure without re-injecting Blockly or losing workspace state. |
-| `fll_experience`              | `src/components/SpikeSimulatorWindow.svelte` | Supply header/simulator menu actions, narrow pane switcher, participant run strip, and routes to the existing Expert/Diagnostics modes. Preserve current season, dirty, readiness, and run callbacks; do not relocate technical functionality without a route.                  |
-| `fll_lead`                    | shared state contracts                       | Confirm the available run lifecycle and whether pause/reset/save/package state can support the proposed labels. No UI may claim a state contract the runtime does not provide.                                                                                                  |
-| `fll_rules` / `fll_assets`    | wording and package/setup review             | Verify capability/rule wording and package, project-version, field, robot, and launch-zone terms before they become participant copy.                                                                                                                                           |
-| `fll_physics` / `fll_runtime` | diagnostic and lifecycle review              | Verify that `Pause`, reset boundaries, contact wording, runtime collider overlays, and fixed-step timestamps are semantically true.                                                                                                                                             |
-| `fll_qa`                      | `docs/qa/ui-layout-03-review.md`             | Independently verify the acceptance scenarios below in Chromium and Firefox on agreed classroom devices; record unavailable measurements separately.                                                                                                                            |
+| Owner                         | Allowed path / responsibility                | Bounded handoff                                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `fll_experience`              | `src/components/BlocklyComponent.svelte`     | Make the existing split stable and default to two simultaneous desktop panes. Replace icon-first top controls with the proposed low-noise header integration boundary; implement a keyboard-operable command disclosure without re-injecting Blockly or losing workspace state.                                                                                                                  |
+| `fll_experience`              | `src/components/SpikeSimulatorWindow.svelte` | Implement the persistent mode bar (Surface 8a), the all-modes top-bar run/stop control (Surface 8b), the narrow pane switcher, and the participant run strip; remove the `Simulator view` mode-route items and the shell's duplicate mode/save/run controls (Surface 8c). Preserve current season, dirty, readiness, and run callbacks; do not relocate technical functionality without a route. |
+| `fll_lead`                    | shared state contracts                       | Confirm the available run lifecycle and whether pause/reset/save/package state can support the proposed labels. No UI may claim a state contract the runtime does not provide.                                                                                                                                                                                                                   |
+| `fll_rules` / `fll_assets`    | wording and package/setup review             | Verify capability/rule wording and package, project-version, field, robot, and launch-zone terms before they become participant copy.                                                                                                                                                                                                                                                            |
+| `fll_physics` / `fll_runtime` | diagnostic and lifecycle review              | Verify that `Pause`, reset boundaries, contact wording, runtime collider overlays, and fixed-step timestamps are semantically true.                                                                                                                                                                                                                                                              |
+| `fll_qa`                      | `docs/qa/ui-layout-03-review.md`             | Independently verify the acceptance scenarios below in Chromium and Firefox on agreed classroom devices; record unavailable measurements separately.                                                                                                                                                                                                                                             |
 
 No new CSS token or package/API change is specified here. Reuse the existing Svelte,
 TypeScript, Blockly, Flowbite, and Tailwind patterns where they can meet these constraints.
@@ -281,9 +300,10 @@ TypeScript, Blockly, Flowbite, and Tailwind patterns where they can meet these c
 6. **Corrective setup:** With missing robot parts, wheel setup, field, or a usable program,
    Practice names the first known need and opens the relevant Expert Setup route. It does not
    expose raw library paths, physics settings, or technical calibration in the quiet header.
-7. **Technical routes:** Open Expert Setup and Developer Diagnostics from a labelled header
-   menu route, return to Practice, and verify no mode switch alters the current run, score,
-   project inputs, or displayed capability state.
+7. **Technical routes:** Open Expert Setup and Developer Diagnostics from the persistent
+   iconified mode bar (amended 2026-09-20; previously a header menu), verify the active
+   control follows the mode, return to Practice, and verify no mode switch alters the
+   current run, score, project inputs, or displayed capability state.
 8. **Season/project safety:** Attempt to switch packages with unsaved work and open a project
    requiring a missing package. The original project remains preserved, decision copy is
    explicit, and generic UI displays package data rather than a fixed season/missions label.

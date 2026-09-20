@@ -3,6 +3,9 @@
 Task: `ui-icons-04` / `icon-button-design`; Phase B finalized by `ui-icons-05` / `phase-b-design`
 Owner: `fll_design`
 Status: proposed design and implementation handoff; no production source changed
+Changelog: 2026-09-20 (run `ui-modes-06`) — added Surface 8, the persistent iconified mode bar
+and the unified simulator top-bar run/stop control, per a new owner decision that supersedes
+exception A2 for the three mode controls (Practice, Expert Setup, Developer Diagnostics).
 Changelog: 2026-09-19 (run `ui-icons-05`) — Phase B / Expert Setup (EXP-1..11) inventory re-verified
 against the committed source, weak glyphs EXP-6/EXP-7 resolved to verified icons, and the Phase B
 section upgraded from deferred to an implementation-ready handoff. Phase A content below is unchanged.
@@ -27,6 +30,11 @@ Diagnostics` routes) and modal confirmation buttons (`Keep working`, `Discard
 changes`, `OK`/`CANCEL`/`SAVE`) keep visible text. Icon-only routes and destructive
     confirmations would harm wayfinding and comprehension; owner approval is required to
     extend iconification there.
+    **Update 2026-09-20 (`ui-modes-06`):** the owner has iconified the three mode route
+    controls in the simulator top bar (Surface 8 below), superseding exception A2 for
+    exactly those three controls. Exception A2 still applies to any _other_ mode-route
+    control; the `Program`/`Simulator` tabs remain exception A1 and modal confirmations
+    remain exception A4.
 
 ## Evidence Boundary
 
@@ -70,7 +78,9 @@ replaced by an icon plus `aria-label`/`title`.
 
 The `Simulator view` menu items (`Focus robot`, `Default view`, `Expert Setup`,
 `Developer Diagnostics`) keep visible text: they are `role="menuitem"` entries inside a
-menu, not toolbar buttons. The menu trigger's `aria-haspopup="menu"`, `aria-expanded`,
+menu, not toolbar buttons. **Amended 2026-09-20 (Surface 8c):** the `Expert Setup` and
+`Developer Diagnostics` items are removed from this menu (replaced by the mode bar); only
+the camera items remain. The menu trigger's `aria-haspopup="menu"`, `aria-expanded`,
 Escape handling, and callbacks are unchanged.
 
 ### Surface 2 — Blockly pane header bar (BlocklyComponent.svelte, `z-10 flex shrink-0 …` header div)
@@ -108,6 +118,11 @@ season-neutral toolbox category names).
 | NRS-1 | `Stop run` / `Run program` / `Fix setup` (flowbite `Button`) | `StopOutline` / `PlayOutline` / `ToolsOutline` | `Stop run` / `Run program` / `Fix setup` (dynamic) |
 
 ### Surface 5 — PracticeReadinessShell controls (PracticeReadinessShell.svelte; header visible in expert/diagnostics modes)
+
+**Update 2026-09-20 (`ui-modes-06`):** PWS-1 (save), PWS-2 (close), and PWS-3/4/5
+(run/stop/corrective) move to the simulator top menu bar and are removed from this
+surface; the TEXT mode buttons are removed entirely (replaced by Surface 8 MBR-1..3).
+The readiness chips (A3) stay here unchanged. Surface 8c is the authority on what remains.
 
 | ID    | Current visible text                                                                                                   | Proposed icon                                                    | Accessible name                        |
 | ----- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- | -------------------------------------- |
@@ -192,6 +207,124 @@ bare `<button>`s). Add `aria-label` and `title` per button: `Play sound`,
 `Remove sound`, `Add sound`. This is a bug fix aligned with this spec's non-negotiables,
 not a label change.
 
+## Surface 8 — Persistent mode bar and unified run control (run `ui-modes-06`, 2026-09-20)
+
+**Status: proposed.** Owner decision from hands-on use: switching between Expert and
+Practice views must not change the mode-selection UI itself. All three modes are therefore
+ALWAYS visible as iconified controls in the simulator's top menu bar, in every mode, at
+desktop and narrow widths. This supersedes exception A2 for exactly these three controls
+and the ui-modes-06 placement supersedes the practice-header-only arrangement.
+
+### Verified current behavior (2026-09-20, read-only)
+
+-   `SpikeSimulatorWindow.svelte`: `workspaceMode` state (:100); Practice-only compact header
+    (~:796–936) whose icon `Simulator view` menu contains TEXT items `Expert Setup` (~:873)
+    and `Developer Diagnostics` (~:882); practice run button (~:905) driven by the reactive
+    `practiceRunLabel` (:350–354) and `runOrCorrect` (:413). Non-practice modes render
+    `PracticeReadinessShell` instead (:938–959).
+-   `PracticeReadinessShell.svelte`: header (:97–157) with TEXT mode buttons `Practice` /
+    `Expert Setup` / `Developer Diagnostics` (:106–135, `aria-current` at :111/:121/:131),
+    its own save button (:136–144), and its own icon run/stop control (:166–200, `runLabel`
+    :46). It renders only when `workspaceMode !== 'practice'` — so today the mode switcher
+    changes shape depending on the mode (the owner's complaint).
+-   `BlocklyComponent.svelte`: narrow `lg:hidden` run strip (:702–724, `stripRunLabel` :496)
+    inside the Program pane.
+-   Mode switches do not reinitialize run/score/project state: `workspaceMode` is plain
+    component state and the `{#key}` block keys only on `blocklyOpen-robotModelGeneration`.
+
+### 8a. Mode bar inventory
+
+The three controls are one `role="group"` labelled `Workspace mode` (or an equivalent
+labelled container), placed at the leading edge of the simulator top menu bar in ALL modes.
+
+| ID    | Mode                  | Verified icon (`flowbite-svelte-icons`) | `aria-label` = `title` (verbatim) | Active state (visual + ARIA)                                           |
+| ----- | --------------------- | --------------------------------------- | --------------------------------- | ---------------------------------------------------------------------- |
+| MBR-1 | Practice              | `HomeOutline` (`HomeOutline.svelte`)    | `Practice`                        | filled/tinted button background plus `aria-current="page"` when active |
+| MBR-2 | Expert Setup          | `AdjustmentsVerticalOutline`            | `Expert Setup`                    | same treatment plus `aria-current="page"`                              |
+| MBR-3 | Developer Diagnostics | `BugOutline` (`BugOutline.svelte`)      | `Developer Diagnostics`           | same treatment plus `aria-current="page"`                              |
+
+-   **Existence-verified 2026-09-20** in `node_modules/flowbite-svelte-icons/dist/`
+    (`HomeOutline.svelte`, `AdjustmentsVerticalOutline.svelte`, `BugOutline.svelte`).
+    All three are unused by Surfaces 1–7 and mutually distinct (house / vertical sliders /
+    bug silhouettes). MBR-2 is a sibling of EXP-9's `AdjustmentsHorizontalOutline`; they
+    never appear adjacent (different bars) and the directions differ, but QA checks the
+    pair for confusability.
+-   **Order is fixed:** Practice, Expert Setup, Developer Diagnostics (ascending opt-in
+    depth, matching the brief's workspace table).
+-   **Grouping:** the mode group sits left of a vertical divider in the top bar; all other
+    top-bar controls (run/stop, save, dirty status, view menus, close) sit right of it.
+    The group is identical pixel-for-pixel and DOM-order-for-DOM-order in all three modes —
+    that identity is the point of this change.
+-   **Beginner-recognition mitigation (documented, owner decision followed):** icon-only
+    mode routes reduce first-time wayfinding compared with today's text buttons. Mitigations:
+    native `title`/`aria-label` with the verbatim mode name, the filled active treatment,
+    and the retained in-content mode note (8d) naming the current mode in words. If QA or
+    observation shows participants cannot find the modes, the fallback is text beside
+    icons — NOT a per-mode re-arrangement.
+-   **Narrow width:** the mode group stays in the top bar at the agreed narrow viewport and
+    200% zoom; it never collapses into a menu or overflow. Icon size may shrink one step
+    (`size="xs"`) but the three controls and their tooltips remain.
+
+### 8b. Run/Stop in the simulator top bar (all modes)
+
+| ID    | Control  | Icon (existing, verified)                      | `aria-label` = `title` (dynamic)                                | Behavior callback                                    |
+| ----- | -------- | ---------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------- |
+| RUN-1 | Run/Stop | `PlayOutline` / `StopOutline` / `ToolsOutline` | `Run program` / `Stop run` / the first corrective action string | `runOrCorrect` (stop → start → open next setup item) |
+
+-   **Position:** the top bar's right-hand action cluster, immediately BEFORE `Save project`
+    and after the mode group's divider. Same slot in Practice, Expert Setup, and Developer
+    Diagnostics; it is never hidden in an overflow menu.
+-   **State machine unchanged:** bind one reactive label string per mode host
+    (`practiceRunLabel` in `SpikeSimulatorWindow.svelte` :350–354; the shell's `runLabel`
+    equivalent) to icon, `title`, and `aria-label` together, per the existing State
+    Contract "Active/running swap". `Stop run` keeps red, `Run program` green,
+    corrective `light` with `ToolsOutline`, exactly as today.
+-   **Duplicates resolved:**
+    -   Practice-header run button (SpikeSimulatorWindow ~:905): removed — it IS the new
+        bar control (moved, not copied).
+    -   PracticeReadinessShell run control (:166–200, PWS-3/4/5): removed. The shell no
+        longer renders any run/stop button.
+    -   BlocklyComponent narrow strip (:702–724, NRS-1): **KEPT.** Rationale: at narrow
+        width with the Program tab active, the simulator pane (which owns the top bar) is
+        `hidden`, so a bar-only run control would be unreachable — violating the brief's
+        "Stop must stay accessible" and layout-spec run-visibility scenario. The strip is
+        `lg:hidden` and only renders when the simulator pane is not the visible surface,
+        so on desktop Practice there is exactly ONE visible run control. This is the only
+        sanctioned run-control duplicate; it binds the same reactive label and callback
+        (`simulatorWindow.runOrCorrect()`).
+
+### 8c. Removals and non-duplication contract
+
+-   `Simulator view` menu items `Expert Setup` (~:873) and `Developer Diagnostics` (~:882)
+    are **removed** — the mode bar replaces them. The menu KEEPS `Focus robot` and
+    `Default view` (camera-only, route-neutral), so the menu itself stays and loses its
+    pre-route separator.
+-   PracticeReadinessShell TEXT mode buttons (:106–135), their `aria-current` wiring, the
+    shell save button (:136–144, PWS-1), and the shell run control (PWS-3/4/5) are
+    **removed** — all three functions live in the top bar now. `Close simulator` (PWS-2)
+    also moves to the top bar's right cluster (same conditional `canClose` behavior), so
+    the shell renders no primary action buttons other than readiness chips.
+-   **Top bar owns (all modes):** mode group (MBR-1..3), run/stop (RUN-1), `Save project`
+    (PWS-1 styling), unsaved-changes status text, `Simulator view` menu (Practice camera
+    items only), `Close simulator` (conditional).
+-   **Shell header retains (non-practice modes):** the mission/season summary line, the
+    readiness chips (A3, unchanged), the setup-guidance text, and the per-mode informational
+    note. It loses the eyebrow label, the h1 row's navigation cluster, save, close, and run.
+
+### 8d. Mode name in content (informational, not a switcher)
+
+The bar now marks location, so per-pane mode-name labels are de-duplicated: the shell's
+hardcoded `Practice` eyebrow (PracticeReadinessShell.svelte :100 — today shown even in
+expert/diagnostics modes, which is wrong) is removed; the h1 `Build, run, and improve your
+robot` may stay as a page title. The shell's per-mode informational notes (:273–287) STAY —
+they explain what the current mode is for, which text the icon-only bar can no longer carry.
+The Practice pane's own title/season summary row stays in the top bar region.
+
+**Preserved invariant:** switching modes must not lose run, score, program, season, mission,
+dirty-state, or project state. This is already true (`workspaceMode` is presentation-only
+component state; no `{#key}` depends on it); the invariant is restated here so
+implementation and QA protect it. `fll_qa` must verify it with a live run in progress.
+
 ## State Contract
 
 Applies to every icon-only button above. Never convey state by icon color alone.
@@ -207,7 +340,7 @@ Applies to every icon-only button above. Never convey state by icon color alone.
     `disabled`), add `cursor-not-allowed opacity-50`. The title may still surface on some
     browsers even when disabled; this is acceptable — the button is not focusable and
     carries no promise.
--   **Active/running swap (PRH-3/4/5, NRS-1, PWS-3/4/5):** when run state changes, the
+-   **Active/running swap (RUN-1 incl. the narrow strip NRS-1):** when run state changes, the
     **icon, visible-meaning text (`title`), and `aria-label` must all update together**
     with the existing color change. Implementation: bind one reactive label string per
     button (e.g. `{#if runSimulation}` branch already computes the text) and set both
@@ -242,26 +375,31 @@ options` stays as-is (its text differs from the button label by design and is
     labels in generic shell controls.
 3.  No behavior change: callbacks, run/save/route semantics, menu structure,
     `aria-haspopup`/`aria-expanded`/`aria-current`/`aria-controls`, keyboard handlers,
-    hover-preview timing, and focus return are unchanged.
+    hover-preview timing, and focus return are unchanged. (Surface 8 is the documented
+    exception: it removes the two mode-route menu items and relocates run/save/close per
+    the owner decision.)
 4.  No layout-structure change: the exact two-pane Practice layout, header row, command
     overlay positioning, and narrow tab switcher stay as specified; icons must not resize
     buttons into new wrap points (verify at the agreed narrow viewport).
 5.  State changes never alter icon color or glyph alone — the accessible name updates
     with the state.
-6.  Exceptions A1–A4 (tabs, routes, chips, modal confirmations) keep text until the owner
-    explicitly approves extending iconification.
+6.  Exceptions A1, A3, A4 (tabs, chips, modal confirmations) keep text. Exception A2 is
+    superseded for the three Surface 8 mode controls (iconified per owner decision,
+    2026-09-20); A2 otherwise still applies to any other route control.
 
 ## Bounded Implementation Seams for `fll_experience`
 
-| File                                           | Seam location                                                                                                                                                                               | Change                                                                                               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `src/components/SpikeSimulatorWindow.svelte`   | Practice header section: the controls `div` containing the `Simulator view` trigger, `Save project`, and the run `Button`                                                                   | Iconify PRH-1..5; bind `aria-label`/`title` to the existing reactive label strings; add icon imports |
-| `src/components/SpikeSimulatorWindow.svelte`   | Expert Setup section, `workspaceMode === 'expert'` block (lines ~955–1109 at commit `bdf2363`): header row button, Prepared setup / Robot / Mission and advanced grids, M01 calibration row | Phase B EXP-1..11, finalized — icons verified, no open design questions                              |
-| `src/components/BlocklyComponent.svelte`       | Blockly pane header bar (Blockly view trigger, Hide/Show simulator)                                                                                                                         | Iconify BLH-1, BLH-3                                                                                 |
-| `src/components/BlocklyComponent.svelte`       | Command disclosure button and overlay close button                                                                                                                                          | Iconify CMD-1, CMD-2; keep `aria-expanded`/`aria-controls` and focus return                          |
-| `src/components/BlocklyComponent.svelte`       | Narrow run strip (`lg:hidden` strip)                                                                                                                                                        | Iconify NRS-1 with dynamic name binding                                                              |
-| `src/components/PracticeReadinessShell.svelte` | Save/Close/Run controls row                                                                                                                                                                 | Iconify PWS-1..5; routes and chips unchanged                                                         |
-| `src/components/AudioDialog.svelte`            | The three bare icon buttons                                                                                                                                                                 | Add missing `aria-label` + `title` (`Play sound`, `Remove sound`, `Add sound`)                       |
+| File                                           | Seam location                                                                                                                                                                                    | Change                                                                                                                                    |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/components/SpikeSimulatorWindow.svelte`   | Practice header section: the controls `div` containing the `Simulator view` trigger, `Save project`, and the run `Button`                                                                        | Iconify PRH-1..5; bind `aria-label`/`title` to the existing reactive label strings; add icon imports                                      |
+| `src/components/SpikeSimulatorWindow.svelte`   | Expert Setup section, `workspaceMode === 'expert'` block (lines ~955–1109 at commit `bdf2363`): header row button, Prepared setup / Robot / Mission and advanced grids, M01 calibration row      | Phase B EXP-1..11, finalized — icons verified, no open design questions                                                                   |
+| `src/components/BlocklyComponent.svelte`       | Blockly pane header bar (Blockly view trigger, Hide/Show simulator)                                                                                                                              | Iconify BLH-1, BLH-3                                                                                                                      |
+| `src/components/BlocklyComponent.svelte`       | Command disclosure button and overlay close button                                                                                                                                               | Iconify CMD-1, CMD-2; keep `aria-expanded`/`aria-controls` and focus return                                                               |
+| `src/components/BlocklyComponent.svelte`       | Narrow run strip (`lg:hidden` strip)                                                                                                                                                             | Iconify NRS-1 with dynamic name binding                                                                                                   |
+| `src/components/PracticeReadinessShell.svelte` | Save/Close/Run controls row                                                                                                                                                                      | Iconify PWS-1..5; routes and chips unchanged                                                                                              |
+| `src/components/AudioDialog.svelte`            | The three bare icon buttons                                                                                                                                                                      | Add missing `aria-label` + `title` (`Play sound`, `Remove sound`, `Add sound`)                                                            |
+| `src/components/SpikeSimulatorWindow.svelte`   | Simulator top menu bar: mode group, run/stop, save, dirty status, `Simulator view` menu (routes removed), `Close simulator`; promote out of the practice-only section so it renders in ALL modes | Surface 8: MBR-1..3 + RUN-1; remove the two route menu items; bind labels per State Contract                                              |
+| `src/components/PracticeReadinessShell.svelte` | Header navigation cluster, save button, run-control row, eyebrow label                                                                                                                           | Remove mode text buttons (replaced by MBR-1..3), PWS-1/2 (moved to top bar), PWS-3/4/5 (moved); keep chips, summary, guidance, mode notes |
 
 Do **not** change:
 
@@ -339,13 +477,63 @@ Recorded in the same `docs/qa/` review file, with browser/viewport details:
     constant name `Load robot`; `Load missing parts` keeps its `animate-bounce`
     attention class when the library is missing.
 
+### Surface 8 acceptance scenarios (mode bar + run placement, for `fll_qa`)
+
+All proposed until recorded with browser evidence in `docs/qa/ui-modes-06-review.md`.
+
+1.  **Mode bar identical everywhere:** In Practice, Expert Setup, and Developer
+    Diagnostics — at desktop AND the agreed narrow width — the simulator top menu bar
+    shows the same three iconified mode controls (`HomeOutline`/`AdjustmentsVerticalOutline`/
+    `BugOutline`) in the same order (Practice, Expert Setup, Developer Diagnostics) in the
+    same group position. No mode changes the bar's structure or membership.
+2.  **Tooltips and names:** Hovering and keyboard-focusing each mode control shows a native
+    tooltip equal to the verbatim mode name (`Practice`, `Expert Setup`,
+    `Developer Diagnostics`); the accessibility-tree name matches; Enter/Space switches
+    modes exactly as the old text buttons did.
+3.  **Active mode marked:** In each mode, exactly one mode control carries the filled/tinted
+    active treatment and `aria-current="page"` — the mode you are in — and no other control
+    in the bar does.
+4.  **Run/Stop in the top bar everywhere:** With a prepared project, `Run program`
+    (play glyph) is present in the simulator top bar in ALL three modes; during a run it
+    becomes `Stop run` (red `StopOutline`) with name/tooltip/aria-label updated together;
+    with incomplete setup its name equals the first corrective action string and clicking
+    it opens that setup target (same `runOrCorrect` behavior as today).
+5.  **No desktop duplicates in Practice:** At desktop width in Practice, exactly one
+    visible run/stop control exists (the top bar). The narrow strip and the shell run
+    button are gone, and the `Simulator view` menu contains only camera items
+    (`Focus robot`, `Default view`) with no mode routes.
+6.  **State preserved on switch:** Start a run (or make unsaved edits) in Practice, switch
+    to Expert Setup and to Developer Diagnostics via the bar, and switch back: the run/
+    score/program/season/dirty state is unchanged, no pane reinitializes, and the run
+    (if any) is still controllable from the top bar.
+7.  **Narrow width:** At the agreed narrow viewport/200% zoom, the mode group stays in the
+    top bar with working tooltips; with the Program tab active and the simulator pane
+    hidden, the narrow strip run control is the reachable Run/Stop and mirrors the bar
+    control's state; `Stop run` remains reachable without opening any menu.
+8.  **Keyboard order/focus:** Tab order in the bar is mode group → run/stop → save →
+    remaining controls; each icon-only control shows a visible focus ring and the old
+    buttons' keyboard behavior (menu triggers keep `aria-haspopup`/`aria-expanded`;
+    Escape/focus-return unchanged).
+
 ## Assumptions and Risks
 
 -   Assumption: the owner's "all the buttons" request tolerates the documented exceptions
-    A1–A4 (tabs, routes, chips, modal confirmations); the lead confirms before
-    implementation.
+    A1, A3, A4 (tabs, chips, modal confirmations); the lead confirms before
+    implementation. A2 was superseded on 2026-09-20 for the three top-bar mode controls
+    only (Surface 8); extending iconification beyond those still needs owner approval.
 -   Assumption: native `title` tooltips satisfy the "alt text on hover" request without
     custom tooltip code.
+-   Risk: icon-only mode routes (Surface 8) reduce mode discoverability for first-time
+    participants more than icon-only actions do — losing the only in-bar text for
+    wayfinding was exactly why A2 existed. Mitigations: verbatim tooltips/names, filled
+    active state, retained in-content mode notes, and the text-beside-icons fallback.
+    Needs participant observation; none has been done — no user research is claimed.
+-   Risk: MBR-2 `AdjustmentsVerticalOutline` resembles EXP-9 `AdjustmentsHorizontalOutline`
+    (Simulation settings). They never share a bar; QA scenario 8/Surface 8 scenario 1
+    should still capture them side by side.
+-   Risk: the narrow strip keeps a second run control (8b) by design; if the simulator pane
+    ever becomes always-visible at narrow width, the strip duplicate must be removed to
+    restore the single-control contract.
 -   Risk: icon-only menu triggers (`Simulator view`, `Blockly view`, `Commands`) reduce
     discoverability for first-time participants; the chevron and hover text mitigate this.
     Needs participant observation, which has not been done — no user research is claimed.
