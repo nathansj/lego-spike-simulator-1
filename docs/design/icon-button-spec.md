@@ -1,8 +1,11 @@
 # Icon Button Specification
 
-Task: `ui-icons-04` / `icon-button-design`
+Task: `ui-icons-04` / `icon-button-design`; Phase B finalized by `ui-icons-05` / `phase-b-design`
 Owner: `fll_design`
 Status: proposed design and implementation handoff; no production source changed
+Changelog: 2026-09-19 (run `ui-icons-05`) — Phase B / Expert Setup (EXP-1..11) inventory re-verified
+against the committed source, weak glyphs EXP-6/EXP-7 resolved to verified icons, and the Phase B
+section upgraded from deferred to an implementation-ready handoff. Phase A content below is unchanged.
 
 ## Purpose and Supersession
 
@@ -126,24 +129,51 @@ Exceptions in this surface:
 
 ### Surface 6 — Expert Setup toolbar (SpikeSimulatorWindow.svelte, `workspaceMode === 'expert'` section)
 
-Phase B (lower priority than Practice default surfaces, same contract):
+**Status: finalized 2026-09-19 for run `ui-icons-05`** — re-verified against the committed
+source (commit `bdf2363`), section spans lines 955–1109. Labels below are the exact current
+visible text, verbatim. Phase B is implementation-ready; `fll_experience` should not need
+further design input.
 
-| ID     | Current visible text                                     | Proposed icon                                                                                    | Accessible name         |
-| ------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------- |
-| EXP-1  | `Save or export setup`                                   | `FloppyDiskOutline`                                                                              | `Save or export setup`  |
-| EXP-2  | `Load project or field`                                  | `FolderOpenOutline`                                                                              | `Load project or field` |
-| EXP-3  | `Load missing parts`                                     | `DatabaseOutline`                                                                                | `Load missing parts`    |
-| EXP-4  | `Choose LDraw folder`                                    | `FolderPlusOutline`                                                                              | `Choose LDraw folder`   |
-| EXP-5  | `Load robot`                                             | `UploadOutline`                                                                                  | `Load robot`            |
-| EXP-6  | `Reference robot`                                        | ⚠ no strong glyph in set — proposed `LayersOutline`; confirm with lead or keep text             | `Reference robot`       |
-| EXP-7  | `Ports`                                                  | ⚠ weak glyph — proposed `PlusOutline`; confirm with lead or keep text                           | `Ports`                 |
-| EXP-8  | `Drive wheels`                                           | `CogOutline` (gear ≈ wheel)                                                                      | `Drive wheels`          |
-| EXP-9  | `Simulation settings`                                    | `AdjustmentsHorizontalOutline`                                                                   | `Simulation settings`   |
-| EXP-10 | `Display options`                                        | `EyeOutline` (keeps its existing flowbite `Tooltip` text "Display-only camera and grid options") | `Display options`       |
-| EXP-11 | `Clear calibration` (disabled until a profile is loaded) | `TrashBinOutline` (matches existing usage in `AudioDialog`/`LoadScene`)                          | `Clear calibration`     |
+| ID     | Accessible name / `title` (verbatim) | Final icon                     | Handler / location (current source)                            | State notes                                                                                                                                                    |
+| ------ | ------------------------------------ | ------------------------------ | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| EXP-1  | `Save or export setup`               | `FloppyDiskOutline`            | `saveRobotOrScene`, header row, line 981                       | flowbite `Button` light xs                                                                                                                                     |
+| EXP-2  | `Load project or field`              | `FolderOpenOutline`            | `loadScene`, Prepared setup grid, line 999                     | light xs                                                                                                                                                       |
+| EXP-3  | `Load missing parts`                 | `DatabaseOutline`              | `askForLibrary`, line 1002                                     | keeps `class={libraryClass}` (`!p-2`, or `!p-2 animate-bounce` when the library is missing — keep the bounce; it is attention, not a color-only state channel) |
+| EXP-4  | `Choose LDraw folder`                | `FolderPlusOutline`            | proxies hidden `#select_library_folder` input click, line 1008 | light xs                                                                                                                                                       |
+| EXP-5  | `Load robot`                         | `UploadOutline`                | `askForRobot`, line 1026                                       | keeps dynamic `color={robotButtonColour}` (`light`/`red`/`green`); the accessible name stays `Load robot` in all three states, matching today's constant text  |
+| EXP-6  | `Reference robot`                    | `MapPinAltOutline`             | sets `loadVirtualReferenceRobot = true`, line 1031             | light xs                                                                                                                                                       |
+| EXP-7  | `Ports`                              | `ShareNodesOutline`            | `connectPorts`, line 1037                                      | light xs                                                                                                                                                       |
+| EXP-8  | `Drive wheels`                       | `CogOutline`                   | `connectWheels`, line 1040                                     | light xs                                                                                                                                                       |
+| EXP-9  | `Simulation settings`                | `AdjustmentsHorizontalOutline` | `openSettings`, line 1053                                      | light xs                                                                                                                                                       |
+| EXP-10 | `Display options`                    | `EyeOutline`                   | no `on:click`; `id="camera_config_button"`, line 1056          | existing flowbite `Tooltip` "Display-only camera and grid options" stays as-is                                                                                 |
+| EXP-11 | `Clear calibration`                  | `TrashBinOutline`              | `clearM01ObservationProfile`, line 1084                        | `disabled={m01ObservationGeometry === undefined}`; keep real `disabled` + dimming per State Contract                                                           |
 
-The camera `MenuDropdown` (`name="camera"`) is not iconified in this pass; its dropdown
-internals stay untouched.
+EXP-6/EXP-7 glyph resolution (supersedes the `ui-icons-04` placeholders):
+
+-   **EXP-6 `Reference robot` → `MapPinAltOutline`.** flowbite-svelte-icons@^1.6.2 has no
+    robot, android, or figure-model glyph (verified by listing
+    `node_modules/flowbite-svelte-icons/dist/` on 2026-09-19). A map pin reads as
+    "reference point/landmark", which matches the semantic (loading the built-in
+    reference model); it is visually distinct from `UploadOutline` beside it and from
+    every other icon in this spec.
+-   **EXP-7 `Ports` → `ShareNodesOutline`.** There is no plug/socket/connector glyph in
+    the set. A hub with connected nodes matches what the Ports dialog does (connect robot
+    ports to hub ports) and is clearly distinct from `CogOutline` (Drive wheels) and the
+    `PlusOutline` placeholder it replaces. Both chosen components exist as
+    `MapPinAltOutline.svelte` and `ShareNodesOutline.svelte` in the dist folder; all nine
+    other EXP icons were re-verified the same way (`FloppyDiskOutline`, `FolderOpenOutline`,
+    `DatabaseOutline`, `FolderPlusOutline`, `UploadOutline`, `CogOutline`,
+    `AdjustmentsHorizontalOutline`, `EyeOutline`, `TrashBinOutline`).
+
+In this section, and still NOT iconified:
+
+-   The `MenuDropdown name="camera"` (line 1059) stays untouched.
+-   The `Expert Setup` / `Developer Diagnostics` entries at lines 865/874 are
+    `role="menuitem"` buttons inside the Simulator view menu; they keep visible text
+    (menu-item exception, same as A1/A2).
+-   Section headings (`Prepared setup`, `Robot`, `Mission and advanced`) are `h3`s, not
+    buttons; the M01 calibration row keeps its native file input. No tabs, chips, or
+    modal confirmations live inside this section; exceptions A1–A4 are unaffected.
 
 ### Surface 7 — Dialog buttons opened from BlocklyComponent
 
@@ -223,15 +253,15 @@ options` stays as-is (its text differs from the button label by design and is
 
 ## Bounded Implementation Seams for `fll_experience`
 
-| File                                           | Seam location                                                                                                             | Change                                                                                               |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `src/components/SpikeSimulatorWindow.svelte`   | Practice header section: the controls `div` containing the `Simulator view` trigger, `Save project`, and the run `Button` | Iconify PRH-1..5; bind `aria-label`/`title` to the existing reactive label strings; add icon imports |
-| `src/components/SpikeSimulatorWindow.svelte`   | Expert Setup section buttons (`Prepared setup`, `Robot`, `Mission and advanced` grids, calibration row)                   | Phase B: EXP-1..11 (confirm weak glyphs EXP-6/7 with lead first)                                     |
-| `src/components/BlocklyComponent.svelte`       | Blockly pane header bar (Blockly view trigger, Hide/Show simulator)                                                       | Iconify BLH-1, BLH-3                                                                                 |
-| `src/components/BlocklyComponent.svelte`       | Command disclosure button and overlay close button                                                                        | Iconify CMD-1, CMD-2; keep `aria-expanded`/`aria-controls` and focus return                          |
-| `src/components/BlocklyComponent.svelte`       | Narrow run strip (`lg:hidden` strip)                                                                                      | Iconify NRS-1 with dynamic name binding                                                              |
-| `src/components/PracticeReadinessShell.svelte` | Save/Close/Run controls row                                                                                               | Iconify PWS-1..5; routes and chips unchanged                                                         |
-| `src/components/AudioDialog.svelte`            | The three bare icon buttons                                                                                               | Add missing `aria-label` + `title` (`Play sound`, `Remove sound`, `Add sound`)                       |
+| File                                           | Seam location                                                                                                                                                                               | Change                                                                                               |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `src/components/SpikeSimulatorWindow.svelte`   | Practice header section: the controls `div` containing the `Simulator view` trigger, `Save project`, and the run `Button`                                                                   | Iconify PRH-1..5; bind `aria-label`/`title` to the existing reactive label strings; add icon imports |
+| `src/components/SpikeSimulatorWindow.svelte`   | Expert Setup section, `workspaceMode === 'expert'` block (lines ~955–1109 at commit `bdf2363`): header row button, Prepared setup / Robot / Mission and advanced grids, M01 calibration row | Phase B EXP-1..11, finalized — icons verified, no open design questions                              |
+| `src/components/BlocklyComponent.svelte`       | Blockly pane header bar (Blockly view trigger, Hide/Show simulator)                                                                                                                         | Iconify BLH-1, BLH-3                                                                                 |
+| `src/components/BlocklyComponent.svelte`       | Command disclosure button and overlay close button                                                                                                                                          | Iconify CMD-1, CMD-2; keep `aria-expanded`/`aria-controls` and focus return                          |
+| `src/components/BlocklyComponent.svelte`       | Narrow run strip (`lg:hidden` strip)                                                                                                                                                        | Iconify NRS-1 with dynamic name binding                                                              |
+| `src/components/PracticeReadinessShell.svelte` | Save/Close/Run controls row                                                                                                                                                                 | Iconify PWS-1..5; routes and chips unchanged                                                         |
+| `src/components/AudioDialog.svelte`            | The three bare icon buttons                                                                                                                                                                 | Add missing `aria-label` + `title` (`Play sound`, `Remove sound`, `Add sound`)                       |
 
 Do **not** change:
 
@@ -280,6 +310,35 @@ Setup` on the header, `Fix setup` on the strip).
     as before the icon change; command overlay open/close does not resize panes or disturb
     workspace state.
 
+### Phase B acceptance scenarios (Expert Setup, for `fll_qa`)
+
+Recorded in the same `docs/qa/` review file, with browser/viewport details:
+
+1.  **Reference robot vs Ports distinctness:** In the Expert Setup toolbar at desktop
+    width, `Reference robot` (`MapPinAltOutline`) and `Ports` (`ShareNodesOutline`) are
+    visually distinguishable from each other and from every other icon in the section
+    (no two adjacent buttons share a similar silhouette at `size="xs"`); capture a
+    side-by-side screenshot.
+2.  **Hover/aria names:** Hovering and keyboard-focusing each EXP-1..11 button shows a
+    native `title` tooltip and an accessibility-tree name equal to the verbatim label
+    (e.g. `Save or export setup`, `Load missing parts`, `Ports`, `Clear calibration`);
+    no abbreviated or renamed strings.
+3.  **Layout unchanged:** The Expert Setup section keeps its three-column
+    (`lg:grid-cols-3`) grid, section height, and wrap behavior at desktop and the agreed
+    narrow viewport; iconification introduces no new wrap points or clipped controls
+    (header row, grid rows, and calibration row).
+4.  **Behavior regression:** Each button triggers its original action unchanged —
+    `Ports` opens the port connector, `Reference robot` opens the virtual reference
+    robot dialog, `Simulation settings` opens settings, `Choose LDraw folder` opens the
+    folder picker, `Display options` still shows its existing "Display-only camera and
+    grid options" tooltip via `#camera_config_button`, and the camera `MenuDropdown`
+    works untouched.
+5.  **State preservation:** With no calibration profile loaded, `Clear calibration` is
+    dimmed with a real `disabled` attribute and becomes activatable after loading a
+    profile; `Load robot` keeps its existing light/red/green color states with the
+    constant name `Load robot`; `Load missing parts` keeps its `animate-bounce`
+    attention class when the library is missing.
+
 ## Assumptions and Risks
 
 -   Assumption: the owner's "all the buttons" request tolerates the documented exceptions
@@ -290,9 +349,14 @@ Setup` on the header, `Fix setup` on the strip).
 -   Risk: icon-only menu triggers (`Simulator view`, `Blockly view`, `Commands`) reduce
     discoverability for first-time participants; the chevron and hover text mitigate this.
     Needs participant observation, which has not been done — no user research is claimed.
--   Risk: weak glyph mappings (PRH-5 for `Choose challenge`/`Review setup`, EXP-6, EXP-7)
-    are placeholder choices from the installed set; the lead/design confirms or those
-    buttons keep text.
+-   Risk: weak glyph mappings (PRH-5 for `Choose challenge`/`Review setup`, PWS-5 for some
+    corrective strings) remain placeholder choices from the installed set; the lead/design
+    confirms or those buttons keep text. The Phase B weak glyphs (EXP-6, EXP-7) were
+    resolved on 2026-09-19 (run `ui-icons-05`) — see Surface 6.
+-   Risk (Phase B, EXP-5): `Load robot` keeps its existing light/red/green `robotButtonColour`
+    state channel with a constant accessible name; this preserves current behavior but means
+    robot-present state is still color-only for non-sighted users — a pre-existing gap, not
+    introduced by iconification, out of scope for this pass.
 -   Risk: icon sizing could change header wrap behavior at medium widths; acceptance
     scenario 1 and 4 cover this, but the fix (icon size token) is an implementation
     decision, not specified here.

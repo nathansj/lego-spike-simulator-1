@@ -2,12 +2,22 @@
     import * as Blockly from 'blockly/core';
     import { Button, Tooltip } from 'flowbite-svelte';
     import {
+        AdjustmentsHorizontalOutline,
         ChevronDownOutline,
+        CogOutline,
+        DatabaseOutline,
+        EyeOutline,
         FloppyDiskOutline,
+        FolderOpenOutline,
+        FolderPlusOutline,
         GridOutline,
+        MapPinAltOutline,
         PlayOutline,
+        ShareNodesOutline,
         StopOutline,
-        ToolsOutline
+        ToolsOutline,
+        TrashBinOutline,
+        UploadOutline
     } from 'flowbite-svelte-icons';
     import MenuDropdown from '$components/MenuDropdown.svelte';
     import { type MenuAction } from '$components/Menu.svelte';
@@ -978,9 +988,15 @@
                                     Change the field, robot, wheels, attachments, and saved setup.
                                 </p>
                             </div>
-                            <Button color="light" size="xs" on:click={saveRobotOrScene}
-                                >Save or export setup</Button
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Save or export setup"
+                                title="Save or export setup"
+                                on:click={saveRobotOrScene}
                             >
+                                <FloppyDiskOutline size="sm" aria-hidden="true" />
+                            </Button>
                         </div>
                         <p class="mt-2 text-xs text-slate-600">
                             Camera and grid choices are display-only. Field, robot, port, wheel,
@@ -996,23 +1012,37 @@
                                     Prepared setup
                                 </h3>
                                 <div class="mt-1 flex flex-wrap gap-2">
-                                    <Button color="light" size="xs" on:click={loadScene}
-                                        >Load project or field</Button
+                                    <Button
+                                        color="light"
+                                        size="xs"
+                                        aria-label="Load project or field"
+                                        title="Load project or field"
+                                        on:click={loadScene}
                                     >
+                                        <FolderOpenOutline size="sm" aria-hidden="true" />
+                                    </Button>
                                     <Button
                                         color="light"
                                         size="xs"
                                         class={libraryClass}
-                                        on:click={askForLibrary}>Load missing parts</Button
+                                        aria-label="Load missing parts"
+                                        title="Load missing parts"
+                                        on:click={askForLibrary}
                                     >
+                                        <DatabaseOutline size="sm" aria-hidden="true" />
+                                    </Button>
                                     <Button
                                         color="light"
                                         size="xs"
+                                        aria-label="Choose LDraw folder"
+                                        title="Choose LDraw folder"
                                         on:click={() =>
                                             document
                                                 .getElementById('select_library_folder')
-                                                ?.click()}>Choose LDraw folder</Button
+                                                ?.click()}
                                     >
+                                        <FolderPlusOutline size="sm" aria-hidden="true" />
+                                    </Button>
                                 </div>
                             </section>
                             <section aria-labelledby="robot-setup-title">
@@ -1026,20 +1056,39 @@
                                     <Button
                                         color={robotButtonColour}
                                         size="xs"
-                                        on:click={askForRobot}>Load robot</Button
+                                        aria-label="Load robot"
+                                        title="Load robot"
+                                        on:click={askForRobot}
                                     >
+                                        <UploadOutline size="sm" aria-hidden="true" />
+                                    </Button>
                                     <Button
                                         color="light"
                                         size="xs"
+                                        aria-label="Reference robot"
+                                        title="Reference robot"
                                         on:click={() => (loadVirtualReferenceRobot = true)}
-                                        >Reference robot</Button
                                     >
-                                    <Button color="light" size="xs" on:click={connectPorts}
-                                        >Ports</Button
+                                        <MapPinAltOutline size="sm" aria-hidden="true" />
+                                    </Button>
+                                    <Button
+                                        color="light"
+                                        size="xs"
+                                        aria-label="Ports"
+                                        title="Ports"
+                                        on:click={connectPorts}
                                     >
-                                    <Button color="light" size="xs" on:click={connectWheels}
-                                        >Drive wheels</Button
+                                        <ShareNodesOutline size="sm" aria-hidden="true" />
+                                    </Button>
+                                    <Button
+                                        color="light"
+                                        size="xs"
+                                        aria-label="Drive wheels"
+                                        title="Drive wheels"
+                                        on:click={connectWheels}
                                     >
+                                        <CogOutline size="sm" aria-hidden="true" />
+                                    </Button>
                                 </div>
                             </section>
                             <section aria-labelledby="advanced-setup-title">
@@ -1050,12 +1099,27 @@
                                     Mission and advanced
                                 </h3>
                                 <div class="mt-1 flex flex-wrap gap-2">
-                                    <Button color="light" size="xs" on:click={openSettings}
-                                        >Simulation settings</Button
+                                    <Button
+                                        color="light"
+                                        size="xs"
+                                        aria-label="Simulation settings"
+                                        title="Simulation settings"
+                                        on:click={openSettings}
                                     >
-                                    <Button id="camera_config_button" color="light" size="xs"
-                                        >Display options</Button
+                                        <AdjustmentsHorizontalOutline
+                                            size="sm"
+                                            aria-hidden="true"
+                                        />
+                                    </Button>
+                                    <Button
+                                        id="camera_config_button"
+                                        color="light"
+                                        size="xs"
+                                        aria-label="Display options"
+                                        title="Display options"
                                     >
+                                        <EyeOutline size="sm" aria-hidden="true" />
+                                    </Button>
                                     <MenuDropdown
                                         name="camera"
                                         actions={cameraMenu}
@@ -1084,10 +1148,12 @@
                             <Button
                                 color="light"
                                 size="xs"
+                                aria-label="Clear calibration"
+                                title="Clear calibration"
                                 on:click={clearM01ObservationProfile}
                                 disabled={m01ObservationGeometry === undefined}
                             >
-                                Clear calibration
+                                <TrashBinOutline size="sm" aria-hidden="true" />
                             </Button>
                         </div>
                         <div
