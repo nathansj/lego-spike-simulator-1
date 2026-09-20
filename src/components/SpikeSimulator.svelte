@@ -52,9 +52,10 @@
     import DroneSurveyScoreFeedback from '$components/DroneSurveyScoreFeedback.svelte';
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
-    import { onDestroy, onMount } from 'svelte';
+    import { createEventDispatcher, onDestroy, onMount } from 'svelte';
     import RunLogConsole from '$components/RunLogConsole.svelte';
     import { appendRunLog, clearRunLog } from '$lib/spike/run-log';
+    import { shouldStartResetRun } from '$lib/fll/practice-run-gate';
 
     export let runSimulation: boolean = false;
     export let workspace: Blockly.WorkspaceSvg | undefined;
@@ -69,8 +70,17 @@
     export let m01ObservationGeometry: DroneSurveyObservationGeometry | undefined = undefined;
     export let m01ObservationProfile: DroneSurveyObservationGeometryProfile | undefined = undefined;
     export let loadVirtualReferenceRobot = false;
+    export let practiceReady = true;
+
+    type PracticeResultKind = 'stopped' | 'startup-failure' | 'runtime-failure';
+
+    interface PracticeResult {
+        kind: PracticeResultKind;
+        message: string;
+    }
 
     let compiler = new WebGLCompiler();
+    const dispatch = createEventDispatcher<{ openDiagnostics: void }>();
 
     interface SensorView {
         id: number | 'none';
@@ -82,6 +92,8 @@
     let vm: VM | undefined;
     let simulation: Simulation | undefined;
     let simulationGeneration = 0;
+    let simulationPaused = false;
+    let practiceResult: PracticeResult | undefined;
     let bioglowMatchClock = new BioglowMatchClock();
     let droneSurveyMatchController = createDroneSurveyMatchController();
     let droneSurveyScore: DroneSurveyScore | undefined;
@@ -100,6 +112,8 @@
     let diagnosticElapsedSeconds = 0;
     let loopFrameCount = 0;
     let lastLoggedVmState: string | undefined;
+    let programExecutionIdle = false;
+    let runAttemptActive = false;
     let scene = copyScene($sceneStore);
     let id = genId();
 
@@ -158,6 +172,63 @@
             return `cause=force-not-producing-motion${nonMatContacts.length > 0 ? `-contacts:${nonMatContacts.join(',')}` : '-inspect-mat-friction-or-wheel-alignment'}`;
         }
         return 'cause=moving';
+    }
+
+    function stopRun(): void {
+        if (runSimulation) {
+            practiceResult = {
+                kind: 'stopped',
+                message: `Run stopped at ${diagnosticElapsedSeconds.toFixed(1)} s.`
+            };
+            runSimulation = false;
+        }
+    }
+
+    function togglePause(): void {
+        if (!vm || !runSimulation) return;
+        if (simulationPaused) {
+            vm.unpause();
+            simulationPaused = false;
+            appendRunLog('info', 'Robot run resumed.');
+            lastFrame = 0;
+            requestAnimationFrame((timestamp) => stepVM(timestamp, simulationGeneration));
+        } else {
+            vm.pause();
+            simulationPaused = true;
+            appendRunLog('info', 'Robot run paused.');
+        }
+    }
+
+    function resetRun(): void {
+        if (simulation) {
+            simulation.reset();
+            vm?.stop();
+            vm?.start();
+            vm?.resetTimer();
+            simulationPaused = false;
+            clearDroneSurveyMatch();
+            startDroneSurveyMatch();
+            diagnosticElapsedSeconds = 0;
+            lastDiagnosticSeconds = 0;
+            programExecutionIdle = false;
+            practiceResult = undefined;
+            appendRunLog('info', 'Robot run reset to the saved setup.');
+            lastFrame = 0;
+            requestAnimationFrame((timestamp) => stepVM(timestamp, simulationGeneration));
+            return;
+        }
+        if (shouldStartResetRun(Boolean(simulation), runSimulation, practiceReady)) {
+            practiceResult = undefined;
+            runSimulation = true;
+            return;
+        }
+        if (!simulation && !runSimulation && !practiceReady) {
+            practiceResult = {
+                kind: 'startup-failure',
+                message: 'Reset is blocked until the Practice setup is ready.'
+            };
+            appendRunLog('warn', 'Run reset blocked: Practice setup is not ready.');
+        }
     }
 
     function formatWheelCommands(): string {
@@ -570,7 +641,8 @@
         }
     }
 
-    function stepVM(timestamp: number) {
+    function stepVM(timestamp: number, generation: number) {
+        if (generation !== simulationGeneration || !runSimulation) return;
         if (!vm) {
             return;
         }
@@ -586,10 +658,11 @@
                 return;
             }
             if (vm.state != 'running') {
+                programExecutionIdle = !simulationPaused;
                 if (lastLoggedVmState !== vm.state) {
                     appendRunLog(
                         'warn',
-                        `VM loop stopped: state=${vm.state}; ${motionDiagnosis()}`
+                        `VM execution is idle: state=${vm.state}; program completion is not confirmed.`
                     );
                     lastLoggedVmState = vm.state;
                 }
@@ -624,13 +697,19 @@
                 } else {
                     vm.step(0.0, scene);
                 }
-                requestAnimationFrame(stepVM);
+                requestAnimationFrame((nextTimestamp) => stepVM(nextTimestamp, generation));
             }
             lastFrame = timestamp;
         } catch (error) {
+            if (generation !== simulationGeneration || !runSimulation) return;
             appendRunLog('error', `VM loop error: ${String(error)}`);
             vm.stop();
             lastLoggedVmState = 'error';
+            practiceResult = {
+                kind: 'runtime-failure',
+                message: 'The run stopped because the simulator encountered an error.'
+            };
+            runSimulation = false;
         }
     }
 
@@ -639,10 +718,15 @@
         if (start) {
             clearRunLog();
             appendRunLog('info', 'Starting robot run.');
+            runAttemptActive = true;
             try {
                 lastLoggedVmState = undefined;
                 diagnosticElapsedSeconds = 0;
+                lastDiagnosticSeconds = 0;
                 loopFrameCount = 0;
+                simulationPaused = false;
+                programExecutionIdle = false;
+                practiceResult = undefined;
                 clearDroneSurveyMatch();
                 simulation?.dispose();
                 simulation = undefined;
@@ -747,15 +831,30 @@
                 startDroneSurveyMatch();
                 appendRunLog('info', `Simulation running: VM state=${vm.state}.`);
                 lastFrame = 0;
-                requestAnimationFrame(stepVM);
+                requestAnimationFrame((timestamp) => stepVM(timestamp, generation));
             } catch (error) {
+                if (generation !== simulationGeneration || !runSimulation) return;
                 appendRunLog('error', `Run initialization failed: ${String(error)}`);
                 vm?.stop();
                 simulation?.dispose();
                 simulation = undefined;
+                simulationPaused = false;
+                practiceResult = {
+                    kind: 'startup-failure',
+                    message: 'The simulation could not start. Check the setup, then try again.'
+                };
+                runSimulation = false;
             }
         } else {
+            if (runAttemptActive && !practiceResult) {
+                practiceResult = {
+                    kind: 'stopped',
+                    message: `Run stopped at ${diagnosticElapsedSeconds.toFixed(1)} s.`
+                };
+            }
             appendRunLog('info', 'Robot run stopped.');
+            simulationPaused = false;
+            programExecutionIdle = false;
             simulation?.dispose();
             simulation = undefined;
             if (vm) {
@@ -764,6 +863,7 @@
                 hubCentreButtonColour = '#ffffff';
             }
             clearDroneSurveyMatch();
+            runAttemptActive = false;
         }
     }
 
@@ -801,7 +901,7 @@
     });
 </script>
 
-<div class="flex flex-col h-full p-2 overflow-y-scroll relative">
+<div class="relative flex h-full min-h-0 min-w-0 flex-col overflow-y-auto p-2">
     {#key numberOfLoads}
         <input
             type="file"
@@ -857,9 +957,12 @@
         </div>
     {/if}
 
-    <div class="w-full h-full relative overflow-hidden" hidden={!compiledRobot && !runSimulation}>
-        <div class="flex flex-row w-full h-full">
-            <div class="flex flex-col">
+    <div
+        class="relative h-full min-h-0 min-w-0 w-full overflow-hidden"
+        hidden={!compiledRobot && !runSimulation}
+    >
+        <div class="flex h-full min-h-0 min-w-0 w-full flex-row">
+            <div class="min-h-0 min-w-0 flex flex-col">
                 <div class="mx-3 my-0 h-min">
                     <HubWidget
                         image={hubImage}
@@ -870,6 +973,86 @@
                         on:rightRelease={hubRightRelease}
                     />
                 </div>
+                {#if runSimulation || practiceResult}
+                    <section
+                        class="mx-3 mt-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm"
+                        aria-labelledby="practice-run-status"
+                    >
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <h2 id="practice-run-status" class="font-semibold text-slate-900">
+                                {#if practiceResult}
+                                    Run result
+                                {:else if simulationPaused}
+                                    Paused
+                                {:else if programExecutionIdle}
+                                    Program activity is idle
+                                {:else}
+                                    Running · {droneSurveyElapsedSeconds.toFixed(1)} s
+                                {/if}
+                            </h2>
+                            <div class="flex flex-wrap gap-2">
+                                {#if runSimulation}
+                                    <button
+                                        type="button"
+                                        class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                                        on:click={togglePause}
+                                        disabled={!vm || vm.state === 'stopped'}
+                                    >
+                                        {simulationPaused ? 'Resume' : 'Pause'}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="rounded border border-red-300 bg-white px-2 py-1 font-medium text-red-800"
+                                        on:click={stopRun}
+                                    >
+                                        Stop
+                                    </button>
+                                {/if}
+                                <button
+                                    type="button"
+                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
+                                    on:click={resetRun}
+                                >
+                                    Reset run
+                                </button>
+                            </div>
+                        </div>
+                        {#if practiceResult}
+                            <p class="mt-2 text-slate-800" role="status" aria-live="polite">
+                                {practiceResult.message}
+                            </p>
+                            <p class="mt-1 text-xs text-slate-600">
+                                Check diagnostics for the detailed error, then reset and try again.
+                            </p>
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    class="rounded border border-blue-300 bg-white px-2 py-1 font-medium text-blue-800"
+                                    on:click={resetRun}
+                                >
+                                    Run again
+                                </button>
+                                <button
+                                    type="button"
+                                    class="rounded border border-slate-300 bg-white px-2 py-1 font-medium text-slate-800"
+                                    on:click={() => dispatch('openDiagnostics')}
+                                >
+                                    Open diagnostics
+                                </button>
+                            </div>
+                        {:else if programExecutionIdle}
+                            <p class="mt-2 text-xs text-slate-700" role="status">
+                                Program activity is idle. The simulator cannot confirm whether the
+                                program finished; stop or reset the run when you are ready.
+                            </p>
+                        {:else}
+                            <p class="mt-2 text-xs text-slate-700">
+                                Pause holds the program. Stop keeps the scene available for
+                                inspection. Reset returns the robot to the saved setup.
+                            </p>
+                        {/if}
+                    </section>
+                {/if}
                 {#if runSimulation}
                     <div class="mx-3 mt-3 space-y-2">
                         <p class="text-sm">
@@ -944,9 +1127,9 @@
                         {/if}
                     {/each}
                 {/if}
-                <RunLogConsole />
+                <RunLogConsole onOpenDiagnostics={() => dispatch('openDiagnostics')} />
             </div>
-            <div class="overflow-hidden w-full h-full">
+            <div class="min-h-0 min-w-0 h-full w-full overflow-hidden">
                 {#if runSimulation}
                     <ScenePreview
                         id="scene_preview"

@@ -51,16 +51,34 @@
                 >
                     {item.name}
                     <div class="flex flex-row gap-4">
-                        <button on:click={() => play(item)}>
-                            <PlaySolid size="xl" />
+                        <button
+                            type="button"
+                            class="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                            aria-label="Play sound"
+                            title="Play sound"
+                            on:click={() => play(item)}
+                        >
+                            <PlaySolid size="xl" aria-hidden="true" />
                         </button>
                         {#if isSelected(item)}
-                            <button on:click={() => remove(item)}>
-                                <TrashBinOutline size="xl" />
+                            <button
+                                type="button"
+                                class="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                                aria-label="Remove sound"
+                                title="Remove sound"
+                                on:click={() => remove(item)}
+                            >
+                                <TrashBinOutline size="xl" aria-hidden="true" />
                             </button>
                         {:else}
-                            <button on:click={() => add(item)}>
-                                <CirclePlusOutline size="xl" />
+                            <button
+                                type="button"
+                                class="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700"
+                                aria-label="Add sound"
+                                title="Add sound"
+                                on:click={() => add(item)}
+                            >
+                                <CirclePlusOutline size="xl" aria-hidden="true" />
                             </button>
                         {/if}
                     </div>

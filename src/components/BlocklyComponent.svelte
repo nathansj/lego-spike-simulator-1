@@ -31,13 +31,31 @@
     import { blocks } from '$lib/blockly/blocks';
     import { toolbox } from '$lib/blockly/toolbox';
     import { type BlocklyState } from '$lib/blockly/state';
-    import { Button, CloseButton, Tooltip } from 'flowbite-svelte';
+    import { Button } from 'flowbite-svelte';
+    import {
+        ChevronDownOutline,
+        ChevronRightOutline,
+        CloseOutline,
+        CodeOutline,
+        EyeOutline,
+        EyeSlashOutline,
+        LayersOutline,
+        PlayOutline,
+        StopOutline,
+        ToolsOutline
+    } from 'flowbite-svelte-icons';
     import { loadScratchSb3 } from '$lib/scratch/sb3';
     import { createManifest } from '$lib/scratch/manifest';
     import { convertToBlockly, convertToScratch, mergeBlockly } from '$lib/scratch/blockly';
     import { cat, clearSelectedAudio, selectAudio, registerAudioDialog } from '$lib/blockly/audio';
     import JSZip from 'jszip';
     import FileSaver from 'file-saver';
+    import UnsavedChangesModal from '$components/UnsavedChangesModal.svelte';
+    import {
+        canProceedWithDestructiveAction,
+        projectDirtyStore,
+        shouldConfirmDestructiveAction
+    } from '$lib/spike/project-dirty-state';
 
     let workspace: Blockly.WorkspaceSvg | undefined;
     let zoomToFit: ZoomToFitControl | undefined;
@@ -48,13 +66,25 @@
     let variableCreateCallback: variableFlyout.VariableCreateCallback | undefined = undefined;
     let procedureDialogOpen = false;
     let procedureCreateCallback: procedureFlyout.ProcedureCreateCallback | undefined = undefined;
-    let simulatorOpen = false;
+    let simulatorOpen = true;
     let blocklyOpen = true;
     let split = 2;
     let observer = new ResizeObserver(onBlocklyResize);
     let print = false;
     let printDialogOpen = false;
     let printColour = false;
+    let workspaceChangeListener: ((event: Blockly.Events.Abstract) => void) | undefined;
+    let unsavedChangesOpen = false;
+    let commandsOpen = false;
+    let commandMenuOpen = false;
+    let commandsButton: HTMLButtonElement | undefined;
+    let activePane: 'program' | 'simulator' = 'program';
+    let runSimulation = false;
+    let practiceReady = false;
+    let simulatorWindow: SpikeSimulatorWindow | undefined;
+    let commandHoverTimer: ReturnType<typeof setTimeout> | undefined;
+
+    const commandCategories = toolbox.contents.filter((item) => item.kind === 'category');
 
     function sleep(ms: number): Promise<void> {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -110,6 +140,7 @@
             },
             toolbox: toolbox
         });
+        workspace.getToolbox()?.setVisible(false);
         variableFlyout.registerVariableFlyout(workspace, createVariableDialog);
         procedureFlyout.registerProcedureFlyout(workspace, createProcedureDialog);
         registerAudioDialog(workspace, createAudioDialog);
@@ -118,6 +149,14 @@
         zoomToFit.init();
         observer.observe(element);
         workspace.createVariable('message1', 'broadcast');
+        workspaceChangeListener = (event: Blockly.Events.Abstract) => {
+            if (event.isUiEvent) return;
+            if (!workspace) return;
+            projectDirtyStore.markChanged({
+                blockly: Blockly.serialization.workspaces.save(workspace)
+            });
+        };
+        workspace.addChangeListener(workspaceChangeListener);
     });
 
     onDestroy(() => {
@@ -125,6 +164,9 @@
             zoomToFit.dispose();
         }
         observer.disconnect();
+        if (workspace && workspaceChangeListener) {
+            workspace.removeChangeListener(workspaceChangeListener);
+        }
     });
 
     function onBlocklyResize() {
@@ -253,10 +295,28 @@
     }
 
     function askForFile() {
+        if (shouldConfirmDestructiveAction($projectDirtyStore)) {
+            unsavedChangesOpen = true;
+            return;
+        }
+        openProgramFilePicker();
+    }
+
+    function openProgramFilePicker(): void {
         const element = document.getElementById('load_project');
         if (element) {
             element.click();
         }
+    }
+
+    function cancelProgramLoad(): void {
+        unsavedChangesOpen = false;
+    }
+
+    function confirmProgramLoad(): void {
+        if (!canProceedWithDestructiveAction($projectDirtyStore, 'discard')) return;
+        unsavedChangesOpen = false;
+        openProgramFilePicker();
     }
 
     function askForMerge() {
@@ -341,6 +401,57 @@
         blocklyOpen = false;
     }
 
+    function openCommands(pinned = true): void {
+        if (commandHoverTimer) clearTimeout(commandHoverTimer);
+        commandsOpen = true;
+        if (pinned) commandMenuOpen = true;
+    }
+
+    function scheduleCommandPreview(): void {
+        if (commandMenuOpen || commandsOpen) return;
+        commandHoverTimer = setTimeout(() => openCommands(false), 200);
+    }
+
+    function cancelCommandPreview(): void {
+        if (commandHoverTimer) clearTimeout(commandHoverTimer);
+    }
+
+    function scheduleCommandClose(): void {
+        cancelCommandPreview();
+        if (commandMenuOpen) return;
+        commandHoverTimer = setTimeout(() => {
+            if (!commandMenuOpen) {
+                commandsOpen = false;
+                workspace?.getToolbox()?.clearSelection();
+            }
+        }, 200);
+    }
+
+    function closeCommands(): void {
+        cancelCommandPreview();
+        commandsOpen = false;
+        commandMenuOpen = false;
+        workspace?.getToolbox()?.clearSelection();
+        commandsButton?.focus();
+    }
+
+    function selectCommandCategory(position: number): void {
+        commandsOpen = true;
+        commandMenuOpen = true;
+        workspace?.getToolbox()?.selectItemByPosition(position);
+    }
+
+    function handleCommandKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeCommands();
+        }
+    }
+
+    function runOrCorrectFromProgram(): void {
+        simulatorWindow?.runOrCorrect();
+    }
+
     function closePrint() {
         print = false;
     }
@@ -381,6 +492,8 @@
 
     $: resizeWorkspace(simulatorOpen);
     $: setPrintMode(print);
+    $: simulatorToggleLabel = simulatorOpen ? 'Hide simulator' : 'Show simulator';
+    $: stripRunLabel = runSimulation ? 'Stop run' : practiceReady ? 'Run program' : 'Fix setup';
 </script>
 
 {#key numberOfLoads}
@@ -395,76 +508,231 @@
 />
 <ProcedureDialog bind:modalOpen={procedureDialogOpen} bind:callback={procedureCreateCallback} />
 <PrintDialog bind:modalOpen={printDialogOpen} callback={printCallback} />
+<UnsavedChangesModal
+    open={unsavedChangesOpen}
+    actionLabel="load this program"
+    on:cancel={cancelProgramLoad}
+    on:discard={confirmProgramLoad}
+/>
 
-<div class="relative h-full w-full overflow-hidden flex flex-row">
-    <!-- flex-col-reverse so that the buttons are higher in z order -->
-    <div class="relative {blocklyOpen ? 'flex-1' : 'w-0'} h-full flex flex-col overflow-hidden">
-        <div
-            class="flex flex-row bg-gray-100 gap-2 p-2 items-center border-r border-r-gray-300 z-10"
+<div class="relative flex h-full min-h-0 min-w-0 w-full flex-col overflow-hidden">
+    <div
+        class="flex shrink-0 border-b border-slate-200 bg-white lg:hidden"
+        role="tablist"
+        aria-label="Practice panes"
+    >
+        <button
+            type="button"
+            role="tab"
+            aria-selected={activePane === 'program'}
+            class="flex-1 px-3 py-2 text-sm font-semibold {activePane === 'program'
+                ? 'border-b-2 border-blue-700 text-blue-800'
+                : 'text-slate-600'}"
+            on:click={() => (activePane = 'program')}
         >
-            <div class="w-8 h-8 flex flex-col justify-center items-center">
-                <img alt="code" width="32" height="32" src="icons/BlocklyIcon.svg" />
-            </div>
-            <Button color="light" class="!p-2" on:click={askForFile}>
-                <div class="w-8 h-8 flex flex-col justify-center items-center">
-                    <img alt="open" width="32" height="32" src="icons/FolderMedium.svg" />
-                </div>
-            </Button>
-            <Tooltip>Open a spike program</Tooltip>
-            <Button color="light" class="!p-2" on:click={askForMerge}>
-                <div class="w-8 h-8 flex flex-col justify-center items-center">
-                    <img alt="merge" width="32" height="32" src="icons/FolderMerge.svg" />
-                </div>
-            </Button>
-            <Tooltip>Merge in another spike program</Tooltip>
-            <Button color="light" class="!p-2" on:click={saveState}>
-                <div class="w-8 h-8 flex flex-col justify-center items-center">
-                    <img alt="save" width="32" height="32" src="icons/SaveMedium.svg" />
-                </div>
-            </Button>
-            <Tooltip>Save the spike program</Tooltip>
-            <Button id="print_close_button" color="light" class="hidden" on:click={closePrint}>
-                Close print
-            </Button>
-            {#if !simulatorOpen}
-                <Button color="light" class="!p-2" on:click={togglePrintDialog}>
-                    <div class="w-8 h-8 flex flex-col justify-center items-center">
-                        <img alt="print" width="32" height="32" src="icons/Print.svg" />
-                    </div>
-                </Button>
-                <Tooltip>Print the code</Tooltip>
-            {/if}
-            {#if simulatorOpen}
-                <Button color="light" class="!p-2" on:click={toggleSize}>
-                    <div class="w-8 h-8 flex flex-row justify-center items-center text-base">
-                        1:{split == 1 ? 2 : 1}
-                    </div>
-                </Button>
-                <Tooltip>Adjust the code panel width</Tooltip>
-            {/if}
-            <Button color="light" class="!p-2" on:click={toggleRobot}>
-                <div class="w-8 h-8 flex flex-col justify-center items-center">
-                    <img alt="simulator" width="32" height="32" src="icons/Brick.svg" />
-                </div>
-            </Button>
-            <Tooltip>Open the robot simulator panel</Tooltip>
-            {#if !simulatorOpen}
-                <div class="flex-1" />
-                <a href="https://developers.google.com/blockly" target="_blank">
-                    <div class="w-24 h-8 flex flex-col justify-center items-center">
-                        <img class="w-32" src="icons/blockly.svg" alt="blockly" />
-                    </div>
-                </a>
-            {:else}
-                <CloseButton on:click={closeWindow} />
-                <Tooltip>Close the code panel without losing code</Tooltip>
-            {/if}
-        </div>
-        <div class="flex-1 w-full overflow-hidden">
-            <div id="blocklyDiv" />
-        </div>
+            Program
+        </button>
+        <button
+            type="button"
+            role="tab"
+            aria-selected={activePane === 'simulator'}
+            class="flex-1 px-3 py-2 text-sm font-semibold {activePane === 'simulator'
+                ? 'border-b-2 border-blue-700 text-blue-800'
+                : 'text-slate-600'}"
+            on:click={() => (activePane = 'simulator')}
+        >
+            Simulator
+        </button>
     </div>
-    <SpikeSimulatorWindow bind:modalOpen={simulatorOpen} bind:blocklyOpen {workspace} {split} />
+    <div class="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden lg:flex-row">
+        <div
+            class="relative min-h-0 min-w-0 w-full flex-col overflow-hidden {blocklyOpen
+                ? simulatorOpen
+                    ? activePane === 'program'
+                        ? 'flex h-full lg:flex-1'
+                        : 'hidden lg:flex lg:flex-1'
+                    : 'flex h-full'
+                : 'hidden'}"
+        >
+            <div
+                class="z-10 flex shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-3 py-2"
+            >
+                <span class="text-sm font-semibold text-slate-800">Blockly</span>
+                <div class="relative">
+                    <button
+                        type="button"
+                        class="icon-btn border border-slate-300 px-2 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                        aria-haspopup="menu"
+                        aria-expanded={commandMenuOpen}
+                        aria-label="Blockly view"
+                        title="Blockly view"
+                        on:click={() => (commandMenuOpen = !commandMenuOpen)}
+                        on:keydown={(event) => event.key === 'Escape' && (commandMenuOpen = false)}
+                    >
+                        <CodeOutline size="sm" aria-hidden="true" />
+                        <ChevronDownOutline size="xs" aria-hidden="true" />
+                    </button>
+                    {#if commandMenuOpen}
+                        <div
+                            class="absolute left-0 top-full z-30 mt-1 w-44 rounded border border-slate-200 bg-white p-1 shadow-lg"
+                            role="menu"
+                        >
+                            <button
+                                type="button"
+                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                role="menuitem"
+                                on:click={() => openCommands(true)}>Show commands</button
+                            >
+                            <button
+                                type="button"
+                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                role="menuitem"
+                                on:click={askForFile}>Open program</button
+                            >
+                            <button
+                                type="button"
+                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                role="menuitem"
+                                on:click={askForMerge}>Import program</button
+                            >
+                            <button
+                                type="button"
+                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                role="menuitem"
+                                on:click={saveState}>Save program</button
+                            >
+                            <button
+                                type="button"
+                                class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                role="menuitem"
+                                on:click={togglePrintDialog}>Print program</button
+                            >
+                        </div>
+                    {/if}
+                </div>
+                <Button id="print_close_button" color="light" class="hidden" on:click={closePrint}>
+                    Close print
+                </Button>
+                <div class="flex-1" />
+                <button
+                    type="button"
+                    class="icon-btn p-1 text-sm font-medium text-blue-800 hover:bg-slate-100"
+                    aria-label={simulatorToggleLabel}
+                    title={simulatorToggleLabel}
+                    on:click={toggleRobot}
+                >
+                    {#if simulatorOpen}
+                        <EyeSlashOutline size="sm" aria-hidden="true" />
+                    {:else}
+                        <EyeOutline size="sm" aria-hidden="true" />
+                    {/if}
+                </button>
+            </div>
+            <div
+                class="relative min-h-0 min-w-0 flex-1 w-full overflow-hidden"
+                on:pointerdown={() => commandsOpen && closeCommands()}
+            >
+                <div id="blocklyDiv" />
+                <div class="absolute left-2 right-2 top-2 z-20 lg:right-auto">
+                    <button
+                        bind:this={commandsButton}
+                        type="button"
+                        class="icon-btn rounded border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50"
+                        aria-expanded={commandsOpen}
+                        aria-controls="command-category-overlay"
+                        aria-label="Commands"
+                        title="Commands"
+                        on:click={() => openCommands(true)}
+                        on:mouseenter={scheduleCommandPreview}
+                        on:mouseleave={scheduleCommandClose}
+                        on:keydown={handleCommandKeydown}
+                    >
+                        <LayersOutline size="sm" aria-hidden="true" />
+                        {#if commandsOpen}
+                            <ChevronDownOutline size="xs" aria-hidden="true" />
+                        {:else}
+                            <ChevronRightOutline size="xs" aria-hidden="true" />
+                        {/if}
+                    </button>
+                    {#if commandsOpen}
+                        <div
+                            id="command-category-overlay"
+                            class="mt-1 max-h-[calc(100vh-14rem)] w-full overflow-y-auto rounded border border-slate-200 bg-white p-2 shadow-lg lg:w-56"
+                            role="menu"
+                            tabindex="-1"
+                            aria-label="Choose a block category"
+                            on:mouseenter={cancelCommandPreview}
+                            on:mouseleave={scheduleCommandClose}
+                            on:keydown={handleCommandKeydown}
+                        >
+                            <div class="mb-2 flex items-center justify-between gap-2">
+                                <span
+                                    class="text-xs font-semibold uppercase tracking-wide text-slate-500"
+                                    >Choose a category</span
+                                >
+                                <button
+                                    type="button"
+                                    class="icon-btn p-1 text-blue-800 hover:bg-slate-100"
+                                    aria-label="Close commands"
+                                    title="Close commands"
+                                    on:click={closeCommands}
+                                >
+                                    <CloseOutline size="sm" aria-hidden="true" />
+                                </button>
+                            </div>
+                            <div class="grid gap-1">
+                                {#each commandCategories as category, index}
+                                    <button
+                                        type="button"
+                                        role="menuitem"
+                                        class="rounded border-l-4 bg-slate-50 px-2 py-2 text-left text-sm font-medium text-slate-800 hover:bg-slate-100"
+                                        style:--category-colour={category.colour ?? '#64748b'}
+                                        on:click={() => selectCommandCategory(index)}
+                                    >
+                                        {category.name}
+                                    </button>
+                                {/each}
+                            </div>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+            {#if simulatorOpen}
+                <div
+                    class="flex shrink-0 items-center justify-between gap-2 border-t border-slate-200 bg-white px-3 py-2 lg:hidden"
+                >
+                    <span class="text-sm text-slate-600"
+                        >{practiceReady ? 'Ready to run.' : 'Finish setup before running.'}</span
+                    >
+                    <Button
+                        color={runSimulation ? 'red' : practiceReady ? 'green' : 'light'}
+                        size="sm"
+                        aria-label={stripRunLabel}
+                        title={stripRunLabel}
+                        on:click={runOrCorrectFromProgram}
+                    >
+                        {#if runSimulation}
+                            <StopOutline size="md" aria-hidden="true" />
+                        {:else if practiceReady}
+                            <PlayOutline size="md" aria-hidden="true" />
+                        {:else}
+                            <ToolsOutline size="md" aria-hidden="true" />
+                        {/if}
+                    </Button>
+                </div>
+            {/if}
+        </div>
+        <SpikeSimulatorWindow
+            bind:this={simulatorWindow}
+            bind:modalOpen={simulatorOpen}
+            bind:blocklyOpen
+            bind:activePane
+            bind:runSimulation
+            bind:practiceReady
+            {workspace}
+            {split}
+        />
+    </div>
 </div>
 
 {#if !print || printColour}
@@ -472,6 +740,12 @@
         #blocklyDiv {
             height: 100%;
             width: 100%;
+        }
+        #blocklyDiv :global(.blocklyToolboxDiv) {
+            display: none !important;
+        }
+        #command-category-overlay button {
+            border-left-color: var(--category-colour);
         }
         .print-renderer.spike-theme .blocklyText {
             fill: #000;
