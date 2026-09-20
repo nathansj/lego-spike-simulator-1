@@ -3,7 +3,6 @@
     import { Button, Tooltip } from 'flowbite-svelte';
     import {
         AdjustmentsHorizontalOutline,
-        AdjustmentsVerticalOutline,
         BugOutline,
         CalendarMonthOutline,
         ChevronDownOutline,
@@ -11,11 +10,11 @@
         CogOutline,
         DatabaseOutline,
         EyeOutline,
+        FileCirclePlusOutline,
         FloppyDiskOutline,
         FolderOpenOutline,
         FolderPlusOutline,
         GridOutline,
-        HomeOutline,
         MapPinAltOutline,
         PlayOutline,
         ShareNodesOutline,
@@ -100,7 +99,7 @@
     let saveOpen = false;
     let sceneOpen = false;
     let settingsOpen = false;
-    let workspaceMode: 'practice' | 'expert' | 'diagnostics' = 'practice';
+    let workspaceMode: 'practice' | 'diagnostics' = 'practice';
     let robotButtonColour: 'light' | 'red' | 'green' = 'light';
     let libraryClass = '!p-2';
     export let runSimulation = false;
@@ -277,7 +276,6 @@
     }
 
     function askForRobot() {
-        workspaceMode = 'expert';
         const element = document.getElementById('load_robot');
         if (element) {
             element.click();
@@ -285,7 +283,6 @@
     }
 
     function askForLibrary() {
-        workspaceMode = 'expert';
         const element = document.getElementById('load_library');
         if (element) {
             element.click();
@@ -392,11 +389,11 @@
             case 'Season':
                 return 'Choose challenge';
             case 'Field':
-                return 'Open Expert Setup';
+                return 'Fix setup';
             case 'Robot':
-                return 'Open Expert Setup';
+                return 'Fix setup';
             case 'Drive wheels':
-                return 'Open Expert Setup';
+                return 'Fix setup';
             case 'Program':
                 return 'Open program';
             default:
@@ -497,17 +494,14 @@
     }
 
     function connectPorts() {
-        workspaceMode = 'expert';
         connectorOpen = true;
     }
 
     function connectWheels() {
-        workspaceMode = 'expert';
         wheelsOpen = true;
     }
 
     function loadScene() {
-        workspaceMode = 'expert';
         sceneOpen = true;
     }
 
@@ -516,8 +510,11 @@
     }
 
     function openPracticeField(): void {
-        workspaceMode = 'expert';
         loadScene();
+    }
+
+    function openCalibrationSelector(): void {
+        document.getElementById('m01-calibration-profile')?.click();
     }
 
     function openSeasonSelection(): void {
@@ -809,50 +806,22 @@
                 <div class="border-b border-slate-200 bg-white px-3 py-2">
                     <div class="flex flex-wrap items-center justify-between gap-2">
                         <div class="flex items-center gap-2">
-                            <div
-                                role="group"
-                                aria-label="Workspace mode"
-                                class="flex items-center gap-1"
+                            <button
+                                type="button"
+                                class="icon-btn rounded p-1 {workspaceMode === 'diagnostics'
+                                    ? 'bg-blue-700 text-white'
+                                    : 'text-slate-700 hover:bg-slate-100'}"
+                                aria-pressed={workspaceMode === 'diagnostics'}
+                                aria-label="Developer Diagnostics"
+                                title="Developer Diagnostics"
+                                on:click={() =>
+                                    (workspaceMode =
+                                        workspaceMode === 'diagnostics'
+                                            ? 'practice'
+                                            : 'diagnostics')}
                             >
-                                <button
-                                    type="button"
-                                    class="icon-btn rounded p-1 {workspaceMode === 'practice'
-                                        ? 'bg-blue-700 text-white'
-                                        : 'text-slate-700 hover:bg-slate-100'}"
-                                    aria-current={workspaceMode === 'practice' ? 'page' : undefined}
-                                    aria-label="Practice"
-                                    title="Practice"
-                                    on:click={() => (workspaceMode = 'practice')}
-                                >
-                                    <HomeOutline size="sm" aria-hidden="true" />
-                                </button>
-                                <button
-                                    type="button"
-                                    class="icon-btn rounded p-1 {workspaceMode === 'expert'
-                                        ? 'bg-blue-700 text-white'
-                                        : 'text-slate-700 hover:bg-slate-100'}"
-                                    aria-current={workspaceMode === 'expert' ? 'page' : undefined}
-                                    aria-label="Expert Setup"
-                                    title="Expert Setup"
-                                    on:click={() => (workspaceMode = 'expert')}
-                                >
-                                    <AdjustmentsVerticalOutline size="sm" aria-hidden="true" />
-                                </button>
-                                <button
-                                    type="button"
-                                    class="icon-btn rounded p-1 {workspaceMode === 'diagnostics'
-                                        ? 'bg-blue-700 text-white'
-                                        : 'text-slate-700 hover:bg-slate-100'}"
-                                    aria-current={workspaceMode === 'diagnostics'
-                                        ? 'page'
-                                        : undefined}
-                                    aria-label="Developer Diagnostics"
-                                    title="Developer Diagnostics"
-                                    on:click={() => (workspaceMode = 'diagnostics')}
-                                >
-                                    <BugOutline size="sm" aria-hidden="true" />
-                                </button>
-                            </div>
+                                <BugOutline size="sm" aria-hidden="true" />
+                            </button>
                             <div class="h-5 w-px bg-slate-300" aria-hidden="true"></div>
                             <button
                                 type="button"
@@ -882,6 +851,128 @@
                                     </p>
                                 </div>
                             {/if}
+                            <div class="h-5 w-px bg-slate-300" aria-hidden="true"></div>
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Load project or field"
+                                title="Load project or field"
+                                on:click={loadScene}
+                            >
+                                <FolderOpenOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <Button
+                                color="light"
+                                size="xs"
+                                class={libraryClass}
+                                aria-label="Load missing parts"
+                                title="Load missing parts"
+                                on:click={askForLibrary}
+                            >
+                                <DatabaseOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Choose LDraw folder"
+                                title="Choose LDraw folder"
+                                on:click={() =>
+                                    document.getElementById('select_library_folder')?.click()}
+                            >
+                                <FolderPlusOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <div class="h-5 w-px bg-slate-300" aria-hidden="true"></div>
+                            <Button
+                                color={robotButtonColour}
+                                size="xs"
+                                aria-label="Load robot"
+                                title="Load robot"
+                                on:click={askForRobot}
+                            >
+                                <UploadOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Reference robot"
+                                title="Reference robot"
+                                on:click={() => (loadVirtualReferenceRobot = true)}
+                            >
+                                <MapPinAltOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Ports"
+                                title="Ports"
+                                on:click={connectPorts}
+                            >
+                                <ShareNodesOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Drive wheels"
+                                title="Drive wheels"
+                                on:click={connectWheels}
+                            >
+                                <CogOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <div class="h-5 w-px bg-slate-300" aria-hidden="true"></div>
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Simulation settings"
+                                title="Simulation settings"
+                                on:click={openSettings}
+                            >
+                                <AdjustmentsHorizontalOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <Button
+                                id="camera_config_button"
+                                color="light"
+                                size="xs"
+                                aria-label="Display options"
+                                title="Display options"
+                            >
+                                <EyeOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <MenuDropdown
+                                name="camera"
+                                actions={cameraMenu}
+                                rounded={true}
+                                class="bg-white rounded-2xl"
+                            />
+                            <Tooltip triggeredBy="#camera_config_button"
+                                >Display-only camera and grid options</Tooltip
+                            >
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Load calibration"
+                                title="Load calibration (user-supplied M01 profile)"
+                                on:click={openCalibrationSelector}
+                            >
+                                <FileCirclePlusOutline size="sm" aria-hidden="true" />
+                            </Button>
+                            <input
+                                id="m01-calibration-profile"
+                                type="file"
+                                class="hidden"
+                                accept=".json,application/json"
+                                aria-describedby="m01-calibration-profile-status"
+                                on:change={loadM01ObservationProfile}
+                            />
+                            <Button
+                                color="light"
+                                size="xs"
+                                aria-label="Clear calibration"
+                                title="Clear calibration"
+                                on:click={clearM01ObservationProfile}
+                                disabled={m01ObservationGeometry === undefined}
+                            >
+                                <TrashBinOutline size="sm" aria-hidden="true" />
+                            </Button>
                         </div>
                         <div class="flex flex-wrap items-center gap-2">
                             <Button
@@ -1013,206 +1104,24 @@
                         on:select={handleSeasonSelect}
                     />
                 {/if}
-                {#if workspaceMode === 'expert'}
-                    <section
-                        class="shrink-0 border-b border-b-gray-300 bg-gray-50 p-3"
-                        aria-labelledby="expert-setup-title"
+                {#if m01ProfileFileName || m01ProfileError}
+                    <div
+                        id="m01-calibration-profile-status"
+                        class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-sm"
+                        role={m01ProfileError ? 'alert' : 'status'}
+                        aria-live="polite"
                     >
-                        <div class="flex flex-wrap items-baseline justify-between gap-2">
-                            <div>
-                                <h2 id="expert-setup-title" class="font-semibold text-slate-900">
-                                    Expert Setup
-                                </h2>
-                                <p class="text-sm text-slate-600">
-                                    Change the field, robot, wheels, attachments, and saved setup.
-                                </p>
-                            </div>
-                            <Button
-                                color="light"
-                                size="xs"
-                                aria-label="Save or export setup"
-                                title="Save or export setup"
-                                on:click={saveRobotOrScene}
-                            >
-                                <FloppyDiskOutline size="sm" aria-hidden="true" />
-                            </Button>
-                        </div>
-                        <p class="mt-2 text-xs text-slate-600">
-                            Camera and grid choices are display-only. Field, robot, port, wheel,
-                            attachment, calibration, and simulation changes are saved setup inputs;
-                            apply them with Reset run before the next run.
-                        </p>
-                        <div class="mt-3 grid gap-3 lg:grid-cols-3">
-                            <section aria-labelledby="prepared-setup-title">
-                                <h3
-                                    id="prepared-setup-title"
-                                    class="text-sm font-semibold text-slate-800"
-                                >
-                                    Prepared setup
-                                </h3>
-                                <div class="mt-1 flex flex-wrap gap-2">
-                                    <Button
-                                        color="light"
-                                        size="xs"
-                                        aria-label="Load project or field"
-                                        title="Load project or field"
-                                        on:click={loadScene}
-                                    >
-                                        <FolderOpenOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                    <Button
-                                        color="light"
-                                        size="xs"
-                                        class={libraryClass}
-                                        aria-label="Load missing parts"
-                                        title="Load missing parts"
-                                        on:click={askForLibrary}
-                                    >
-                                        <DatabaseOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                    <Button
-                                        color="light"
-                                        size="xs"
-                                        aria-label="Choose LDraw folder"
-                                        title="Choose LDraw folder"
-                                        on:click={() =>
-                                            document
-                                                .getElementById('select_library_folder')
-                                                ?.click()}
-                                    >
-                                        <FolderPlusOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                </div>
-                            </section>
-                            <section aria-labelledby="robot-setup-title">
-                                <h3
-                                    id="robot-setup-title"
-                                    class="text-sm font-semibold text-slate-800"
-                                >
-                                    Robot
-                                </h3>
-                                <div class="mt-1 flex flex-wrap gap-2">
-                                    <Button
-                                        color={robotButtonColour}
-                                        size="xs"
-                                        aria-label="Load robot"
-                                        title="Load robot"
-                                        on:click={askForRobot}
-                                    >
-                                        <UploadOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                    <Button
-                                        color="light"
-                                        size="xs"
-                                        aria-label="Reference robot"
-                                        title="Reference robot"
-                                        on:click={() => (loadVirtualReferenceRobot = true)}
-                                    >
-                                        <MapPinAltOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                    <Button
-                                        color="light"
-                                        size="xs"
-                                        aria-label="Ports"
-                                        title="Ports"
-                                        on:click={connectPorts}
-                                    >
-                                        <ShareNodesOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                    <Button
-                                        color="light"
-                                        size="xs"
-                                        aria-label="Drive wheels"
-                                        title="Drive wheels"
-                                        on:click={connectWheels}
-                                    >
-                                        <CogOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                </div>
-                            </section>
-                            <section aria-labelledby="advanced-setup-title">
-                                <h3
-                                    id="advanced-setup-title"
-                                    class="text-sm font-semibold text-slate-800"
-                                >
-                                    Mission and advanced
-                                </h3>
-                                <div class="mt-1 flex flex-wrap gap-2">
-                                    <Button
-                                        color="light"
-                                        size="xs"
-                                        aria-label="Simulation settings"
-                                        title="Simulation settings"
-                                        on:click={openSettings}
-                                    >
-                                        <AdjustmentsHorizontalOutline
-                                            size="sm"
-                                            aria-hidden="true"
-                                        />
-                                    </Button>
-                                    <Button
-                                        id="camera_config_button"
-                                        color="light"
-                                        size="xs"
-                                        aria-label="Display options"
-                                        title="Display options"
-                                    >
-                                        <EyeOutline size="sm" aria-hidden="true" />
-                                    </Button>
-                                    <MenuDropdown
-                                        name="camera"
-                                        actions={cameraMenu}
-                                        rounded={true}
-                                        class="bg-white rounded-2xl"
-                                    />
-                                </div>
-                                <Tooltip triggeredBy="#camera_config_button"
-                                    >Display-only camera and grid options</Tooltip
-                                >
-                            </section>
-                        </div>
-                        <div
-                            class="mt-3 flex flex-wrap items-center gap-2 rounded border border-amber-300 bg-amber-50 px-2 py-1 text-sm"
-                        >
-                            <label for="m01-calibration-profile" class="font-medium">
-                                M01 user-supplied calibration
-                            </label>
-                            <input
-                                id="m01-calibration-profile"
-                                type="file"
-                                accept=".json,application/json"
-                                aria-describedby="m01-calibration-profile-status"
-                                on:change={loadM01ObservationProfile}
-                            />
-                            <Button
-                                color="light"
-                                size="xs"
-                                aria-label="Clear calibration"
-                                title="Clear calibration"
-                                on:click={clearM01ObservationProfile}
-                                disabled={m01ObservationGeometry === undefined}
-                            >
-                                <TrashBinOutline size="sm" aria-hidden="true" />
-                            </Button>
-                        </div>
-                        <div
-                            id="m01-calibration-profile-status"
-                            class="mt-2 text-sm"
-                            role={m01ProfileError ? 'alert' : 'status'}
-                            aria-live="polite"
-                        >
-                            <p>{m01ProfileStatus}</p>
-                            {#if m01ProfileFileName}<p class="mt-1">
-                                    Scoring uses this calibration only; it is not an official field
-                                    profile.
-                                </p>{/if}
-                            {#if m01ProfileError}<p class="mt-1 text-red-700">
-                                    Profile error: {m01ProfileError}
-                                </p>{/if}
-                        </div>
-                    </section>
+                        <p>{m01ProfileStatus}</p>
+                        {#if m01ProfileFileName}<p class="mt-1">
+                                Scoring uses this calibration only; it is not an official field
+                                profile.
+                            </p>{/if}
+                        {#if m01ProfileError}<p class="mt-1 text-red-700">
+                                Profile error: {m01ProfileError}
+                            </p>{/if}
+                    </div>
                 {/if}
-                {#if workspaceMode !== 'practice'}
+                {#if workspaceMode === 'diagnostics'}
                     <div
                         class="border-b border-slate-200 bg-slate-50 px-3 py-2 text-sm"
                         role={projectRestoreError ? 'alert' : 'status'}
