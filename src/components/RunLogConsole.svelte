@@ -60,7 +60,7 @@
 </script>
 
 <section
-    class="mx-3 mt-3 w-72 max-w-[calc(100vw-1.5rem)] rounded border border-gray-300 bg-white text-xs shadow-sm"
+    class="flex min-h-0 w-full flex-col rounded border border-gray-300 bg-white text-xs shadow-sm"
     aria-labelledby="run-log-title"
 >
     <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-2 py-1">
@@ -142,7 +142,7 @@
         >
         <div
             bind:this={logContainer}
-            class="max-h-56 overflow-y-auto break-words p-2 font-mono"
+            class="min-h-0 flex-1 overflow-y-auto break-words p-2 font-mono"
             aria-label="Newest first raw robot run diagnostics"
         >
             {#if $runLogStore.length === 0}

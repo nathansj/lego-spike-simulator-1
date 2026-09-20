@@ -835,7 +835,9 @@
                 {/if}
             </section>
             <section
-                class="shrink-0 border-t border-slate-200 bg-white"
+                class="border-t border-slate-200 bg-white {diagnosticsSectionOpen
+                    ? 'flex min-h-0 flex-1 flex-col'
+                    : 'shrink-0'}"
                 aria-labelledby="diagnostics-section-title"
             >
                 <button
