@@ -1,0 +1,23 @@
+{
+    "schemaVersion": 1,
+    "runId": "ui-lifecycle-02",
+    "taskId": "lifecycle-ui",
+    "role": "fll_experience",
+    "agentId": null,
+    "attempt": 1,
+    "source": "worker",
+    "reportedAt": "2026-09-15T03:36:51.000Z",
+    "nextUpdateAt": "2026-09-15T03:38:01.000Z",
+    "state": "review",
+    "summary": "Implemented participant-facing run result messaging and distinct Pause/Resume, Stop, Reset run, and disabled Restore setup entry points in src/components/SpikeSimulator.svelte. Pause/resume uses VM pause/unpause; reset uses Simulation.reset and restarts the VM; both internal and existing top-level stop paths preserve a result summary.",
+    "nextAction": "Lead review and acceptance. Restore setup remains pending until a saved project/setup snapshot contract exists; browser walkthrough remains required.",
+    "dependencies": [],
+    "blockers": [],
+    "milestones": [
+        { "id": "inspect", "weight": 1, "done": true, "evidence": "Read AGENTS.md, docs/agent-work/README.md, docs/design/practice-flow-implementation-spec.md, fll-experience role, and current lifecycle implementations." },
+        { "id": "lifecycle", "weight": 3, "done": true, "evidence": "src/components/SpikeSimulator.svelte adds PracticeResult state, lifecycle handlers, result card, and explicit controls wired to VM and Simulation APIs." },
+        { "id": "validation", "weight": 2, "done": true, "evidence": "Final code: npm run check passed with 0 errors and warnings; npm test -- --run passed with 40 files and 179 tests; Prettier check and git diff --check passed after the external-stop transition fix." }
+    ],
+    "estimate": null,
+    "planChange": ""
+}

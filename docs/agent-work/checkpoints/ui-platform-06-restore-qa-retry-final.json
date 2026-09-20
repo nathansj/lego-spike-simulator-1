@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-06",
+  "taskId": "restore-qa-retry",
+  "role": "fll_qa",
+  "agentId": "01a0a49e-92da-71e1-9882-b41f5cad4833",
+  "attempt": 1,
+  "source": "worker",
+  "reportReference": "",
+  "state": "review",
+  "reportedAt": "2026-09-15T10:32:21.000Z",
+  "nextUpdateAt": "2026-09-15T10:42:21.000Z",
+  "summary": "Code-level QA accepts the user-visible .lsp-project load and supported state restoration path; browser, accessibility, and participant evidence remain a separate release gate.",
+  "nextAction": "Lead should record the blocker-two integration decision and proceed to dirty-state protection; do not claim full release approval from this checkpoint.",
+  "blockers": [],
+  "dependencies": ["project-ui-restore"],
+  "milestones": [
+    { "id": "initial-checkpoint", "weight": 1, "done": true, "evidence": "Initial retry checkpoint recorded before review." },
+    { "id": "implementation-review", "weight": 2, "done": true, "evidence": "Reviewed LoadScene.svelte, SpikeSimulatorWindow.svelte, project-restore.ts, project-archive.ts, and the associated tests; picker and restoration callback are wired." },
+    { "id": "focused-validation", "weight": 2, "done": true, "evidence": "Focused archive/restore suite: 2 files, 7 tests passed; npm run check reported 0 errors and 0 warnings; Prettier and git diff --check passed." },
+    { "id": "restore-qa-report", "weight": 2, "done": true, "evidence": "Decision: accepted for code-level covered scope; full release approval remains outside this task pending browser, accessibility, and participant evidence." }
+  ],
+  "estimate": { "minMinutes": 5, "maxMinutes": 10, "confidence": "medium", "basis": "Lead integration update and transition to dirty-state protection remain." },
+  "planChange": ""
+}

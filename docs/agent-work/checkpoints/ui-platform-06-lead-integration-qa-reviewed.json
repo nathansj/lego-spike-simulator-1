@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-06",
+  "taskId": "lead-integration",
+  "role": "fll_lead",
+  "agentId": "primary",
+  "attempt": 1,
+  "source": "lead",
+  "reportReference": "",
+  "state": "review",
+  "reportedAt": "2026-09-15T10:32:43.000Z",
+  "nextUpdateAt": "2026-09-15T10:42:43.000Z",
+  "summary": "Independent restore-qa-retry accepts the user-visible .lsp-project loader and supported state restoration for code-level scope.",
+  "nextAction": "Begin dirty-state protection; retain browser, accessibility, and participant validation as separate release gates.",
+  "blockers": ["Browser, keyboard, screen-reader, Firefox/Chromium, and participant validation remain outstanding for full release approval."],
+  "dependencies": ["restore-qa-retry"],
+  "milestones": [
+    { "id": "dispatch", "weight": 1, "done": true, "evidence": "ui-platform-06 registration ledger includes project-ui-restore, restore-qa, restore-qa-retry, and lead-integration." },
+    { "id": "ui-restore", "weight": 4, "done": true, "evidence": "LoadScene and SpikeSimulatorWindow implement the .lsp-project restore flow; project-restore.ts and tests cover scene asset application; checks passed." },
+    { "id": "qa-review", "weight": 2, "done": true, "evidence": "Independent retry checkpoint docs/agent-work/logs/ui-platform-06/restore-qa-retry.jsonl records code-level acceptance after focused validation." }
+  ],
+  "estimate": { "minMinutes": 10, "maxMinutes": 20, "confidence": "medium", "basis": "Proceed to dirty-state protection; release evidence gates remain." },
+  "planChange": ""
+}

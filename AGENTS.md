@@ -21,6 +21,10 @@ for claims of real-world accuracy; do not claim or fabricate measurements.
 
 ## Working as a team
 
+-   Every agent, including the lead and read-only reviewers, follows
+    `docs/agent-work/README.md`. Register every task before delegation, keep an
+    evidence-backed work log, and publish checkpoints while working. The lead
+    reads the logs before reporting progress and investigates overdue updates.
 -   The primary agent acts as `fll_lead`. For substantial implementation work, use
     the relevant specialist subagents when available. Keep simple tasks local.
 -   Delegate bounded tasks with explicit file ownership and observable acceptance

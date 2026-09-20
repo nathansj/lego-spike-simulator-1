@@ -1,0 +1,29 @@
+{
+    "schemaVersion": 1,
+    "runId": "ui-platform-05",
+    "taskId": "archive-qa",
+    "role": "fll_qa",
+    "agentId": "primary",
+    "attempt": 1,
+    "source": "lead",
+    "reportedAt": "2026-09-15T04:28:58.000Z",
+    "nextUpdateAt": "2026-09-15T04:35:00.000Z",
+    "state": "review",
+    "summary": "Independent QA reviewed project-archive.ts and project-archive.test.ts. Parser-level acceptance is demonstrated for generated project and legacy ZIP fixtures; application-level restoration is not accepted.",
+    "nextAction": "Wire the loader into the UI and apply every returned project domain, then add browser and end-to-end restore evidence before re-audit.",
+    "dependencies": [],
+    "blockers": [
+        "No UI action invokes loadProjectArchive or accepts .lsp-project files; LoadScene.svelte still exposes only .spk input.",
+        "The payload is not applied to sceneStore, componentStore/hub, Blockly workspace, participant settings, map/model library, calibration state, or selected season state.",
+        "project.capabilities.seasonRestore is hard-coded false, so season identity cannot be restored or protected during load/switch.",
+        "No reactive dirty-state integration or unsaved-change prompt protects the current project during load.",
+        "Browser, keyboard, responsive, screen-reader, Firefox/Chromium, and participant evidence is absent."
+    ],
+    "milestones": [
+        { "id": "handoff-inspection", "weight": 3, "done": true, "evidence": "Reviewed src/lib/spike/project-archive.ts: project/legacy dispatch, required and optional entries, nested metadata checks, safe model names, scene consistency, robot validation, Blockly validation, and calibration loading." },
+        { "id": "focused-validation", "weight": 2, "done": true, "evidence": "npm test -- --run src/lib/spike/project-archive.test.ts src/lib/spike/project-contract.test.ts: 2 files and 10 tests passed." },
+        { "id": "acceptance-checkpoint", "weight": 2, "done": true, "evidence": "Independent QA decision recorded: archive parser accepted for covered fixtures; UI restoration and end-to-end round trip remain blocked by the listed gaps." }
+    ],
+    "estimate": null,
+    "planChange": ""
+}

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "runId": "design-impl-02",
+  "taskId": "expert-setup-slice-2",
+  "role": "fll_experience",
+  "agentId": "primary",
+  "attempt": 1,
+  "source": "worker",
+  "reportedAt": "2026-09-17T01:16:45.000Z",
+  "nextUpdateAt": "2026-09-17T01:18:45.000Z",
+  "state": "running",
+  "summary": "Started Slice 2. Inspecting the approved Expert Setup, loading, save, and confirmation components before changing labels or routing.",
+  "nextAction": "Trace current controls and callbacks, then patch only the seven Slice 2 components.",
+  "dependencies": [],
+  "blockers": [],
+  "milestones": [
+    { "id": "inspect", "weight": 2, "done": false, "evidence": "Read docs/design/simplified-practice-ui-spec.md Slice 2 and required team/work-log guidance." },
+    { "id": "implement", "weight": 4, "done": false, "evidence": "" },
+    { "id": "validate", "weight": 3, "done": false, "evidence": "" },
+    { "id": "browser-evidence", "weight": 2, "done": false, "evidence": "" }
+  ],
+  "estimate": { "minMinutes": 25, "maxMinutes": 45, "confidence": "medium", "basis": "Existing UI is dirty and requires focused inspection before minimally scoped changes." },
+  "planChange": ""
+}

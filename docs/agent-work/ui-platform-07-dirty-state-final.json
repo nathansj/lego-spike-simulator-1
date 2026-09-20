@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-07",
+  "taskId": "dirty-state",
+  "role": "fll_experience",
+  "agentId": null,
+  "attempt": 1,
+  "source": "lead-relay",
+  "reportReference": "Final lead-relay handoff after closing the scene rename and calibration tracking gaps; no QA documents were edited.",
+  "state": "review",
+  "reportedAt": "2026-09-15T10:46:12.300Z",
+  "nextUpdateAt": "2026-09-15T11:01:12.300Z",
+  "summary": "Blocker 3 implementation is complete. Dirty state is reactive across Blockly workspace changes, scene/component/boundary store replacements, scene renames, map changes, robot/model changes, hub port and wheel events, settings, and M01 calibration. Project saves and project/legacy scene restores mark clean. Full scene/project and legacy Blockly loads use an accessible Cancel/Discard confirmation when dirty. Legacy robot and scene exports remain unchanged.",
+  "nextAction": "Independent fll_qa review should verify the code-level handoff; browser, accessibility, Firefox/Chromium, and participant runs must be performed when those environments are available.",
+  "blockers": [
+    "Independent QA runtime is unavailable in this sandbox; the existing QA checkpoint remains overdue and cannot be represented as an independent acceptance.",
+    "Browser, accessibility, Firefox/Chromium, and participant evidence remain separate release gates."
+  ],
+  "dependencies": [
+    "dirty-state-qa",
+    "Browser session for actual keyboard/focus and destructive-load flows"
+  ],
+  "milestones": [
+    { "id": "inspect", "weight": 2, "done": true, "evidence": "Traced all requested change sources and existing save/load callbacks." },
+    { "id": "dirty-wiring", "weight": 4, "done": true, "evidence": "Shared projectDirtyStore, revision comparison, store-reference detection, explicit connector/settings events, Blockly listener, rename notification, and calibration tracking implemented." },
+    { "id": "confirmation", "weight": 2, "done": true, "evidence": "UnsavedChangesModal provides labeled dialog semantics, focus placement, Cancel, and Discard changes actions for scene/project/program loads." },
+    { "id": "tests", "weight": 2, "done": true, "evidence": "45 test files/196 tests passed; npm run check clean; npm run test:agents 9 tests passed; npm run build passed; Prettier and git diff --check clean." }
+  ],
+  "estimate": {
+    "minMinutes": 10,
+    "maxMinutes": 20,
+    "confidence": "medium",
+    "basis": "Implementation and automated validation are complete; remaining effort is external QA/browser evidence."
+  },
+  "planChange": ""
+}

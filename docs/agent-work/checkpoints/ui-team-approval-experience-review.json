@@ -1,0 +1,24 @@
+{
+    "schemaVersion": 1,
+    "runId": "ui-team-approval",
+    "taskId": "experience-review",
+    "role": "fll_experience",
+    "agentId": "01a09d42-1a36-76a2-a160-f67f9383cf6b",
+    "attempt": 1,
+    "source": "worker",
+    "reportedAt": "2026-09-14T16:40:54.000Z",
+    "nextUpdateAt": null,
+    "state": "review",
+    "nextUpdateAt": "2026-09-14T16:45:54.000Z",
+    "summary": "Completed a read-only source trace of load, configure, program, run, inspect, reset, and save. Current UI supports coached setup but needs a guided Practice path, progressive disclosure, structured diagnostics, explicit run/reset/save state, and a season package contract for participant readiness.",
+    "nextAction": "Lead reviews this handoff with fll_design and fll_qa, agrees bounded implementation contracts, and assigns production work to fll_experience.",
+    "dependencies": [],
+    "blockers": [],
+    "milestones": [
+        { "id": "inputs", "weight": 1, "done": true, "evidence": "Read AGENTS.md, docs/agent-team.md, docs/design/fll-experience-brief.md, docs/design/ui-audience-review-2026-09-14.md, docs/agent-work/README.md, and .codex/agents/fll-experience.toml." },
+        { "id": "trace", "weight": 2, "done": true, "evidence": "Inspected SpikeSimulatorWindow.svelte, SpikeSimulator.svelte, LoadScene.svelte, PortConnector.svelte, WheelConnector.svelte, BlocklyComponent.svelte, SaveSimulation.svelte, SimulatorSettings.svelte, RunLogConsole.svelte, ScenePreview.svelte, and BioglowMissionReadiness.svelte; traced visible handlers and state transitions." },
+        { "id": "review", "weight": 2, "done": true, "evidence": "Delivered current-versus-required findings, prioritized implementation handoffs, acceptance scenarios, and validation limits in the worker report." }
+    ],
+    "estimate": null,
+    "planChange": ""
+}

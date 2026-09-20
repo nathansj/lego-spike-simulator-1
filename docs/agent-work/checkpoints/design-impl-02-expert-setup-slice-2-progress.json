@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "runId": "design-impl-02",
+  "taskId": "expert-setup-slice-2",
+  "role": "fll_experience",
+  "agentId": "primary",
+  "attempt": 1,
+  "source": "worker",
+  "reportedAt": "2026-09-17T01:19:03.000Z",
+  "nextUpdateAt": "2026-09-17T01:21:30.000Z",
+  "state": "running",
+  "summary": "Implemented named Expert Setup groups while preserving existing loading, robot, port, wheel, calibration, save, and display callbacks. Practice no longer renders calibration status or technical controls.",
+  "nextAction": "Format the approved components, run Svelte/TypeScript checks, then exercise Practice and Expert Setup in Chromium.",
+  "dependencies": [],
+  "blockers": [],
+  "milestones": [
+    { "id": "inspect", "weight": 2, "done": true, "evidence": "Traced all seven approved components and existing project-dirty callbacks." },
+    { "id": "implement", "weight": 4, "done": true, "evidence": "Named setup groups and scope language added in SpikeSimulatorWindow.svelte; load/save/dirty, port/wheel, and settings language updated in the approved components." },
+    { "id": "validate", "weight": 3, "done": false, "evidence": "Prettier check identified formatting needed in six touched components." },
+    { "id": "browser-evidence", "weight": 2, "done": false, "evidence": "" }
+  ],
+  "estimate": { "minMinutes": 15, "maxMinutes": 25, "confidence": "medium", "basis": "Implementation is complete; formatting, checks, and browser verification remain." },
+  "planChange": ""
+}

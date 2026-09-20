@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-07",
+  "taskId": "dirty-state",
+  "role": "fll_experience",
+  "agentId": null,
+  "attempt": 1,
+  "source": "lead-relay",
+  "reportReference": "Implementation handoff after full automated validation; assigned experience runtime was unavailable, so the lead recorded the handoff for the team dashboard.",
+  "state": "review",
+  "reportedAt": "2026-09-15T10:43:10.300Z",
+  "nextUpdateAt": "2026-09-15T10:58:10.300Z",
+  "summary": "Dirty-state implementation is ready for independent QA. Shared revision controller tracks edits from Blockly, scene/model/robot stores, hub connector events, and settings; project saves and restores mark clean; full scene/project and legacy Blockly program loads confirm before replacing dirty work; accessible confirmation dialog is wired. Changed paths: src/lib/spike/project-contract.ts, src/lib/spike/project-dirty-state.ts, src/lib/spike/project-dirty-state.test.ts, src/components/UnsavedChangesModal.svelte, src/components/SaveSimulation.svelte, src/components/LoadScene.svelte, src/components/PortConnector.svelte, src/components/WheelConnector.svelte, src/components/SimulatorSettings.svelte, src/components/BlocklyComponent.svelte, src/components/SpikeSimulatorWindow.svelte.",
+  "nextAction": "Independent QA should review dirty transitions, confirmation behavior, save/load clean boundaries, and accessibility semantics; then report acceptance or defects.",
+  "blockers": [
+    "Independent QA review is pending.",
+    "Browser, accessibility, Firefox/Chromium, and participant evidence remain separate release gates."
+  ],
+  "dependencies": [
+    "dirty-state-qa",
+    "Browser validation when a browser session is available"
+  ],
+  "milestones": [
+    { "id": "inspect", "weight": 2, "done": true, "evidence": "Traced all requested change sources and existing save/load callbacks." },
+    { "id": "dirty-wiring", "weight": 4, "done": true, "evidence": "Shared projectDirtyStore and component/store/event wiring implemented." },
+    { "id": "confirmation", "weight": 2, "done": true, "evidence": "UnsavedChangesModal guards full scene/project and legacy program loads with Cancel and Discard changes actions." },
+    { "id": "tests", "weight": 2, "done": true, "evidence": "45 test files/196 tests passed; npm run check clean; npm run test:agents 9 tests passed; npm run build passed; prettier and git diff --check clean." }
+  ],
+  "estimate": {
+    "minMinutes": 10,
+    "maxMinutes": 25,
+    "confidence": "medium",
+    "basis": "Code-level implementation is complete; remaining time is independent review and any defect correction."
+  },
+  "planChange": ""
+}

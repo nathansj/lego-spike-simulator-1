@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-07",
+  "taskId": "lead-integration",
+  "role": "fll_lead",
+  "agentId": null,
+  "attempt": 1,
+  "source": "lead",
+  "reportReference": "Initial lead checkpoint requested by owner.",
+  "state": "running",
+  "reportedAt": "2026-09-15T10:33:57.300Z",
+  "nextUpdateAt": "2026-09-15T10:48:57.300Z",
+  "summary": "Started blocker 3: make project dirty state reactive across program, scene, robot, hub setup, settings, and project restore, with accessible destructive-action confirmation.",
+  "nextAction": "Inspect revision helpers and current save/load component callbacks, then delegate disjoint implementation and review work.",
+  "blockers": [],
+  "dependencies": [
+    "Existing projectRevision and dirty-state helpers",
+    "Current project save/load callbacks"
+  ],
+  "milestones": [
+    { "id": "contract", "weight": 2, "done": false, "evidence": "" },
+    { "id": "wiring", "weight": 4, "done": false, "evidence": "" },
+    { "id": "confirmation", "weight": 2, "done": false, "evidence": "" },
+    { "id": "tests", "weight": 2, "done": false, "evidence": "" }
+  ],
+  "estimate": {
+    "minMinutes": 30,
+    "maxMinutes": 75,
+    "confidence": "medium",
+    "basis": "Existing revision helpers and save/load callbacks are already present; integration breadth is unknown."
+  },
+  "planChange": ""
+}

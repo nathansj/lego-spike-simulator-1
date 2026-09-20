@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-07",
+  "taskId": "dirty-state",
+  "role": "fll_experience",
+  "agentId": null,
+  "attempt": 1,
+  "source": "lead-relay",
+  "reportReference": "Overdue checkpoint requested by owner; implementation remains with lead because no assigned experience runtime ID is available.",
+  "state": "running",
+  "reportedAt": "2026-09-15T10:39:22.300Z",
+  "nextUpdateAt": "2026-09-15T10:54:22.300Z",
+  "summary": "Implemented the shared dirty-state controller, revision-based transitions, confirmation decision helpers, accessible UnsavedChangesModal, and project-save revision callback. Changed paths: src/lib/spike/project-dirty-state.ts, src/lib/spike/project-dirty-state.test.ts, src/lib/spike/project-contract.ts, src/components/UnsavedChangesModal.svelte, src/components/SaveSimulation.svelte.",
+  "nextAction": "Wire the controller into Blockly, scene/project loading, hub connectors, settings, and SpikeSimulatorWindow; then run focused checks and hand off to QA.",
+  "blockers": [
+    "The remaining exact interface boundary is callback propagation: SaveSimulation needs onProjectSaved, LoadScene needs confirmation plus onSceneLoaded, and PortConnector/WheelConnector/SimulatorSettings need change events consumed by SpikeSimulatorWindow.",
+    "BlocklyComponent must register a non-UI workspace change listener and guard its legacy .llsp3 file load.",
+    "Browser, accessibility, Firefox/Chromium, and participant evidence remain separate release gates."
+  ],
+  "dependencies": [
+    "Existing project save/load callbacks",
+    "Current scene, component, boundary, hub, and Blockly state sources"
+  ],
+  "milestones": [
+    { "id": "inspect", "weight": 2, "done": true, "evidence": "Traced project-contract helpers, SaveSimulation, LoadScene, SpikeSimulatorWindow, BlocklyComponent, connectors, settings, sceneStore, componentStore, and VM settings." },
+    { "id": "dirty-wiring", "weight": 4, "done": false, "evidence": "Shared controller and save callback are implemented; source wiring remains." },
+    { "id": "confirmation", "weight": 2, "done": false, "evidence": "Accessible confirmation dialog exists; load entry points remain to be wired." },
+    { "id": "tests", "weight": 2, "done": false, "evidence": "Focused dirty-state tests added; validation is pending after integration." }
+  ],
+  "estimate": {
+    "minMinutes": 15,
+    "maxMinutes": 35,
+    "confidence": "medium",
+    "basis": "The shared contract is complete; remaining work is explicit event/callback wiring across four existing components."
+  },
+  "planChange": ""
+}

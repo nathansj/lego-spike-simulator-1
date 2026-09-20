@@ -2,6 +2,10 @@
     "name": "lego-spike-simulator",
     "version": "0.0.1",
     "scripts": {
+        "agents:log": "node scripts/agent-work-log.mjs record",
+        "agents:register": "node scripts/agent-work-log.mjs register",
+        "agents:status": "node scripts/agent-work-log.mjs status",
+        "test:agents": "vitest run scripts/agent-work-log.test.mjs",
         "dev": "vite dev",
         "build": "vite build",
         "preview": "vite preview",

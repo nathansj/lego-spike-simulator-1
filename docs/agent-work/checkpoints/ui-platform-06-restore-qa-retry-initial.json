@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-06",
+  "taskId": "restore-qa-retry",
+  "role": "fll_qa",
+  "agentId": "01a0a49e-92da-71e1-9882-b41f5cad4833",
+  "attempt": 1,
+  "source": "worker",
+  "reportReference": "",
+  "state": "running",
+  "reportedAt": "2026-09-15T10:31:30.000Z",
+  "nextUpdateAt": "2026-09-15T10:41:30.000Z",
+  "summary": "Beginning the independent post-implementation review of the user-visible .lsp-project loader and application-state restoration path.",
+  "nextAction": "Inspect the changed UI and restore seams, run focused archive/restore tests and type checks, then publish an acceptance decision.",
+  "blockers": [],
+  "dependencies": ["project-ui-restore"],
+  "milestones": [
+    { "id": "initial-checkpoint", "weight": 1, "done": true, "evidence": "Published before validation." },
+    { "id": "implementation-review", "weight": 2, "done": false, "evidence": "" },
+    { "id": "focused-validation", "weight": 2, "done": false, "evidence": "" },
+    { "id": "restore-qa-report", "weight": 2, "done": false, "evidence": "" }
+  ],
+  "estimate": { "minMinutes": 10, "maxMinutes": 20, "confidence": "medium", "basis": "Focused code review and targeted automated validation." },
+  "planChange": ""
+}

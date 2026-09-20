@@ -106,10 +106,20 @@ sessions may not discover newly created role files until restarted.
 
 ## Handoff contract
 
+All roles use the [work-log protocol](./agent-work/README.md). The lead registers
+queued tasks and its own integration work before dispatch, records returned agent
+IDs immediately, and establishes shared-file visibility or message relay. Run
+`npm run agents:status -- <run-id>` before answering a progress question. Reports
+must distinguish last reported work, verified completion, unknown status, and
+overdue updates; a previous `running` state is not proof of current activity.
+
 Each task should fit one reviewable patch and include:
 
 ```text
 Task ID and owner:
+Run ID, runtime agent ID (pending until spawned), and attempt:
+Absolute work-log root and designated writer (worker or lead relay):
+Weighted milestones, dependencies, and next checkpoint deadline:
 User-visible outcome:
 Inputs and source versions:
 Dependencies / agreed interface:

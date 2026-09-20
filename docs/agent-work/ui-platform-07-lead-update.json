@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-07",
+  "taskId": "lead-integration",
+  "role": "fll_lead",
+  "agentId": "primary",
+  "attempt": 1,
+  "source": "lead",
+  "reportReference": "Initial checkpoint requested by owner; preserves existing team registration.",
+  "state": "running",
+  "reportedAt": "2026-09-15T10:33:57.300Z",
+  "nextUpdateAt": "2026-09-15T10:48:57.300Z",
+  "summary": "Started blocker 3: make project dirty state reactive across program, scene, robot, hub setup, settings, and project restore, with accessible destructive-action confirmation.",
+  "nextAction": "Inspect the existing project revision helpers and current save/load component callbacks, then review the implementation handoff and QA evidence.",
+  "blockers": [
+    "Browser, accessibility, Firefox/Chromium, and participant evidence remain unavailable as separate release gates."
+  ],
+  "dependencies": [
+    "project-ui-restore",
+    "Existing project revision and dirty-state helpers",
+    "Current project save/load callbacks"
+  ],
+  "milestones": [
+    { "id": "dispatch", "weight": 1, "done": true, "evidence": "ui-platform-07 registered with dirty-state, dirty-state-qa, and lead-integration; runtime IDs assigned." },
+    { "id": "dirty-integration", "weight": 4, "done": false, "evidence": "Awaiting implementation handoff." },
+    { "id": "qa-review", "weight": 2, "done": false, "evidence": "Awaiting independent lifecycle review." }
+  ],
+  "estimate": {
+    "minMinutes": 20,
+    "maxMinutes": 60,
+    "confidence": "medium",
+    "basis": "The project revision helpers exist, but change sources span Blockly, scene, hub, settings, save, and restore components."
+  },
+  "planChange": ""
+}

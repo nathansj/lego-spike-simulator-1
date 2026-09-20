@@ -1,0 +1,9 @@
+{
+    "schemaVersion": 1,
+    "runId": "example-run",
+    "tasks": [
+        { "taskId": "design-review", "role": "fll_design" },
+        { "taskId": "integration", "role": "fll_lead" }
+    ],
+    "planChange": "Initial assignment scope."
+}

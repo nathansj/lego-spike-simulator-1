@@ -1,0 +1,24 @@
+{
+    "schemaVersion": 1,
+    "runId": "ui-implementation-01",
+    "taskId": "practice-design",
+    "role": "fll_design",
+    "agentId": "primary",
+    "attempt": 1,
+    "source": "lead",
+    "reportedAt": "2026-09-15T03:26:05.000Z",
+    "nextUpdateAt": "2026-09-15T03:28:05.000Z",
+    "state": "review",
+    "summary": "The shared worker handoff is authoritative; duplicate draft removed. Design review is ready with seven participant steps, explicit readiness checks, plain-language run results, distinct reset/save actions, progressive disclosure, responsive/keyboard behavior, and implementation ownership.",
+    "nextAction": "fll_experience implements the bounded shell; fll_qa validates the acceptance scenarios in Firefox and Chromium; lead accepts this design task after review.",
+    "dependencies": ["practice-ui readiness state contract"],
+    "blockers": [],
+    "milestones": [
+        { "id": "inputs", "weight": 1, "done": true, "evidence": "Read AGENTS.md, docs/agent-team.md, docs/design/fll-experience-brief.md, docs/design/ui-audience-review-2026-09-14.md, and docs/agent-work/README.md." },
+        { "id": "practice-spec", "weight": 4, "done": true, "evidence": "docs/design/practice-flow-implementation-spec.md defines Field & mission, Robot, Program, Ready, Run, Result, Save, labels, states, component boundaries, disclosure, responsive, and keyboard behavior." },
+        { "id": "handoff", "weight": 2, "done": true, "evidence": "The authoritative design document assigns implementation slices to existing Svelte components, required local state types, implementation order, and QA scenarios." },
+        { "id": "checkpoint", "weight": 1, "done": true, "evidence": "Final checkpoint published to the shared ui-implementation-01/practice-design log in review state." }
+    ],
+    "estimate": null,
+    "planChange": "Added the requested practice-design task to the existing run; the prior checkpoint covered fll_experience implementation and did not include this design handoff."
+}

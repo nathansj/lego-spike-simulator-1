@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "runId": "ui-platform-07",
+  "taskId": "dirty-state",
+  "role": "fll_experience",
+  "agentId": null,
+  "attempt": 1,
+  "source": "lead-relay",
+  "reportReference": "Lead-published initial checkpoint because the dashboard showed the registered implementation task as missing.",
+  "state": "running",
+  "reportedAt": "2026-09-15T10:35:06.300Z",
+  "nextUpdateAt": "2026-09-15T10:50:06.300Z",
+  "summary": "Dirty-state implementation task is active: wire existing revision and dirty helpers across Blockly, scene/model/robot/hub setup, settings, save/load, and project restore.",
+  "nextAction": "Inspect current callbacks and implement the narrow dirty-state store plus accessible confirmation boundary without changing QA docs.",
+  "blockers": [
+    "Independent QA is waiting for the implementation handoff.",
+    "Browser, accessibility, Firefox/Chromium, and participant evidence remain separate release gates."
+  ],
+  "dependencies": [
+    "Current project save/load callbacks",
+    "Existing projectRevision and dirty helpers"
+  ],
+  "milestones": [
+    { "id": "inspect", "weight": 2, "done": false, "evidence": "" },
+    { "id": "dirty-wiring", "weight": 4, "done": false, "evidence": "" },
+    { "id": "confirmation", "weight": 2, "done": false, "evidence": "" },
+    { "id": "tests", "weight": 2, "done": false, "evidence": "" }
+  ],
+  "estimate": {
+    "minMinutes": 20,
+    "maxMinutes": 50,
+    "confidence": "medium",
+    "basis": "Existing helper contracts are present; UI change sources and confirmation boundaries must be traced."
+  },
+  "planChange": ""
+}

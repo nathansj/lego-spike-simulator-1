@@ -1,0 +1,28 @@
+{
+    "schemaVersion": 1,
+    "runId": "ui-platform-04",
+    "taskId": "project-contract",
+    "role": "fll_experience",
+    "agentId": "primary",
+    "attempt": 1,
+    "source": "worker",
+    "reportedAt": "2026-09-15T04:09:33.000Z",
+    "nextUpdateAt": "2026-09-15T04:11:00.000Z",
+    "state": "review",
+    "summary": "Completed safe selected-season wiring: SpikeSimulatorWindow passes the BIOGLOW Founders SeasonPackage to SaveSimulation, which stores explicit package identity in project.json. Focused tests and Svelte checks pass; formatting is clean.",
+    "nextAction": "Lead integrates a project-open loader and reactive dirty tracking in a separate bounded task when loader/workspace callbacks are available.",
+    "dependencies": [],
+    "blockers": [
+        "SaveSimulation now accepts the current Blockly workspace, but no loader callback or project-open path exists here, so automatic program/setting/dirty-state restoration cannot be integrated without broader shared wiring.",
+        "SpikeSimulatorWindow currently has no season selector; this slice safely wires the existing BIOGLOW Founders package as the selected default. Dynamic season switching remains pending.",
+        "Existing scene archives contain binary/map and MPD payloads outside scene.json; the envelope references those payloads and labels capability limits explicitly."
+    ],
+    "milestones": [
+        { "id": "inspect", "weight": 2, "done": true, "evidence": "Read docs/agent-work/README.md, fll_experience role instructions, design brief/spec, scene-schema.ts, scene-archive.ts, robot-archive.ts, BlocklyComponent.svelte, SaveSimulation.svelte, and SpikeSimulatorWindow.svelte." },
+        { "id": "contract", "weight": 3, "done": true, "evidence": "src/lib/spike/project-contract.ts defines ProjectEnvelope v1, serializable scene/robot/program/settings/assets/capabilities, parser, builder, stable revision, and dirty-state boundaries." },
+        { "id": "integration-tests", "weight": 2, "done": true, "evidence": "src/lib/spike/project-contract.test.ts: 4 tests passed; npm run check: 0 errors and 0 warnings; SaveSimulation.svelte adds Save project archive action." },
+        { "id": "handoff", "weight": 1, "done": true, "evidence": "Follow-up handoff published after focused season/project tests (2 files/8 tests), npm run check (0 errors/warnings), Prettier check, and git diff --check passed." }
+    ],
+    "estimate": null,
+    "planChange": ""
+}
