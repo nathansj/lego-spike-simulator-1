@@ -10,7 +10,7 @@
     export let scene: SceneStore;
     export let enabled = true;
     export let select: string | undefined = undefined;
-    export let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive';
+    export let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive' | 'robot-front';
     export let robotFocus = false;
     export let tilt = true;
     export let rotate = false;
@@ -193,6 +193,8 @@
         } else if (camera == 'right') {
             gl.rotate(-90, 0.0, 1.0, 0.0);
         } else if (camera == 'front') {
+            gl.rotate(0, 0.0, 1.0, 0.0);
+        } else if (camera == 'robot-front') {
             gl.rotate(0, 0.0, 1.0, 0.0);
         } else if (camera == 'back') {
             gl.rotate(180, 0.0, 1.0, 0.0);

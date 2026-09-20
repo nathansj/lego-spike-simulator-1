@@ -109,7 +109,8 @@
     // cameraOpen is used as a bind variable, but reported as unused by es-lint
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let cameraOpen = false;
-    let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive' = 'adaptive';
+    let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive' | 'robot-front' =
+        'adaptive';
     let robotFocus = false;
     let tilt = true;
     let gridScale = 0;
@@ -212,6 +213,16 @@
                     cameraMenu = buildCameraMenu();
                 },
                 toggle: robotFocus
+            },
+            {
+                name: 'Collision view',
+                action: () => {
+                    camera = 'robot-front';
+                    robotFocus = true;
+                    tilt = true;
+                    cameraMenu = buildCameraMenu();
+                },
+                radio: camera == 'robot-front'
             },
             {
                 name: 'Grid scale',
@@ -934,6 +945,18 @@
                                                 cameraMenu = buildCameraMenu();
                                                 simulatorMenuOpen = false;
                                             }}>Focus robot</button
+                                        >
+                                        <button
+                                            type="button"
+                                            class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
+                                            role="menuitem"
+                                            on:click={() => {
+                                                camera = 'robot-front';
+                                                robotFocus = true;
+                                                tilt = true;
+                                                cameraMenu = buildCameraMenu();
+                                                simulatorMenuOpen = false;
+                                            }}>Collision view</button
                                         >
                                         <button
                                             type="button"

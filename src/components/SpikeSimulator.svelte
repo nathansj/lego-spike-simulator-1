@@ -63,7 +63,8 @@
     export let sceneOpen = false;
     export let wheelsOpen = false;
     export let hub = new Hub();
-    export let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive' = 'adaptive';
+    export let camera: 'top' | 'left' | 'right' | 'front' | 'back' | 'adaptive' | 'robot-front' =
+        'adaptive';
     export let robotFocus = false;
     export let tilt = true;
     export let gridScale = 0;
