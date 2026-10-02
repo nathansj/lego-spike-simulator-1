@@ -1,50 +1,88 @@
-Welcome to the lego-spike-simulator project. The aim is to provide
-an environment where LEGO spike robots can be simulated and the
-code tested before uploading to a real LEGO spike robot.
+# LEGO SPIKE Simulator — BIOGLOW practice build
 
-The environment currently only supports the blockly based programming
-language.
+A browser simulator for LEGO SPIKE Prime robots: write Blockly programs, load
+LDraw robots and mission models, and test a run on a simulated FLL field before
+using the real robot. It runs entirely in the browser (Chromebook, macOS,
+Windows) and works offline after the first load.
 
-The simulator allows lego format llsp3 programs to be loaded and saved,
-and can load robots in the ldraw format (ldr and mpd extensions).
-Port connectivity can be specified, and saved into a robot to be loaded
-again at a later time. A basic scene can be setup using images for a base
-map and ldraw objects for obstacles in the scene.
+**Live app:** https://nathansj.github.io/lego-spike-simulator-1/
 
-There is very limited physics at the moment, focussed on moving a
-wheel base with a specific gearing.
+This is the `codex-commit-current-changes` branch of a fork of
+[alexandrehardy/lego-spike-simulator](https://github.com/alexandrehardy/lego-spike-simulator).
+It packages a self-contained BIOGLOW Founders Edition 2026–27 practice
+experience (season, field, robot, missions, and a saved setup).
 
-The system is currently available at http://spike.ahardy.za.net/.
-However, the system can be built locally and executed directly
-from files, so no webserver is required. The software can run completely
-from the web browser.
+## What this branch contains
 
-# Development team
+-   **Bundled BIOGLOW season** (`static/season/`): all 13 mission models
+    (`models/45832_01..13.mpd`), the practice robot (`robots/robot-4.mpd`), the
+    physics sidecars, and a manifest (`manifest.json`).
+-   **Packaged practice setup** (`static/season/default.lsp-project`): the field
+    (mat), robot configuration, mission placement, and a saved Blockly program.
+    It **auto-loads on first run** when the scene is empty; reload it any time
+    from **Expert Setup → Load → Load packaged BIOGLOW setup**.
+-   **Season and mission selection**: choose the season package and add individual
+    missions or all missions in a practice layout.
+-   **Physics colliders**: exact triangle-mesh colliders for the fixed mission
+    models, tight compound primitives for others, and a robot fitter
+    (`src/lib/physics/collider-fit.ts`). Colliders are _uncalibrated_ — they are
+    not verified against a physical robot or field.
+-   **PWA / offline**: a web manifest and service worker
+    (`static/manifest.webmanifest`, `static/sw.js`) precache the app, LDraw
+    library, and season bundle so it can be installed and used offline.
+-   **Programs**: write, load, and save Blockly programs (LLSP3 format).
+-   **Robots**: load LDraw robots (`.ldr`/`.mpd`) or use the in-code virtual
+    reference robot; port, wheel, and gearing setup is saved with the project.
 
-See [the agent team and delivery roadmap](./docs/agent-team.md) for reusable Codex
-specialists and [the code review](./docs/code-review-2026-09-10.md) for the current
-BIOGLOW readiness assessment. Repository working conventions are in [AGENTS.md](./AGENTS.md).
+## Getting started
 
-# Screenshots
+```sh
+npm install
+npm run dev      # local development
+npm run check    # TypeScript + Svelte checks
+npm test         # Vitest suite
+npm run build    # static bundle in dist/
+```
 
-![Start screen](./website/start.png)
+## Deployment
 
-![Code loaded](./website/code.png)
+-   **GitHub Pages**: `.github/workflows/deploy-pages.yml` builds and publishes on
+    push to this branch (requires **Settings → Pages → Source: GitHub Actions**).
+    The build is path-independent, so it works under the `/lego-spike-simulator-1/`
+    subpath.
+-   **Docker** (for a LAN/classroom server):
 
-![Preparing to open a robot](./website/open_robot.png)
+    ```sh
+    docker build -t spike-sim .
+    docker run --rm -p 8080:80 spike-sim
+    ```
 
-![Robot view](./website/robot_view.png)
+    Then open `http://<host>:8080` from any device.
 
-![Port connector](./website/port_connector.png)
+## Assets in this branch
 
-![Opening a scene](./website/load_scene.png)
+-   **Robot**: [`static/season/robots/robot-4.mpd`](./static/season/robots/robot-4.mpd),
+    plus the virtual reference robot in
+    [`src/lib/fll/virtual-reference-robot.ts`](./src/lib/fll/virtual-reference-robot.ts).
+-   **Field / setup**:
+    [`static/season/default.lsp-project`](./static/season/default.lsp-project)
+    (mat, robot, mission placement, and program).
+-   **Mission models**: [`static/season/models/`](./static/season/models).
 
-![Running simulator](./website/running.png)
+## Screenshots
 
-# Robots
+![Practice run with a loaded program and robot views](./website/practice.png)
 
-[Driving base 3](http://ahfiles.s3-website.us-east-1.amazonaws.com/robots/DrivingBase3.mpd)
+## Development team
 
-# Scenes
+See [the agent team and delivery roadmap](./docs/agent-team.md) for reusable
+Codex specialists and [the code review](./docs/code-review-2026-09-10.md) for the
+BIOGLOW readiness assessment. Repository working conventions are in
+[AGENTS.md](./AGENTS.md).
 
-[WRO In house 2025 Level 1](http://ahfiles.s3-website.us-east-1.amazonaws.com/scenes/WRO-InHouse-Level1.spk)
+## Notes and limitations
+
+-   The simulation colliders and mechanism behaviour are **uncalibrated**; they are
+    for practice and are not proof of official scoring or real-world accuracy.
+-   FLL mission models and the LDraw parts library are included for the bundled
+    practice experience; confirm reuse terms before redistributing publicly.
