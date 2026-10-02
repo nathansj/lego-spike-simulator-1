@@ -1,5 +1,6 @@
 name: Deploy to GitHub Pages
 
+# Requires repository Settings -> Pages -> Build and deployment -> Source: GitHub Actions.
 on:
     push:
         branches:
