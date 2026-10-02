@@ -3,7 +3,14 @@
  * season bundle precached at install so the app runs offline after the
  * first load (Chromebook, macOS, Windows). */
 const CACHE = 'spike-simulator-v1';
-const SHELL = ['', 'index.html', 'season/manifest.json', 'complete.zip', 'ldraw/parts.lst'];
+const SHELL = [
+    '',
+    'index.html',
+    'season/manifest.json',
+    'season/default.lsp-project',
+    'complete.zip',
+    'ldraw/parts.lst'
+];
 
 self.addEventListener('install', (event) => {
     event.waitUntil(

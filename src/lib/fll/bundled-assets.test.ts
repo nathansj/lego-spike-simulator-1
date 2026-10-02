@@ -39,4 +39,8 @@ describe('bundled season assets', () => {
             expect(Math.abs(placement.z)).toBeLessThanOrEqual(field.matHeightMm / 2);
         }
     });
+
+    it('contains the packaged default project', () => {
+        expect(existsSync('static/season/default.lsp-project')).toBe(true);
+    });
 });

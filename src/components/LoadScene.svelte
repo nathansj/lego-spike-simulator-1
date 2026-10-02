@@ -7,7 +7,8 @@
         setStudioMode,
         componentStore,
         setRobotFromContent,
-        updateUnresolvedParts
+        updateUnresolvedParts,
+        assetUrl
     } from '$lib/ldraw/components';
     import { sceneStore, type SceneStore, type SceneObject } from '$lib/spike/scene';
     import { EditOutline, TrashBinOutline } from 'flowbite-svelte-icons';
@@ -45,13 +46,9 @@
         findBundledModelPhysics,
         parseModelPhysicsSidecar
     } from '$lib/physics/articulation-presets';
-    import {
-        addBundledMissionToScene,
-        bundledAssetName,
-        fetchBundledAsset,
-        loadBundledManifest,
-        type BundledAssetManifest
-    } from '$lib/fll/bundled-assets';
+
+    /** Project archive packaged with the deployment (mat, robot, missions, program). */
+    const PACKAGED_PROJECT_PATH = 'season/default.lsp-project';
 
     export let modalOpen = false;
     /** Called after a successful scene commit; `undefined` means this legacy archive has no profile. */
@@ -80,11 +77,7 @@
     let customWidth = 1000;
     let projectLoadStatus = '';
     let projectStatusTimer: ReturnType<typeof setTimeout> | undefined;
-    let bundledManifest: BundledAssetManifest | undefined;
-    let bundledMissionId = '';
-    let bundledRobotId = '';
-    let bundledStatus = '';
-    let bundledLoading = false;
+    let packagedProjectLoaded = false;
     let projectLoadError: string | undefined;
     let unsavedChangesOpen = false;
     let pendingFileInput: 'load_scene_file' | 'load_project_file' | undefined;
@@ -340,6 +333,7 @@
         menu.push({
             name: 'Load',
             actions: [
+                { name: 'Load packaged BIOGLOW setup', action: () => loadPackagedProject() },
                 { name: 'Load mat', action: () => loadBackgroundMap() },
                 { name: 'Load object', action: () => loadObject() },
                 { name: 'Load legacy scene setup (.spk)', action: () => loadScene() },
@@ -679,14 +673,11 @@
         }
     }
 
-    async function loadProjectFromFile() {
-        const element = document.getElementById('load_project_file');
-        const file = (element as HTMLInputElement | null)?.files?.[0];
-        if (!file) return;
+    async function restoreProjectArchive(archive: Blob): Promise<void> {
         projectLoadError = undefined;
         setProjectLoadStatus('Loading project archive…', 2000);
         try {
-            const payload: ProjectArchivePayload = await loadProjectArchive(file);
+            const payload: ProjectArchivePayload = await loadProjectArchive(archive);
             if (payload.sourceFormat !== 'project') {
                 throw new Error(
                     'This file is a legacy scene setup. Use Load legacy scene setup instead.'
@@ -712,65 +703,46 @@
             projectLoadError =
                 error instanceof Error ? error.message : 'The project could not be loaded.';
             setProjectLoadStatus('Project restore failed. The current scene was kept unchanged.');
+        }
+    }
+
+    async function loadProjectFromFile() {
+        const element = document.getElementById('load_project_file');
+        const file = (element as HTMLInputElement | null)?.files?.[0];
+        if (!file) return;
+        try {
+            await restoreProjectArchive(file);
         } finally {
             const input = element as HTMLInputElement | null;
             if (input) input.value = '';
         }
     }
 
-    async function ensureBundledManifest(): Promise<BundledAssetManifest> {
-        if (bundledManifest) {
-            return bundledManifest;
+    /** Load the project archive packaged with the deployment (mat, robot, missions, program). */
+    async function loadPackagedProject(): Promise<void> {
+        setProjectLoadStatus('Loading packaged setup…', 2000);
+        const response = await fetch(assetUrl(PACKAGED_PROJECT_PATH));
+        if (!response.ok) {
+            throw new Error(`Packaged setup unavailable (${response.status}).`);
         }
-        bundledLoading = true;
+        const archive = await response.blob();
+        await restoreProjectArchive(archive);
+    }
+
+    async function autoLoadPackagedProject(): Promise<void> {
+        if (packagedProjectLoaded) return;
+        packagedProjectLoaded = true;
+        if ($sceneStore.objects.length > 0 || $sceneStore.map) return;
         try {
-            const manifest = await loadBundledManifest();
-            bundledManifest = manifest;
-            bundledMissionId = manifest.models[0]?.missionId ?? '';
-            bundledRobotId = manifest.robots[0]?.id ?? '';
-            return manifest;
-        } finally {
-            bundledLoading = false;
+            await loadPackagedProject();
+        } catch {
+            setProjectLoadStatus('Packaged setup was not found; starting from an empty field.');
         }
     }
 
-    async function loadBundledMission(): Promise<void> {
-        try {
-            const manifest = await ensureBundledManifest();
-            const asset = manifest.models.find((entry) => entry.missionId === bundledMissionId);
-            if (!asset) return;
-            const added = await addBundledMissionToScene(asset);
-            const editable = added.find((object) => !object.anchored);
-            setSelected(editable ? editorKey(editable) : bundledAssetName(asset.model));
-            numberOfLoads++;
-            bundledStatus = `Added ${asset.name}`;
-        } catch (error) {
-            bundledStatus =
-                error instanceof Error ? error.message : 'Bundled model could not be loaded.';
-        }
-    }
-
-    async function loadBundledRobot(): Promise<void> {
-        try {
-            const manifest = await ensureBundledManifest();
-            const asset = manifest.robots.find((entry) => entry.id === bundledRobotId);
-            if (!asset) return;
-            const content = await fetchBundledAsset(asset.model);
-            const robot = setRobotFromContent(content);
-            updateUnresolvedParts();
-            onRobotModelLoaded?.(robot);
-            bundledStatus = `Loaded ${asset.name}`;
-        } catch (error) {
-            bundledStatus =
-                error instanceof Error ? error.message : 'Bundled robot could not be loaded.';
-        }
-    }
-
-    $: if (modalOpen && !bundledManifest && !bundledLoading) {
-        ensureBundledManifest().catch(() => {
-            bundledStatus = 'Bundled season assets are unavailable.';
-        });
-    }
+    onMount(() => {
+        autoLoadPackagedProject();
+    });
 
     async function loadObjectFromFile() {
         const element = document.getElementById('load_object_file');
@@ -1022,48 +994,6 @@
                 {#if projectLoadError}<p class="mt-1 text-red-700">{projectLoadError}</p>{/if}
             </div>
         {/if}
-        <section
-            class="flex shrink-0 flex-wrap items-center gap-2 rounded border border-slate-200 bg-slate-50 px-2 py-2 text-sm"
-            aria-label="Bundled season assets"
-        >
-            <span class="font-semibold text-slate-800">Bundled BIOGLOW</span>
-            <select
-                class="rounded border border-slate-300 p-1"
-                bind:value={bundledMissionId}
-                disabled={!bundledManifest}
-                aria-label="Mission model"
-            >
-                {#each bundledManifest?.models ?? [] as mission (mission.missionId)}
-                    <option value={mission.missionId}>
-                        {mission.missionId} · {mission.name}
-                    </option>
-                {/each}
-            </select>
-            <Button
-                size="xs"
-                on:click={loadBundledMission}
-                disabled={!bundledManifest || !bundledMissionId}>Add mission</Button
-            >
-            <span class="mx-1 h-5 w-px bg-slate-300" aria-hidden="true"></span>
-            <select
-                class="rounded border border-slate-300 p-1"
-                bind:value={bundledRobotId}
-                disabled={!bundledManifest}
-                aria-label="Bundled robot"
-            >
-                {#each bundledManifest?.robots ?? [] as robot (robot.id)}
-                    <option value={robot.id}>{robot.name}</option>
-                {/each}
-            </select>
-            <Button
-                size="xs"
-                on:click={loadBundledRobot}
-                disabled={!bundledManifest || !bundledRobotId}>Load robot</Button
-            >
-            {#if bundledStatus}
-                <span class="text-slate-600" role="status" aria-live="polite">{bundledStatus}</span>
-            {/if}
-        </section>
         <div class="flex flex-row flex-1 relative overflow-hidden">
             <div class="flex-1 h-full relative">
                 {#if selectedText && $componentStore.unresolved.length == 0}
