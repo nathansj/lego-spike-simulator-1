@@ -883,33 +883,61 @@ export class ActionStatement extends Statement {
         }
     }
 
+    /** Track width (mm) between the movement-pair wheels. */
+    movementTrackWidth(hub: Hub): number {
+        const wheels = hub.wheels.filter(
+            (wheel) => wheel.port === hub.movePair1 || wheel.port === hub.movePair2
+        );
+        if (wheels.length < 2) {
+            return 0;
+        }
+        const [a, b] = wheels;
+        return Math.hypot(
+            a.position.x - b.position.x,
+            a.position.y - b.position.y,
+            a.position.z - b.position.z
+        );
+    }
+
     /**
      * Drive until the robot has actually travelled `targetMm`. This is a closed
-     * loop on measured travel (as the SPIKE movement blocks stop at the encoder
-     * target), so the distance is independent of the speed setting. Falls back
-     * to the nominal time when no scene feedback is available, and is bounded by
-     * a safety timeout so a blocked robot cannot hang the program forever.
+     * loop on measured motion (as the SPIKE movement blocks stop at the encoder
+     * target), so the result is independent of the speed setting. It integrates
+     * the travelled path length and adds the in-place rotation component, so it
+     * works for straight moves, curves, and spins. Falls back to the nominal
+     * time when no scene feedback is available, and is bounded by a safety
+     * timeout so a blocked robot cannot hang the program forever.
      */
     *waitForDistance(thread: Thread, targetMm: number, rpm: number): Generator<VMTask> {
-        const scene = thread.vm.scene;
+        const vm = thread.vm;
+        const scene = vm.scene;
         const start = scene?.robot.position ? { ...scene.robot.position } : undefined;
-        const mmPerSecond = (rpm / 60.0) * thread.vm.hub.moveDistance;
+        const trackWidth = this.movementTrackWidth(vm.hub);
+        const mmPerSecond = (rpm / 60.0) * vm.hub.moveDistance;
         const idealSeconds = mmPerSecond > 0 ? targetMm / mmPerSecond : 0;
-        const timeoutSeconds = Math.max(idealSeconds * 4.0 + 1.0, 2.0);
+        const timeoutSeconds = Math.max(idealSeconds * 2.0 + 0.5, 1.0);
         const interval = 0.002;
+        let previous = start ? { ...start } : undefined;
+        let previousYaw = scene?.robot.rotation ?? 0;
+        let travelled = 0;
         let elapsed = 0;
         while (elapsed < timeoutSeconds) {
             const position = scene?.robot.position;
-            if (!start || !position) {
-                yield thread.vm.sleep(Math.max(idealSeconds - elapsed, 0));
+            if (!previous || !position) {
+                yield vm.sleep(Math.max(idealSeconds - elapsed, 0));
                 return;
             }
-            const dx = position.x - start.x;
-            const dz = position.z - start.z;
-            if (Math.hypot(dx, dz) >= targetMm) {
+            const pathDelta = Math.hypot(position.x - previous.x, position.z - previous.z);
+            const yaw = scene?.robot.rotation ?? previousYaw;
+            const yawDelta = Math.abs(((yaw - previousYaw) * Math.PI) / 180.0);
+            const spinDelta = yawDelta * (trackWidth / 2);
+            travelled += Math.max(pathDelta, spinDelta);
+            previous = { x: position.x, y: position.y, z: position.z };
+            previousYaw = yaw;
+            if (travelled >= targetMm) {
                 return;
             }
-            yield thread.vm.sleep(interval);
+            yield vm.sleep(interval);
             elapsed += interval;
         }
     }
@@ -1164,15 +1192,13 @@ export class ActionStatement extends Statement {
                 }
             }
             if (rpm && rpm > 0) {
-                if (unit == 'rotations') {
-                    const revolution_time = 60.0 / rpm;
-                    yield thread.vm.sleep(amount * revolution_time);
-                } else if (unit == 'degrees') {
-                    // This is probably approximate
-                    const revolution_time = 60.0 / rpm;
-                    yield thread.vm.sleep((amount * revolution_time) / 360.0);
-                } else if (unit == 'seconds') {
+                if (unit == 'seconds') {
                     yield thread.vm.sleep(amount);
+                } else {
+                    const targetMm = movementTargetMm(amount, unit, thread.vm.hub.moveDistance);
+                    if (targetMm > 0) {
+                        yield* this.waitForDistance(thread, targetMm, rpm);
+                    }
                 }
             }
             attachment = thread.vm.hub.ports[thread.vm.hub.movePair1];
