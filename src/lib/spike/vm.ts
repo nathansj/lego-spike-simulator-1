@@ -9,6 +9,26 @@ import * as m4 from '$lib/ldraw/m4';
 export type PortType = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
 export const allPorts: PortType[] = ['A', 'B', 'C', 'D', 'E', 'F'];
 
+/**
+ * Convert a movement block amount to a target travel distance in mm, using the
+ * configured movement distance (mm per wheel revolution).
+ */
+export function movementTargetMm(amount: number, unit: string, moveDistanceMm: number): number {
+    switch (unit) {
+        case 'rotations':
+            return amount * moveDistanceMm;
+        case 'degrees':
+            return (amount / 360.0) * moveDistanceMm;
+        case 'cm':
+            return amount * 10.0;
+        case 'in':
+        case 'inches':
+            return amount * 25.4;
+        default:
+            return 0;
+    }
+}
+
 export interface RobotMotion {
     step(seconds: number, scene: SceneStore, hub: Hub): void;
     reset?(): void;
@@ -863,6 +883,37 @@ export class ActionStatement extends Statement {
         }
     }
 
+    /**
+     * Drive until the robot has actually travelled `targetMm`. This is a closed
+     * loop on measured travel (as the SPIKE movement blocks stop at the encoder
+     * target), so the distance is independent of the speed setting. Falls back
+     * to the nominal time when no scene feedback is available, and is bounded by
+     * a safety timeout so a blocked robot cannot hang the program forever.
+     */
+    *waitForDistance(thread: Thread, targetMm: number, rpm: number): Generator<VMTask> {
+        const scene = thread.vm.scene;
+        const start = scene?.robot.position ? { ...scene.robot.position } : undefined;
+        const mmPerSecond = (rpm / 60.0) * thread.vm.hub.moveDistance;
+        const idealSeconds = mmPerSecond > 0 ? targetMm / mmPerSecond : 0;
+        const timeoutSeconds = Math.max(idealSeconds * 4.0 + 1.0, 2.0);
+        const interval = 0.002;
+        let elapsed = 0;
+        while (elapsed < timeoutSeconds) {
+            const position = scene?.robot.position;
+            if (!start || !position) {
+                yield thread.vm.sleep(Math.max(idealSeconds - elapsed, 0));
+                return;
+            }
+            const dx = position.x - start.x;
+            const dz = position.z - start.z;
+            if (Math.hypot(dx, dz) >= targetMm) {
+                return;
+            }
+            yield thread.vm.sleep(interval);
+            elapsed += interval;
+        }
+    }
+
     *execute_flippermove(thread: Thread, op: string): Generator<VMTask> {
         if (op == 'move') {
             const direction = this.arguments[0].evaluate(thread).getString();
@@ -905,27 +956,13 @@ export class ActionStatement extends Statement {
                 }
             }
             if (rpm && rpm > 0) {
-                if (unit == 'rotations') {
-                    const revolution_time = 60.0 / rpm;
-                    yield thread.vm.sleep(amount * revolution_time);
-                } else if (unit == 'degrees') {
-                    // This is probably approximate
-                    const revolution_time = 60.0 / rpm;
-                    yield thread.vm.sleep((amount * revolution_time) / 360.0);
-                } else if (unit == 'seconds') {
+                if (unit == 'seconds') {
                     yield thread.vm.sleep(amount);
-                } else if (unit == 'cm') {
-                    const revolution_time = 60.0 / rpm;
-                    const revs = (amount * 10.0) / thread.vm.hub.moveDistance;
-                    yield thread.vm.sleep(revs * revolution_time);
-                } else if (unit == 'in') {
-                    const revolution_time = 60.0 / rpm;
-                    const revs = (amount * 25.4) / thread.vm.hub.moveDistance;
-                    yield thread.vm.sleep(revs * revolution_time);
-                } else if (unit == 'inches') {
-                    const revolution_time = 60.0 / rpm;
-                    const revs = (amount * 25.4) / thread.vm.hub.moveDistance;
-                    yield thread.vm.sleep(revs * revolution_time);
+                } else {
+                    const targetMm = movementTargetMm(amount, unit, thread.vm.hub.moveDistance);
+                    if (targetMm > 0) {
+                        yield* this.waitForDistance(thread, targetMm, rpm);
+                    }
                 }
             }
             attachment = thread.vm.hub.ports[thread.vm.hub.movePair1];
@@ -2787,6 +2824,8 @@ export class VM {
     deltaTime: number;
     wait: number;
     sleepTasks: SleepTask[];
+    /** Latest scene, used for closed-loop movement feedback (actual travel). */
+    scene: SceneStore | undefined;
 
     constructor(
         id: string,
@@ -2816,6 +2855,7 @@ export class VM {
         this.oscillator = oscillator;
         this.deltaTime = 0.0;
         this.sleepTasks = [];
+        this.scene = undefined;
         this.wait = 0;
 
         for (const entry of Array.from(events.entries())) {
@@ -3032,6 +3072,7 @@ export class VM {
     }
 
     step(seconds: number, scene: SceneStore, robotMotion?: RobotMotion) {
+        this.scene = scene;
         if (this.state == 'running') {
             let duration = seconds * timeFactor + this.deltaTime;
             if (this.wait >= duration) {
