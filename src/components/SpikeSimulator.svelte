@@ -43,9 +43,6 @@
     } from '$lib/fll/drone-survey-observations';
     import RobotOrthographicViews from '$components/RobotOrthographicViews.svelte';
     import ScenePreview from '$components/ScenePreview.svelte';
-    import ColourSensor from '$components/ColourSensor.svelte';
-    import DistanceSensor from '$components/DistanceSensor.svelte';
-    import ForceCheckSensor from '$components/ForceCheckSensor.svelte';
     import * as m4 from '$lib/ldraw/m4';
     import JSZip from 'jszip';
     import { onDestroy, onMount } from 'svelte';
@@ -84,7 +81,7 @@
 
     let numberOfLoads = 0;
     let vm: VM | undefined;
-    let simulation: Simulation | undefined;
+    export let simulation: Simulation | undefined = undefined;
     let simulationGeneration = 0;
     let bioglowMatchClock = new BioglowMatchClock();
     let droneSurveyMatchController = createDroneSurveyMatchController();
@@ -94,7 +91,6 @@
     let compiledRobot: CompiledModel | undefined = $componentStore.robotModel
         ? compiler.compileModel($componentStore.robotModel, { rescale: false })
         : undefined;
-    let sensors: SensorView[] = [];
     let libraryDirectoryStatus = 'not selected';
     let lastFrame: number = 0;
     let lastDiagnosticSeconds = 0;
@@ -742,7 +738,6 @@
                 if (hub.ports.F.type != 'none') {
                     sensorList.push({ id: hub.ports.F.id(), port: 'F', type: hub.ports.F.type });
                 }
-                sensors = sensorList;
                 appendRunLog(
                     'info',
                     `Hub prepared: ${sensorList.map((sensor) => `${sensor.port}:${sensor.type}`).join(', ') || 'no sensors'}; wheels=${hub.wheels.length}`
@@ -921,55 +916,6 @@
         hidden={!compiledRobot && !runSimulation}
     >
         <div class="flex h-full min-h-0 min-w-0 w-full flex-row">
-            <div class="min-h-0 min-w-0 flex flex-col">
-                {#if runSimulation}
-                    {#each sensors as sensor}
-                        {#if sensor.type == 'light'}
-                            <span class="text-sm mt-2">
-                                Port {sensor.port}: Colour sensor
-                            </span>
-                            <ColourSensor
-                                id={`sensor_view_${sensor.port}`}
-                                {scene}
-                                class="h-14 w-14"
-                                map={$sceneStore.map}
-                                lightSensorId={sensor.id}
-                                {hub}
-                                port={sensor.port}
-                            />
-                        {:else if sensor.type == 'force'}
-                            <span class="text-sm mt-2">
-                                Port {sensor.port}: Force sensor
-                            </span>
-                            <ForceCheckSensor
-                                id={`sensor_view_${sensor.port}`}
-                                {scene}
-                                class="h-14 w-14"
-                                map={$sceneStore.map}
-                                forceSensorId={sensor.id}
-                                {hub}
-                                port={sensor.port}
-                                physicsEnabled={simulation !== undefined}
-                                {simulation}
-                            />
-                        {:else if sensor.type == 'distance'}
-                            <span class="text-sm mt-2">
-                                Port {sensor.port}: Distance sensor
-                            </span>
-                            <DistanceSensor
-                                id={`sensor_view_${sensor.port}`}
-                                {scene}
-                                class="h-14 w-14"
-                                map={$sceneStore.map}
-                                distanceSensorId={sensor.id}
-                                {hub}
-                                port={sensor.port}
-                                physicsEnabled={simulation !== undefined}
-                            />
-                        {/if}
-                    {/each}
-                {/if}
-            </div>
             <div class="min-h-0 min-w-0 h-full w-full overflow-hidden">
                 {#if runSimulation}
                     <ScenePreview

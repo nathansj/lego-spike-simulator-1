@@ -56,9 +56,14 @@
         projectDirtyStore,
         shouldConfirmDestructiveAction
     } from '$lib/spike/project-dirty-state';
-    import { Hub } from '$lib/spike/vm';
+    import { Hub, allPorts, type PortType } from '$lib/spike/vm';
+    import { sceneStore } from '$lib/spike/scene';
+    import type { Simulation } from '$lib/spike/simulation';
     import type { PracticeResult } from '$lib/spike/practice-result';
     import HubWidget from '$components/HubWidget.svelte';
+    import ColourSensor from '$components/ColourSensor.svelte';
+    import ForceCheckSensor from '$components/ForceCheckSensor.svelte';
+    import DistanceSensor from '$components/DistanceSensor.svelte';
     import RunLogConsole from '$components/RunLogConsole.svelte';
     import { commandText } from '$lib/blockly/command-labels';
 
@@ -67,6 +72,30 @@
     let hub = new Hub();
     let hubImage = '0000000000000000000000000';
     let hubCentreButtonColour = '#ffffff';
+    let simulation: Simulation | undefined = undefined;
+
+    interface SensorView {
+        id: number | 'none';
+        port: PortType;
+        type: string;
+        label: string;
+    }
+
+    const sensorLabels: Record<string, string> = {
+        light: 'Colour sensor',
+        force: 'Force sensor',
+        distance: 'Distance sensor'
+    };
+
+    let sensorViews: SensorView[] = [];
+    $: sensorViews = allPorts
+        .filter((port) => hub.ports[port]?.type !== 'none')
+        .map((port) => ({
+            id: hub.ports[port].id(),
+            port,
+            type: hub.ports[port].type,
+            label: sensorLabels[hub.ports[port].type] ?? hub.ports[port].type
+        }));
     let practiceResult: PracticeResult | undefined = undefined;
     let simulationPaused = false;
     let programExecutionIdle = false;
@@ -1177,6 +1206,51 @@
                             on:leftRelease={() => (hub.leftPressed = false)}
                             on:rightRelease={() => (hub.rightPressed = false)}
                         />
+                        {#if sensorViews.length > 0}
+                            <div class="mt-3 flex flex-wrap items-start gap-4">
+                                {#each sensorViews as sensor (sensor.port)}
+                                    <div class="flex flex-col items-start">
+                                        <span class="text-sm text-slate-700">
+                                            Port {sensor.port}: {sensor.label}
+                                        </span>
+                                        {#if sensor.type === 'light'}
+                                            <ColourSensor
+                                                id={`hub_sensor_view_${sensor.port}`}
+                                                scene={$sceneStore}
+                                                class="h-14 w-14"
+                                                map={$sceneStore.map}
+                                                lightSensorId={sensor.id}
+                                                {hub}
+                                                port={sensor.port}
+                                            />
+                                        {:else if sensor.type === 'force'}
+                                            <ForceCheckSensor
+                                                id={`hub_sensor_view_${sensor.port}`}
+                                                scene={$sceneStore}
+                                                class="h-14 w-14"
+                                                map={$sceneStore.map}
+                                                forceSensorId={sensor.id}
+                                                {hub}
+                                                port={sensor.port}
+                                                physicsEnabled={simulation !== undefined}
+                                                {simulation}
+                                            />
+                                        {:else if sensor.type === 'distance'}
+                                            <DistanceSensor
+                                                id={`hub_sensor_view_${sensor.port}`}
+                                                scene={$sceneStore}
+                                                class="h-14 w-14"
+                                                map={$sceneStore.map}
+                                                distanceSensorId={sensor.id}
+                                                {hub}
+                                                port={sensor.port}
+                                                physicsEnabled={simulation !== undefined}
+                                            />
+                                        {/if}
+                                    </div>
+                                {/each}
+                            </div>
+                        {/if}
                     </div>
                 {/if}
             </section>
@@ -1343,6 +1417,7 @@
             bind:hubImage
             bind:hubCentreButtonColour
             bind:practiceResult
+            bind:simulation
             bind:simulationPaused
             bind:programExecutionIdle
             bind:droneSurveyElapsedSeconds

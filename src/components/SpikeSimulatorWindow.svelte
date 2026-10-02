@@ -34,6 +34,7 @@
     } from '$lib/fll/bundled-assets';
     import SpikeSimulator from '$components/SpikeSimulator.svelte';
     import SaveSimulation from '$components/SaveSimulation.svelte';
+    import type { Simulation } from '$lib/spike/simulation';
     import SimulatorSettings from '$components/SimulatorSettings.svelte';
     import PortConnector from '$components/PortConnector.svelte';
     import WheelConnector from '$components/WheelConnector.svelte';
@@ -101,6 +102,7 @@
     export let hubCentreButtonColour = '#ffffff';
     export let practiceResult: PracticeResult | undefined = undefined;
     export let simulationPaused = false;
+    export let simulation: Simulation | undefined = undefined;
     export let programExecutionIdle = false;
     export let droneSurveyElapsedSeconds = 0;
     export let runPauseDisabled = false;
@@ -1227,6 +1229,7 @@
                         bind:hubCentreButtonColour
                         bind:practiceResult
                         bind:simulationPaused
+                        bind:simulation
                         bind:programExecutionIdle
                         bind:droneSurveyElapsedSeconds
                         bind:runPauseDisabled
