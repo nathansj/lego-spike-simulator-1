@@ -21,7 +21,7 @@
         }
     },
     "mission": "Window to the Past",
-    "mechanics": ["hinge","latch","trigger"],
+    "mechanics": ["hinge", "latch", "trigger"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
     "segments": [
         {
@@ -32,6 +32,7 @@
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
+                "autoColliderMode": "trimesh",
                 "friction": 0.7,
                 "restitution": 0,
                 "colliders": []

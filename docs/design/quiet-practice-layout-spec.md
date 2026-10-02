@@ -143,7 +143,7 @@ remain reachable from Expert Setup with their scope and reset requirement stated
 | Collapsed, default            | Show the `Commands` button/rail label. Blockly canvas uses the full left-pane workspace area.                                                                                                                                                   | `Commands`                   |
 | Hover preview, mouse/trackpad | Pointer entering the rail opens the category surface after a short intentional delay (about 150–250 ms). Pointer leaving both rail and overlay closes it after a short delay unless it is pinned or has focus.                                  | `Choose a block category`    |
 | Click or keyboard open        | Click, Enter, or Space opens and pins the surface until the participant chooses `Close commands`, presses Escape, clicks the labelled close control, or moves focus elsewhere after no menu item is active.                                     | `Commands open`              |
-| Category selected             | Selecting a category replaces the category list with its command list inside the same overlay. Selecting a command inserts/starts Blockly’s normal placement flow; it must not unexpectedly close a keyboard user’s required placement control. | `{category}: choose a block` |
+| Category selected             | Selecting a category expands it in place as a vertical expander to reveal its command list; the category list stays visible. Selecting the open category again collapses it, and opening a different category collapses the previous one. Selecting a command inserts/starts Blockly’s normal placement flow; it must not unexpectedly close a keyboard user’s required placement control. | `{category}: choose a block` |
 | Workspace focus               | A click in the workspace, Escape from a non-editing command list, or the close button returns the overlay to collapsed state and returns focus predictably.                                                                                     | `Commands closed`            |
 
 Hover is an optional convenience only. Keyboard, touch, switch, and reduced-motion users
@@ -164,6 +164,12 @@ cannot indicate selected category or readiness.
     `This browser` and never include it in program/scoring inputs.
 -   This is a presentation change only. Selecting a category or showing commands cannot change
     simulation state, run evidence, score, or saved project data.
+-   Amended 2026-09-21: the disclosure is a fixed-width column beside the Blockly workspace
+    (the Program pane defaults to 45% width) instead of a floating overlay, so the command
+    list and program show side by side. It still must not trigger simulator remounting.
+    Command entries are the category's real rendered blocks (as in the original SPIKE
+    palette), and selecting one appends it to the bottom of the currently selected block's
+    stack (value/output blocks are placed beside that stack).
 
 ## Responsive Behavior
 

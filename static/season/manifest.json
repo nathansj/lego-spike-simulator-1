@@ -1,0 +1,32 @@
+{
+    "schemaVersion": 1,
+    "seasonId": "bioglow-founders-2026-27",
+    "seasonName": "BIOGLOW Founders Edition Challenge 2026-27",
+    "field": {
+        "matWidthMm": 2360,
+        "matHeightMm": 1140,
+        "boundaryHeightMm": 50
+    },
+    "models": [
+        { "missionId": "M01", "name": "Drone Survey", "model": "season/models/45832_01.mpd" },
+        { "missionId": "M02", "name": "Exploding Seeds", "model": "season/models/45832_02.mpd" },
+        { "missionId": "M03", "name": "Flip the Rock", "model": "season/models/45832_03.mpd" },
+        { "missionId": "M04", "name": "Lucky Leaves", "model": "season/models/45832_04.mpd" },
+        { "missionId": "M05", "name": "Reaching Rods", "model": "season/models/45832_05.mpd" },
+        { "missionId": "M06", "name": "Leafcutter Frenzy", "model": "season/models/45832_06.mpd" },
+        { "missionId": "M07", "name": "Humongous Fungus", "model": "season/models/45832_07.mpd" },
+        { "missionId": "M08", "name": "Tangled", "model": "season/models/45832_08.mpd" },
+        { "missionId": "M09", "name": "Research Platform", "model": "season/models/45832_09.mpd" },
+        {
+            "missionId": "M10",
+            "name": "Fragile Microhabitats",
+            "model": "season/models/45832_10.mpd"
+        },
+        { "missionId": "M11", "name": "Window to the Past", "model": "season/models/45832_11.mpd" },
+        { "missionId": "M12", "name": "Forest Elder", "model": "season/models/45832_12.mpd" },
+        { "missionId": "M13", "name": "Keystone Species", "model": "season/models/45832_13.mpd" }
+    ],
+    "robots": [
+        { "id": "robot-4", "name": "Practice robot 4", "model": "season/robots/robot-4.mpd" }
+    ]
+}

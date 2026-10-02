@@ -60,6 +60,7 @@
     import type { PracticeResult } from '$lib/spike/practice-result';
     import HubWidget from '$components/HubWidget.svelte';
     import RunLogConsole from '$components/RunLogConsole.svelte';
+    import { commandText } from '$lib/blockly/command-labels';
 
     let workspace: Blockly.WorkspaceSvg | undefined;
     let zoomToFit: ZoomToFitControl | undefined;
@@ -92,14 +93,283 @@
     let unsavedChangesOpen = false;
     let commandsOpen = false;
     let commandMenuOpen = false;
+    let blocklyViewMenuOpen = false;
     let commandsButton: HTMLButtonElement | undefined;
     let activePane: 'program' | 'simulator' = 'program';
     let runSimulation = false;
     let practiceReady = false;
     let simulatorWindow: SpikeSimulatorWindow | undefined;
     let commandHoverTimer: ReturnType<typeof setTimeout> | undefined;
+    let selectedCommandCategory: number | null = null;
+    let lastStackRootId: string | undefined;
 
-    const commandCategories = toolbox.contents.filter((item) => item.kind === 'category');
+    interface CommandCategory {
+        name: string;
+        colour?: string;
+        custom?: string;
+        contents?: CommandDefinition[];
+    }
+
+    interface CommandDefinition {
+        kind?: string;
+        type?: string;
+        text?: string;
+        callbackkey?: string;
+        fields?: Record<string, unknown>;
+        extraState?: unknown;
+    }
+
+    interface CommandItem {
+        kind: 'block' | 'button';
+        label: string;
+        blockState?: CommandDefinition;
+        buttonKey?: string;
+    }
+
+    const commandCategories = toolbox.contents.filter(
+        (item) => item.kind === 'category'
+    ) as unknown as CommandCategory[];
+
+    const commandButtonActions: Record<string, (workspace: Blockly.WorkspaceSvg) => void> = {
+        CREATE_SPIKE_NUMBER_VARIABLE: variableFlyout.createStringVariable,
+        CREATE_SPIKE_LIST_VARIABLE: variableFlyout.createListVariable,
+        CREATE_SPIKE_BLOCK: procedureFlyout.createProcedureBlock
+    };
+
+    function commandItemFromDefinition(definition: CommandDefinition): CommandItem | undefined {
+        if (definition.kind === 'button') {
+            if (!definition.text) {
+                return undefined;
+            }
+            return { kind: 'button', label: definition.text, buttonKey: definition.callbackkey };
+        }
+        if (definition.kind === 'block' && definition.type) {
+            return {
+                kind: 'block',
+                label: commandText(definition),
+                blockState: {
+                    type: definition.type,
+                    fields: definition.fields,
+                    extraState: definition.extraState
+                }
+            };
+        }
+        return undefined;
+    }
+
+    function buildCommandItems(category: CommandCategory): CommandItem[] {
+        let definitions: CommandDefinition[] = [];
+        if (category.custom) {
+            const callback = workspace?.getToolboxCategoryCallback(category.custom);
+            if (callback && workspace) {
+                definitions = (callback(workspace) as unknown as CommandDefinition[]) ?? [];
+            }
+        } else {
+            definitions = category.contents ?? [];
+        }
+        return definitions
+            .map(commandItemFromDefinition)
+            .filter((item): item is CommandItem => item !== undefined);
+    }
+
+    function resolveTargetStack(): Blockly.Block | undefined {
+        if (!workspace || !lastStackRootId) {
+            return undefined;
+        }
+        const block = workspace.getBlockById(lastStackRootId);
+        return block ? block.getRootBlock() : undefined;
+    }
+
+    function stackBottom(root: Blockly.Block): Blockly.Block {
+        let bottom = root;
+        while (bottom.getNextBlock()) {
+            bottom = bottom.getNextBlock()!;
+        }
+        return bottom;
+    }
+
+    function placeBlock(block: Blockly.BlockSvg, targetRoot: Blockly.Block | undefined): void {
+        if (!workspace) {
+            return;
+        }
+        if (!targetRoot) {
+            const metrics = workspace.getMetrics();
+            moveBlockTo(
+                block,
+                metrics.viewLeft + metrics.viewWidth / 2,
+                metrics.viewTop + metrics.viewHeight / 2
+            );
+            return;
+        }
+        const bottom = stackBottom(targetRoot);
+        const bottomSvg = bottom as Blockly.BlockSvg;
+        const bottomXY = bottomSvg.getRelativeToSurfaceXY();
+        const bottomSize = bottomSvg.getHeightWidth();
+        if (block.outputConnection) {
+            moveBlockTo(block, bottomXY.x + bottomSize.width + 40, bottomXY.y);
+        } else {
+            const rootXY = (targetRoot as Blockly.BlockSvg).getRelativeToSurfaceXY();
+            moveBlockTo(block, rootXY.x, bottomXY.y + bottomSize.height + 40);
+        }
+    }
+
+    function moveBlockTo(block: Blockly.BlockSvg, x: number, y: number): void {
+        const current = block.getRelativeToSurfaceXY();
+        block.moveBy(x - current.x, y - current.y);
+    }
+
+    function runCommand(item: CommandItem): void {
+        if (!workspace) {
+            return;
+        }
+        if (item.kind === 'button') {
+            const action = item.buttonKey ? commandButtonActions[item.buttonKey] : undefined;
+            action?.(workspace);
+            return;
+        }
+        if (!item.blockState) {
+            return;
+        }
+        const block = Blockly.serialization.blocks.append(
+            {
+                type: item.blockState.type,
+                fields: item.blockState.fields,
+                extraState: item.blockState.extraState
+            } as Blockly.serialization.blocks.State,
+            workspace
+        ) as Blockly.BlockSvg;
+        if (!block) {
+            return;
+        }
+        const targetRoot = resolveTargetStack();
+        let connected = false;
+        if (block.previousConnection && targetRoot) {
+            const bottom = stackBottom(targetRoot);
+            if (bottom.nextConnection && !bottom.nextConnection.isConnected()) {
+                bottom.nextConnection.connect(block.previousConnection);
+                connected = true;
+            }
+        }
+        if (!connected) {
+            placeBlock(block, targetRoot);
+        }
+        block.select();
+    }
+
+    function commandPreviewSurface(node: HTMLDivElement, items: CommandItem[]) {
+        const previewWorkspace = Blockly.inject(node, {
+            renderer: 'spike_renderer',
+            theme: 'spike',
+            media: 'blockly/media/',
+            trashcan: false,
+            zoom: {
+                controls: false,
+                wheel: false,
+                startScale: 0.7,
+                maxScale: 1.5,
+                minScale: 0.3
+            },
+            move: {
+                scrollbars: true,
+                wheel: true,
+                drag: true
+            }
+        });
+        const observer = new ResizeObserver(() => {
+            Blockly.svgResize(previewWorkspace);
+        });
+        observer.observe(node);
+        renderCommandPreview(previewWorkspace, items);
+        return {
+            update(nextItems: CommandItem[]) {
+                renderCommandPreview(previewWorkspace, nextItems);
+            },
+            destroy() {
+                observer.disconnect();
+                previewWorkspace.dispose();
+            }
+        };
+    }
+
+    function activatePreviewBlock(block: Blockly.BlockSvg, item: CommandItem): void {
+        const root = block.getSvgRoot();
+        root.setAttribute('tabindex', '0');
+        root.setAttribute('role', 'menuitem');
+        root.setAttribute('aria-label', item.label);
+        root.style.cursor = 'pointer';
+        root.addEventListener('click', (event) => {
+            event.stopPropagation();
+            runCommand(item);
+        });
+        root.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                runCommand(item);
+            }
+        });
+    }
+
+    function ensurePreviewVariable(previewWorkspace: Blockly.WorkspaceSvg, value: unknown): void {
+        if (!value || typeof value !== 'object') {
+            return;
+        }
+        const { id, name } = value as { id?: unknown; name?: unknown };
+        if (typeof id !== 'string' || previewWorkspace.getVariableById(id)) {
+            return;
+        }
+        const source = workspace?.getVariableById(id);
+        previewWorkspace.createVariable(
+            typeof name === 'string' && name.length > 0 ? name : (source?.name ?? 'variable'),
+            source?.type ?? 'String',
+            id
+        );
+    }
+
+    function renderCommandPreview(
+        previewWorkspace: Blockly.WorkspaceSvg,
+        items: CommandItem[]
+    ): void {
+        previewWorkspace.clear();
+        let y = 8;
+        for (const item of items) {
+            if (item.kind !== 'block' || !item.blockState) {
+                continue;
+            }
+            ensurePreviewVariable(previewWorkspace, item.blockState.fields?.['VARIABLE']);
+            ensurePreviewVariable(previewWorkspace, item.blockState.fields?.['LIST']);
+            let block: Blockly.BlockSvg;
+            try {
+                block = Blockly.serialization.blocks.append(
+                    {
+                        type: item.blockState.type,
+                        fields: item.blockState.fields,
+                        extraState: item.blockState.extraState
+                    } as Blockly.serialization.blocks.State,
+                    previewWorkspace
+                ) as Blockly.BlockSvg;
+            } catch {
+                continue;
+            }
+            if (!block) {
+                continue;
+            }
+            block.setMovable(false);
+            block.setEditable(false);
+            block.setDeletable(false);
+            block.contextMenu = false;
+            const size = block.getHeightWidth();
+            moveBlockTo(block, 8, y);
+            y += size.height + 12;
+            activatePreviewBlock(block, item);
+        }
+        Blockly.svgResize(previewWorkspace);
+    }
+
+    $: selectedCategory =
+        selectedCommandCategory === null ? undefined : commandCategories[selectedCommandCategory];
+    $: commandItems = selectedCategory ? buildCommandItems(selectedCategory) : [];
+    $: previewBlockItems = commandItems.filter((item) => item.kind === 'block');
+    $: previewButtonItems = commandItems.filter((item) => item.kind === 'button');
 
     function sleep(ms: number): Promise<void> {
         return new Promise((resolve) => setTimeout(resolve, ms));
@@ -165,8 +435,25 @@
         observer.observe(element);
         workspace.createVariable('message1', 'broadcast');
         workspaceChangeListener = (event: Blockly.Events.Abstract) => {
-            if (event.isUiEvent) return;
             if (!workspace) return;
+            if (event.type === Blockly.Events.BLOCK_CREATE) {
+                const create = event as Blockly.Events.BlockCreate;
+                for (const id of create.ids ?? []) {
+                    const block = workspace.getBlockById(id);
+                    if (block && !block.getParent() && !block.getSurroundParent()) {
+                        lastStackRootId = block.getRootBlock().id;
+                    }
+                }
+            } else if (event.type === Blockly.Events.SELECTED) {
+                const selected = event as Blockly.Events.Selected;
+                if (selected.newElementId) {
+                    const block = workspace.getBlockById(selected.newElementId);
+                    if (block) {
+                        lastStackRootId = block.getRootBlock().id;
+                    }
+                }
+            }
+            if (event.isUiEvent) return;
             projectDirtyStore.markChanged({
                 blockly: Blockly.serialization.workspaces.save(workspace)
             });
@@ -398,7 +685,7 @@
     }
 
     let paneContainer: HTMLDivElement | undefined;
-    let splitRatio = 0.25;
+    let splitRatio = 0.45;
     let splitDragging = false;
     let splitResizeHandle: number | undefined;
 
@@ -501,14 +788,15 @@
         cancelCommandPreview();
         commandsOpen = false;
         commandMenuOpen = false;
+        selectedCommandCategory = null;
         workspace?.getToolbox()?.clearSelection();
         commandsButton?.focus();
     }
 
-    function selectCommandCategory(position: number): void {
+    function toggleCommandCategory(position: number): void {
         commandsOpen = true;
         commandMenuOpen = true;
-        workspace?.getToolbox()?.selectItemByPosition(position);
+        selectedCommandCategory = selectedCommandCategory === position ? null : position;
     }
 
     function handleCommandKeydown(event: KeyboardEvent): void {
@@ -659,16 +947,17 @@
                         type="button"
                         class="icon-btn border border-slate-300 px-2 py-1 text-sm font-medium text-slate-700 hover:bg-slate-50"
                         aria-haspopup="menu"
-                        aria-expanded={commandMenuOpen}
+                        aria-expanded={blocklyViewMenuOpen}
                         aria-label="Blockly view"
                         title="Blockly view"
-                        on:click={() => (commandMenuOpen = !commandMenuOpen)}
-                        on:keydown={(event) => event.key === 'Escape' && (commandMenuOpen = false)}
+                        on:click={() => (blocklyViewMenuOpen = !blocklyViewMenuOpen)}
+                        on:keydown={(event) =>
+                            event.key === 'Escape' && (blocklyViewMenuOpen = false)}
                     >
                         <CodeOutline size="sm" aria-hidden="true" />
                         <ChevronDownOutline size="xs" aria-hidden="true" />
                     </button>
-                    {#if commandMenuOpen}
+                    {#if blocklyViewMenuOpen}
                         <div
                             class="absolute left-0 top-full z-30 mt-1 w-44 rounded border border-slate-200 bg-white p-1 shadow-lg"
                             role="menu"
@@ -677,31 +966,46 @@
                                 type="button"
                                 class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
                                 role="menuitem"
-                                on:click={() => openCommands(true)}>Show commands</button
+                                on:click={() => {
+                                    blocklyViewMenuOpen = false;
+                                    openCommands(true);
+                                }}>Show commands</button
                             >
                             <button
                                 type="button"
                                 class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
                                 role="menuitem"
-                                on:click={askForFile}>Open program</button
+                                on:click={() => {
+                                    blocklyViewMenuOpen = false;
+                                    askForFile();
+                                }}>Open program</button
                             >
                             <button
                                 type="button"
                                 class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
                                 role="menuitem"
-                                on:click={askForMerge}>Import program</button
+                                on:click={() => {
+                                    blocklyViewMenuOpen = false;
+                                    askForMerge();
+                                }}>Import program</button
                             >
                             <button
                                 type="button"
                                 class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
                                 role="menuitem"
-                                on:click={saveState}>Save program</button
+                                on:click={() => {
+                                    blocklyViewMenuOpen = false;
+                                    saveState();
+                                }}>Save program</button
                             >
                             <button
                                 type="button"
                                 class="w-full rounded px-2 py-1 text-left text-sm hover:bg-slate-100"
                                 role="menuitem"
-                                on:click={togglePrintDialog}>Print program</button
+                                on:click={() => {
+                                    blocklyViewMenuOpen = false;
+                                    togglePrintDialog();
+                                }}>Print program</button
                             >
                         </div>
                     {/if}
@@ -725,74 +1029,124 @@
                 </button>
             </div>
             <div
-                id="blockly-code-section"
-                class="relative min-h-0 min-w-0 flex-1 w-full overflow-hidden"
+                class="flex min-h-0 min-w-0 flex-1 w-full overflow-hidden"
                 class:hidden={!blocklyCodeOpen}
-                on:pointerdown={() => commandsOpen && closeCommands()}
             >
-                <div id="blocklyDiv" />
-                <div class="absolute left-2 right-2 top-2 z-20 lg:right-auto">
-                    <button
-                        bind:this={commandsButton}
-                        type="button"
-                        class="icon-btn rounded border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50"
-                        aria-expanded={commandsOpen}
-                        aria-controls="command-category-overlay"
+                {#if commandsOpen}
+                    <div
+                        id="command-category-overlay"
+                        class="flex min-h-0 w-60 shrink-0 flex-col overflow-hidden border-r border-slate-200 bg-white"
+                        role="menu"
+                        tabindex="-1"
                         aria-label="Commands"
-                        title="Commands"
-                        on:click={() => openCommands(true)}
-                        on:mouseenter={scheduleCommandPreview}
+                        on:mouseenter={cancelCommandPreview}
                         on:mouseleave={scheduleCommandClose}
                         on:keydown={handleCommandKeydown}
                     >
-                        <LayersOutline size="sm" aria-hidden="true" />
-                        {#if commandsOpen}
-                            <ChevronDownOutline size="xs" aria-hidden="true" />
-                        {:else}
-                            <ChevronRightOutline size="xs" aria-hidden="true" />
-                        {/if}
-                    </button>
-                    {#if commandsOpen}
                         <div
-                            id="command-category-overlay"
-                            class="mt-1 max-h-[calc(100vh-14rem)] w-full overflow-y-auto rounded border border-slate-200 bg-white p-2 shadow-lg lg:w-56"
-                            role="menu"
-                            tabindex="-1"
-                            aria-label="Choose a block category"
-                            on:mouseenter={cancelCommandPreview}
+                            class="flex shrink-0 items-center justify-between gap-2 border-b border-slate-200 px-2 py-2"
+                        >
+                            <span
+                                class="text-xs font-semibold uppercase tracking-wide text-slate-500"
+                                >Commands</span
+                            >
+                            <button
+                                type="button"
+                                class="icon-btn p-1 text-blue-800 hover:bg-slate-100"
+                                aria-label="Close commands"
+                                title="Close commands"
+                                on:click={closeCommands}
+                            >
+                                <CloseOutline size="sm" aria-hidden="true" />
+                            </button>
+                        </div>
+                        <div class="grid min-h-0 flex-1 content-start gap-1 overflow-y-auto p-2">
+                            {#each commandCategories as category, index (index)}
+                                {@const expanded = selectedCommandCategory === index}
+                                <div
+                                    class="overflow-hidden rounded bg-slate-50"
+                                    style:--category-colour={category.colour ?? '#64748b'}
+                                >
+                                    <button
+                                        type="button"
+                                        class="flex w-full items-center justify-between gap-2 border-l-4 px-2 py-2 text-left text-sm font-medium text-slate-800 hover:bg-slate-100"
+                                        aria-expanded={expanded}
+                                        aria-controls={`command-category-${index}`}
+                                        on:click={() => toggleCommandCategory(index)}
+                                    >
+                                        <span class="truncate">{category.name}</span>
+                                        {#if expanded}
+                                            <ChevronDownOutline size="xs" aria-hidden="true" />
+                                        {:else}
+                                            <ChevronRightOutline size="xs" aria-hidden="true" />
+                                        {/if}
+                                    </button>
+                                    {#if expanded}
+                                        <div
+                                            id={`command-category-${index}`}
+                                            class="border-t border-slate-200 bg-white p-2"
+                                        >
+                                            {#if previewButtonItems.length > 0}
+                                                <div class="mb-2 grid shrink-0 gap-1">
+                                                    {#each previewButtonItems as item, itemIndex (itemIndex)}
+                                                        <button
+                                                            type="button"
+                                                            class="rounded border-l-4 bg-slate-50 px-2 py-2 text-left text-sm font-medium text-slate-800 hover:bg-slate-100"
+                                                            style:--category-colour={category.colour ??
+                                                                '#64748b'}
+                                                            on:click={() => runCommand(item)}
+                                                        >
+                                                            {item.label}
+                                                        </button>
+                                                    {/each}
+                                                </div>
+                                            {/if}
+                                            {#if previewBlockItems.length > 0}
+                                                <div
+                                                    id="command-preview"
+                                                    class="h-72"
+                                                    use:commandPreviewSurface={previewBlockItems}
+                                                ></div>
+                                            {:else if previewButtonItems.length === 0}
+                                                <p class="px-1 py-2 text-xs text-slate-500">
+                                                    No commands in this category yet.
+                                                </p>
+                                            {/if}
+                                        </div>
+                                    {/if}
+                                </div>
+                            {/each}
+                        </div>
+                    </div>
+                {/if}
+                <div
+                    id="blockly-code-section"
+                    class="relative min-h-0 min-w-0 flex-1 overflow-hidden"
+                    on:pointerdown={() => commandsOpen && closeCommands()}
+                >
+                    <div id="blocklyDiv" />
+                    <div class="absolute left-2 top-2 z-20" on:pointerdown|stopPropagation>
+                        <button
+                            bind:this={commandsButton}
+                            type="button"
+                            class="icon-btn rounded border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-800 shadow-sm hover:bg-slate-50"
+                            aria-expanded={commandsOpen}
+                            aria-controls="command-category-overlay"
+                            aria-label="Commands"
+                            title="Commands"
+                            on:click={() => openCommands(true)}
+                            on:mouseenter={scheduleCommandPreview}
                             on:mouseleave={scheduleCommandClose}
                             on:keydown={handleCommandKeydown}
                         >
-                            <div class="mb-2 flex items-center justify-between gap-2">
-                                <span
-                                    class="text-xs font-semibold uppercase tracking-wide text-slate-500"
-                                    >Choose a category</span
-                                >
-                                <button
-                                    type="button"
-                                    class="icon-btn p-1 text-blue-800 hover:bg-slate-100"
-                                    aria-label="Close commands"
-                                    title="Close commands"
-                                    on:click={closeCommands}
-                                >
-                                    <CloseOutline size="sm" aria-hidden="true" />
-                                </button>
-                            </div>
-                            <div class="grid gap-1">
-                                {#each commandCategories as category, index}
-                                    <button
-                                        type="button"
-                                        role="menuitem"
-                                        class="rounded border-l-4 bg-slate-50 px-2 py-2 text-left text-sm font-medium text-slate-800 hover:bg-slate-100"
-                                        style:--category-colour={category.colour ?? '#64748b'}
-                                        on:click={() => selectCommandCategory(index)}
-                                    >
-                                        {category.name}
-                                    </button>
-                                {/each}
-                            </div>
-                        </div>
-                    {/if}
+                            <LayersOutline size="sm" aria-hidden="true" />
+                            {#if commandsOpen}
+                                <ChevronDownOutline size="xs" aria-hidden="true" />
+                            {:else}
+                                <ChevronRightOutline size="xs" aria-hidden="true" />
+                            {/if}
+                        </button>
+                    </div>
                 </div>
             </div>
             <section
@@ -847,7 +1201,10 @@
                     {/if}
                 </button>
                 {#if diagnosticsSectionOpen}
-                    <div id="diagnostics-section-body" class="max-h-72 overflow-y-auto px-3 pb-3">
+                    <div
+                        id="diagnostics-section-body"
+                        class="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 pb-3"
+                    >
                         {#if runSimulation || practiceResult}
                             <section
                                 class="mb-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm"

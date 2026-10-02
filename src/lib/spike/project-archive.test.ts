@@ -115,6 +115,39 @@ function makeProject() {
 }
 
 describe('project archive loader', () => {
+    it('accepts legacy numeric-string wheel fields and normalizes them', async () => {
+        const project = makeProject();
+        project.robotSetup.wheels = [
+            {
+                port: 'A',
+                componentId: 20168,
+                radiusMm: '44' as unknown as number,
+                gearing: '-1' as unknown as number,
+                positionMm: { x: '-60', y: '-76', z: '12' } as unknown as {
+                    x: number;
+                    y: number;
+                    z: number;
+                },
+                direction: { x: 0, y: 0, z: 1 }
+            }
+        ];
+        const archive = await makeArchive({
+            'project.json': serializeProjectEnvelope(project),
+            'scene.json': JSON.stringify(scene),
+            'robot.mpd': robotContent,
+            'bricks-mission-a': '0 FILE mission-a.ldr\n',
+            'mat.jpg': new Uint8Array([1, 2, 3])
+        });
+
+        const loaded = await loadProjectArchive(archive);
+        expect(loaded.sourceFormat).toBe('project');
+        if (loaded.sourceFormat !== 'project') throw new Error('expected project payload');
+        const wheel = loaded.project.robotSetup.wheels[0];
+        expect(wheel.radiusMm).toBe(44);
+        expect(wheel.gearing).toBe(-1);
+        expect(wheel.positionMm).toEqual({ x: -60, y: -76, z: 12 });
+    });
+
     it('loads the generated project archive shape and optional data', async () => {
         const project = makeProject();
         const archive = await makeArchive({

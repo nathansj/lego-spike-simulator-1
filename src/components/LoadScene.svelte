@@ -45,6 +45,13 @@
         findBundledModelPhysics,
         parseModelPhysicsSidecar
     } from '$lib/physics/articulation-presets';
+    import {
+        addBundledMissionToScene,
+        bundledAssetName,
+        fetchBundledAsset,
+        loadBundledManifest,
+        type BundledAssetManifest
+    } from '$lib/fll/bundled-assets';
 
     export let modalOpen = false;
     /** Called after a successful scene commit; `undefined` means this legacy archive has no profile. */
@@ -72,6 +79,12 @@
     let customHeight = 1000;
     let customWidth = 1000;
     let projectLoadStatus = '';
+    let projectStatusTimer: ReturnType<typeof setTimeout> | undefined;
+    let bundledManifest: BundledAssetManifest | undefined;
+    let bundledMissionId = '';
+    let bundledRobotId = '';
+    let bundledStatus = '';
+    let bundledLoading = false;
     let projectLoadError: string | undefined;
     let unsavedChangesOpen = false;
     let pendingFileInput: 'load_scene_file' | 'load_project_file' | undefined;
@@ -652,12 +665,26 @@
         }
     }
 
+    function setProjectLoadStatus(message: string, autoDismissMs?: number): void {
+        if (projectStatusTimer) {
+            clearTimeout(projectStatusTimer);
+            projectStatusTimer = undefined;
+        }
+        projectLoadStatus = message;
+        if (autoDismissMs !== undefined) {
+            projectStatusTimer = setTimeout(() => {
+                projectLoadStatus = '';
+                projectStatusTimer = undefined;
+            }, autoDismissMs);
+        }
+    }
+
     async function loadProjectFromFile() {
         const element = document.getElementById('load_project_file');
         const file = (element as HTMLInputElement | null)?.files?.[0];
         if (!file) return;
         projectLoadError = undefined;
-        projectLoadStatus = 'Loading project archive…';
+        setProjectLoadStatus('Loading project archive…', 2000);
         try {
             const payload: ProjectArchivePayload = await loadProjectArchive(file);
             if (payload.sourceFormat !== 'project') {
@@ -676,18 +703,73 @@
             onM01ObservationProfileLoaded?.(payload.calibration?.m01ObservationProfile);
             onRobotModelLoaded?.(loadedRobot);
             await onProjectArchiveLoaded?.(payload);
-            projectLoadStatus = `Saved project restored: ${payload.project.season.reference.name}. Field, robot setup, program, and supported settings were loaded.`;
+            let status = `Saved project restored: ${payload.project.season.reference.name}. Field, robot setup, program, and supported settings were loaded.`;
             if (payload.missingModelIds.length > 0) {
-                projectLoadStatus += ` ${payload.missingModelIds.length} model(s) are missing from the archive.`;
+                status += ` ${payload.missingModelIds.length} model(s) are missing from the archive.`;
             }
+            setProjectLoadStatus(status, 2000);
         } catch (error) {
             projectLoadError =
                 error instanceof Error ? error.message : 'The project could not be loaded.';
-            projectLoadStatus = 'Project restore failed. The current scene was kept unchanged.';
+            setProjectLoadStatus('Project restore failed. The current scene was kept unchanged.');
         } finally {
             const input = element as HTMLInputElement | null;
             if (input) input.value = '';
         }
+    }
+
+    async function ensureBundledManifest(): Promise<BundledAssetManifest> {
+        if (bundledManifest) {
+            return bundledManifest;
+        }
+        bundledLoading = true;
+        try {
+            const manifest = await loadBundledManifest();
+            bundledManifest = manifest;
+            bundledMissionId = manifest.models[0]?.missionId ?? '';
+            bundledRobotId = manifest.robots[0]?.id ?? '';
+            return manifest;
+        } finally {
+            bundledLoading = false;
+        }
+    }
+
+    async function loadBundledMission(): Promise<void> {
+        try {
+            const manifest = await ensureBundledManifest();
+            const asset = manifest.models.find((entry) => entry.missionId === bundledMissionId);
+            if (!asset) return;
+            const added = await addBundledMissionToScene(asset);
+            const editable = added.find((object) => !object.anchored);
+            setSelected(editable ? editorKey(editable) : bundledAssetName(asset.model));
+            numberOfLoads++;
+            bundledStatus = `Added ${asset.name}`;
+        } catch (error) {
+            bundledStatus =
+                error instanceof Error ? error.message : 'Bundled model could not be loaded.';
+        }
+    }
+
+    async function loadBundledRobot(): Promise<void> {
+        try {
+            const manifest = await ensureBundledManifest();
+            const asset = manifest.robots.find((entry) => entry.id === bundledRobotId);
+            if (!asset) return;
+            const content = await fetchBundledAsset(asset.model);
+            const robot = setRobotFromContent(content);
+            updateUnresolvedParts();
+            onRobotModelLoaded?.(robot);
+            bundledStatus = `Loaded ${asset.name}`;
+        } catch (error) {
+            bundledStatus =
+                error instanceof Error ? error.message : 'Bundled robot could not be loaded.';
+        }
+    }
+
+    $: if (modalOpen && !bundledManifest && !bundledLoading) {
+        ensureBundledManifest().catch(() => {
+            bundledStatus = 'Bundled season assets are unavailable.';
+        });
     }
 
     async function loadObjectFromFile() {
@@ -880,6 +962,9 @@
 
     onDestroy(() => {
         window.removeEventListener('keyup', moveObjectWithKey);
+        if (projectStatusTimer) {
+            clearTimeout(projectStatusTimer);
+        }
     });
 
     $: updateSelectedText($sceneStore);
@@ -937,6 +1022,48 @@
                 {#if projectLoadError}<p class="mt-1 text-red-700">{projectLoadError}</p>{/if}
             </div>
         {/if}
+        <section
+            class="flex shrink-0 flex-wrap items-center gap-2 rounded border border-slate-200 bg-slate-50 px-2 py-2 text-sm"
+            aria-label="Bundled season assets"
+        >
+            <span class="font-semibold text-slate-800">Bundled BIOGLOW</span>
+            <select
+                class="rounded border border-slate-300 p-1"
+                bind:value={bundledMissionId}
+                disabled={!bundledManifest}
+                aria-label="Mission model"
+            >
+                {#each bundledManifest?.models ?? [] as mission (mission.missionId)}
+                    <option value={mission.missionId}>
+                        {mission.missionId} · {mission.name}
+                    </option>
+                {/each}
+            </select>
+            <Button
+                size="xs"
+                on:click={loadBundledMission}
+                disabled={!bundledManifest || !bundledMissionId}>Add mission</Button
+            >
+            <span class="mx-1 h-5 w-px bg-slate-300" aria-hidden="true"></span>
+            <select
+                class="rounded border border-slate-300 p-1"
+                bind:value={bundledRobotId}
+                disabled={!bundledManifest}
+                aria-label="Bundled robot"
+            >
+                {#each bundledManifest?.robots ?? [] as robot (robot.id)}
+                    <option value={robot.id}>{robot.name}</option>
+                {/each}
+            </select>
+            <Button
+                size="xs"
+                on:click={loadBundledRobot}
+                disabled={!bundledManifest || !bundledRobotId}>Load robot</Button
+            >
+            {#if bundledStatus}
+                <span class="text-slate-600" role="status" aria-live="polite">{bundledStatus}</span>
+            {/if}
+        </section>
         <div class="flex flex-row flex-1 relative overflow-hidden">
             <div class="flex-1 h-full relative">
                 {#if selectedText && $componentStore.unresolved.length == 0}

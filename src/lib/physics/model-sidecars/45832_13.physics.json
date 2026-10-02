@@ -21,7 +21,7 @@
         }
     },
     "mission": "Keystone Species",
-    "mechanics": ["dynamic-piece","containment","trigger"],
+    "mechanics": ["dynamic-piece", "containment", "trigger"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
     "segments": [
         {
@@ -32,6 +32,7 @@
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
+                "autoColliderMode": "trimesh",
                 "friction": 0.7,
                 "restitution": 0,
                 "colliders": []

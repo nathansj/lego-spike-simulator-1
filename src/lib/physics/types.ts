@@ -17,6 +17,11 @@ interface ColliderBase {
     positionMm?: PhysicsVector;
     rotation?: PhysicsQuaternion;
     collisionEnabled?: boolean;
+    /**
+     * Optional per-collider mass override (kg). When omitted the body mass is
+     * split evenly across colliders as before.
+     */
+    massKg?: number;
 }
 
 export interface BoxColliderDefinition extends ColliderBase {
@@ -39,11 +44,30 @@ export interface CapsuleColliderDefinition extends ColliderBase {
 export type ColliderDefinition =
     | BoxColliderDefinition
     | CylinderColliderDefinition
-    | CapsuleColliderDefinition;
+    | CapsuleColliderDefinition
+    | TrimeshColliderDefinition;
+
+export interface TrimeshColliderDefinition extends ColliderBase {
+    shape: 'trimesh';
+    /** Flat x,y,z triples in the collider's local millimetre frame. */
+    verticesMm: number[];
+    /** Triangle vertex indices into `verticesMm`. */
+    indices: number[];
+}
 
 export interface PhysicsDefinition {
     bodyType: PhysicsBodyType;
     autoCollider?: boolean;
+    /**
+     * How an `autoCollider` body derives colliders from its mesh:
+     * `aabb` (default, one bounding box), `compound` (tight fitted primitives),
+     * or `trimesh` (exact surface; preserves concave openings).
+     */
+    autoColliderMode?: 'aabb' | 'compound' | 'trimesh';
+    /** Compound mode: merge parts whose bounding boxes are within this distance (mm). */
+    autoColliderMergeDistanceMm?: number;
+    /** Compound mode: cap on fitted colliders; the smallest are merged into one box. */
+    autoColliderMaxColliders?: number;
     massKg?: number;
     centerOfMassMm?: PhysicsVector;
     friction?: number;
@@ -81,6 +105,11 @@ export interface PhysicsWorldDefinition {
     fixedTimeStep?: number;
     /** Encoder source for drive motors. Command mode preserves SPIKE semantics; physical mode follows wheel slip. */
     encoderMode?: 'command' | 'physical';
+    /**
+     * Robot collider strategy: `box` (single bounding box, default) or
+     * `chassis` (wheel cylinders plus layered chassis boxes).
+     */
+    robotColliderMode?: 'box' | 'chassis';
 }
 
 export type HingeAxis = 'x' | 'y' | 'z';

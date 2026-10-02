@@ -42,6 +42,11 @@
     let gearing = 1;
     let radius = 0;
 
+    function normalizeGearing(value: unknown): number {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : 1;
+    }
+
     function getWheels(parts: PartMatch[], hub: Hub) {
         const wheels: WheelMatch[] = [];
         for (const part of parts) {
@@ -106,7 +111,13 @@
                     matrix = m4.axisRotate(matrix, [1.0, 0.0, 0.0], Math.PI);
                     matrix = m4.scale(matrix, 0.4, 0.4, 0.4);
                     matrix = m4.multiply(matrix, result.forward);
-                    wheel = new Wheel(selectedWheel, radius, gearing, toPort, matrix);
+                    wheel = new Wheel(
+                        selectedWheel,
+                        radius,
+                        normalizeGearing(gearing),
+                        toPort,
+                        matrix
+                    );
                     hub.wheels.push(wheel);
                 }
             }
@@ -140,7 +151,7 @@
         }
         const match = wheels.find((w) => w.part.id == selectedWheel);
         if (match && match.wheel) {
-            match.wheel.gearing = gearing;
+            match.wheel.gearing = normalizeGearing(gearing);
             wheels = wheels;
             dispatch('change');
         }

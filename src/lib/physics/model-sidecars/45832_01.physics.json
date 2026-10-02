@@ -28,7 +28,16 @@
             "id": "45832-01-fixed-scenery",
             "name": "45832_01 fixed scenery",
             "selection": { "z": { "maxExclusive": -200 } },
-            "body": { "bodyType": "fixed", "autoCollider": true, "friction": 0.7, "restitution": 0, "colliders": [] }
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "autoColliderMode": "compound",
+                "autoColliderMergeDistanceMm": 2,
+                "autoColliderMaxColliders": 64,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
         },
         {
             "id": "45832-01-red-base",
@@ -38,12 +47,26 @@
             "selection": { "x": { "maxExclusive": 100 } },
             "includeRootGeometry": true,
             "body": {
-                "bodyType": "dynamic", "autoCollider": false, "massKg": 0.1,
-                "friction": 0.85, "restitution": 0, "linearDamping": 4.0, "angularDamping": 2.0,
-                "additionalSolverIterations": 8, "motionMode": "planarPush", "motionReleaseFrames": 1, "externalMotionOnly": true,
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.1,
+                "friction": 0.85,
+                "restitution": 0,
+                "linearDamping": 4.0,
+                "angularDamping": 2.0,
+                "additionalSolverIterations": 8,
+                "motionMode": "planarPush",
+                "motionReleaseFrames": 1,
+                "externalMotionOnly": true,
                 "enabledTranslations": { "x": true, "y": false, "z": true },
                 "enabledRotations": { "x": false, "y": false, "z": false },
-                "colliders": [{ "shape": "box", "sizeMm": { "x": 150, "y": 65, "z": 110 }, "positionMm": { "x": 0, "y": -35, "z": 0 } }]
+                "colliders": [
+                    {
+                        "shape": "box",
+                        "sizeMm": { "x": 150, "y": 65, "z": 110 },
+                        "positionMm": { "x": 0, "y": -35, "z": 0 }
+                    }
+                ]
             }
         },
         {
@@ -52,7 +75,16 @@
             "editorGroup": "45832-01-mechanism",
             "editorName": "45832_01 rail mechanism",
             "selection": { "x": { "min": 100, "maxExclusive": 600 } },
-            "body": { "bodyType": "fixed", "autoCollider": true, "friction": 0.7, "restitution": 0, "colliders": [] }
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "autoColliderMode": "compound",
+                "autoColliderMergeDistanceMm": 2,
+                "autoColliderMaxColliders": 16,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
         },
         {
             "id": "45832-01-drone",
@@ -61,12 +93,23 @@
             "editorName": "45832_01 rail mechanism",
             "selection": { "x": { "min": 600, "max": 700 } },
             "body": {
-                "bodyType": "dynamic", "autoCollider": false, "massKg": 0.08,
-                "friction": 0.45, "restitution": 0, "linearDamping": 0.8, "angularDamping": 1.2,
+                "bodyType": "dynamic",
+                "autoCollider": false,
+                "massKg": 0.08,
+                "friction": 0.45,
+                "restitution": 0,
+                "linearDamping": 0.8,
+                "angularDamping": 1.2,
                 "additionalSolverIterations": 8,
                 "enabledTranslations": { "x": true, "y": false, "z": false },
                 "enabledRotations": { "x": false, "y": false, "z": false },
-                "colliders": [{ "shape": "box", "sizeMm": { "x": 120, "y": 55, "z": 130 }, "positionMm": { "x": 256.88, "y": -13, "z": 0 } }]
+                "colliders": [
+                    {
+                        "shape": "box",
+                        "sizeMm": { "x": 120, "y": 55, "z": 130 },
+                        "positionMm": { "x": 256.88, "y": -13, "z": 0 }
+                    }
+                ]
             }
         },
         {
@@ -75,7 +118,16 @@
             "editorGroup": "45832-01-mechanism",
             "editorName": "45832_01 rail mechanism",
             "selection": { "x": { "min": 700, "maxExclusive": 1100 } },
-            "body": { "bodyType": "fixed", "autoCollider": true, "friction": 0.7, "restitution": 0, "colliders": [] }
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "autoColliderMode": "compound",
+                "autoColliderMergeDistanceMm": 2,
+                "autoColliderMaxColliders": 16,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
         },
         {
             "id": "45832-01-pilot-base",
@@ -83,14 +135,28 @@
             "editorGroup": "45832-01-mechanism",
             "editorName": "45832_01 rail mechanism",
             "selection": { "x": { "min": 1100 } },
-            "body": { "bodyType": "fixed", "autoCollider": true, "friction": 0.7, "restitution": 0, "colliders": [] }
+            "body": {
+                "bodyType": "fixed",
+                "autoCollider": true,
+                "autoColliderMode": "compound",
+                "autoColliderMergeDistanceMm": 2,
+                "autoColliderMaxColliders": 64,
+                "friction": 0.7,
+                "restitution": 0,
+                "colliders": []
+            }
         }
     ],
     "joints": [
         {
-            "id": "45832-01-drone-slider", "type": "slider", "parentId": "#world", "childId": "45832-01-drone",
-            "parentAnchorMm": { "x": 0, "y": 0, "z": 0 }, "childAnchorMm": { "x": 0, "y": 0, "z": 0 },
-            "axis": "x", "limitsMm": { "min": 0, "max": 520 }
+            "id": "45832-01-drone-slider",
+            "type": "slider",
+            "parentId": "#world",
+            "childId": "45832-01-drone",
+            "parentAnchorMm": { "x": 0, "y": 0, "z": 0 },
+            "childAnchorMm": { "x": 0, "y": 0, "z": 0 },
+            "axis": "x",
+            "limitsMm": { "min": 0, "max": 520 }
         }
     ]
 }

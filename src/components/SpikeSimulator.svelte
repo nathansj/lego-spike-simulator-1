@@ -41,7 +41,7 @@
         observeDroneSurvey,
         type DroneSurveyObservationGeometry
     } from '$lib/fll/drone-survey-observations';
-    import RobotPreview from '$components/RobotPreview.svelte';
+    import RobotOrthographicViews from '$components/RobotOrthographicViews.svelte';
     import ScenePreview from '$components/ScenePreview.svelte';
     import ColourSensor from '$components/ColourSensor.svelte';
     import DistanceSensor from '$components/DistanceSensor.svelte';
@@ -996,13 +996,11 @@
                                 {Math.ceil(compiledRobot.bbox.max.y - compiledRobot.bbox.min.y)}mm
                             </div>
                         {/if}
-                        <RobotPreview
+                        <RobotOrthographicViews
                             id="robot_preview"
-                            class="w-full h-full"
                             robotModel={$componentStore.robotModel}
                             {compiledRobot}
                             enabled={!connectorOpen && !sceneOpen && !wheelsOpen}
-                            {gridScale}
                         />
                     </div>
                 {/if}

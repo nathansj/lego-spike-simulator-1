@@ -66,6 +66,20 @@ function hasFiniteNumber(value: unknown): value is number {
     return typeof value === 'number' && Number.isFinite(value);
 }
 
+/** Accepts a finite number or a numeric string (legacy project saves). */
+function numberLike(value: unknown): number | undefined {
+    if (hasFiniteNumber(value)) {
+        return value;
+    }
+    if (typeof value === 'string' && value.trim() !== '') {
+        const parsed = Number(value);
+        if (Number.isFinite(parsed)) {
+            return parsed;
+        }
+    }
+    return undefined;
+}
+
 function hasSafeEntryName(entry: unknown): entry is string {
     return (
         typeof entry === 'string' &&
@@ -155,22 +169,34 @@ function validateProjectMetadata(project: ProjectEnvelope): string[] {
     });
     robotSetup.wheels.forEach((wheel, index) => {
         const value = asRecord(wheel, `robotSetup.wheels[${index}]`);
+        const componentId = numberLike(value.componentId);
+        const radiusMm = numberLike(value.radiusMm);
+        const gearing = numberLike(value.gearing);
         if (
             typeof value.port !== 'string' ||
-            !hasFiniteNumber(value.componentId) ||
-            !hasFiniteNumber(value.radiusMm) ||
-            value.radiusMm <= 0 ||
-            !hasFiniteNumber(value.gearing)
+            componentId === undefined ||
+            radiusMm === undefined ||
+            radiusMm <= 0 ||
+            gearing === undefined
         ) {
             throw new Error(`Malformed project: robotSetup.wheels[${index}] is invalid`);
         }
+        value.componentId = componentId;
+        value.radiusMm = radiusMm;
+        value.gearing = gearing;
         for (const vectorName of ['positionMm', 'direction']) {
             const vector = asRecord(value[vectorName], `robotSetup.wheels[${index}].${vectorName}`);
-            if (!['x', 'y', 'z'].every((axis) => hasFiniteNumber(vector[axis]))) {
-                throw new Error(
-                    `Malformed project: robotSetup.wheels[${index}].${vectorName} is invalid`
-                );
+            const normalized: Record<string, number> = {};
+            for (const axis of ['x', 'y', 'z']) {
+                const component = numberLike(vector[axis]);
+                if (component === undefined) {
+                    throw new Error(
+                        `Malformed project: robotSetup.wheels[${index}].${vectorName} is invalid`
+                    );
+                }
+                normalized[axis] = component;
             }
+            value[vectorName] = normalized;
         }
     });
 

@@ -17,7 +17,7 @@
     const dispatch = createEventDispatcher<{ change: { joints: JointDefinition[] } }>();
     const axes: HingeAxis[] = ['x', 'y', 'z'];
     const quaternionComponents: ('x' | 'y' | 'z' | 'w')[] = ['x', 'y', 'z', 'w'];
-    const colliderShapes: ColliderDefinition['shape'][] = ['box', 'cylinder', 'capsule'];
+    const colliderShapes: ('box' | 'cylinder' | 'capsule')[] = ['box', 'cylinder', 'capsule'];
     const bodyTypes: { value: PhysicsBodyType; label: string }[] = [
         { value: 'fixed', label: 'Fixed' },
         { value: 'dynamic', label: 'Dynamic' },
@@ -104,7 +104,7 @@
         commit({ ...physics, [kind]: { ...current, [axis]: value } });
     }
 
-    function addCollider(shape: ColliderDefinition['shape']) {
+    function addCollider(shape: 'box' | 'cylinder' | 'capsule') {
         const collider: ColliderDefinition =
             shape === 'box'
                 ? { shape, sizeMm: { x: 100, y: 100, z: 100 } }
@@ -231,7 +231,9 @@
             const valid =
                 collider.shape === 'box'
                     ? collider.sizeMm.x > 0 && collider.sizeMm.y > 0 && collider.sizeMm.z > 0
-                    : collider.radiusMm > 0 && collider.heightMm > 0;
+                    : collider.shape === 'trimesh'
+                      ? collider.verticesMm.length >= 9 && collider.indices.length >= 3
+                      : collider.radiusMm > 0 && collider.heightMm > 0;
             if (!valid) result.push(`Collider ${index + 1} dimensions must be greater than zero.`);
         });
         if (joint) {
@@ -350,8 +352,7 @@
                 min="0"
                 step="1"
                 value={physics.collisionMask ?? 65535}
-                on:change={(event) =>
-                    setNumber('collisionMask', event.currentTarget.valueAsNumber)}
+                on:change={(event) => setNumber('collisionMask', event.currentTarget.valueAsNumber)}
             /></label
         >
     </div>
@@ -434,7 +435,7 @@
                                 /></label
                             >{/each}
                     </div>
-                {:else}
+                {:else if collider.shape === 'cylinder' || collider.shape === 'capsule'}
                     <div class="grid grid-cols-2 gap-1">
                         <label
                             >Radius<input
@@ -460,6 +461,11 @@
                             /></label
                         >
                     </div>
+                {:else}
+                    <p class="text-xs text-gray-500">
+                        Generated triangle mesh ({Math.floor(collider.indices.length / 3)}
+                        triangles). Edit the source model to change it.
+                    </p>
                 {/if}
                 <div class="grid grid-cols-3 gap-1">
                     {#each axes as axis}<label class="uppercase"

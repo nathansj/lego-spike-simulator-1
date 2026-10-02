@@ -21,8 +21,22 @@
         }
     },
     "mission": "Lucky Leaves",
-    "mechanics": ["removable-pieces","preserve-position"],
+    "mechanics": ["removable-pieces", "preserve-position"],
     "tuningStatus": "baseline-collider; anchors and limits require measured model calibration",
+    "assembly": [
+        {
+            "modelNumbers": ["SubModel Group 4"],
+            "translationMm": { "x": -75.99, "y": 10.8, "z": 0.44 }
+        },
+        {
+            "modelNumbers": ["SubModel Group 5"],
+            "translationMm": { "x": -183.1, "y": 10.8, "z": 25.41 }
+        },
+        {
+            "modelNumbers": ["SubModel Group 6"],
+            "translationMm": { "x": -288.64, "y": 14.4, "z": 1.29 }
+        }
+    ],
     "segments": [
         {
             "id": "45832-04-model",
@@ -32,6 +46,7 @@
             "body": {
                 "bodyType": "fixed",
                 "autoCollider": true,
+                "autoColliderMode": "trimesh",
                 "friction": 0.7,
                 "restitution": 0,
                 "colliders": []

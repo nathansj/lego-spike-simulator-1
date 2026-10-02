@@ -1896,6 +1896,14 @@ export class WebGL extends WebGLCompiler {
         this.setPerspective(this.perspectiveAngle, aspect, this.mindist, this.maxdist);
     }
 
+    setViewport(x: number, y: number, width: number, height: number) {
+        this.gl.viewport(x, y, width, height);
+    }
+
+    clearDepth() {
+        this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
+    }
+
     setupPipeline() {
         this.resizeToFit();
         const vertexShaderSource = lego_vertex_shader;

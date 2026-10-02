@@ -1,6 +1,12 @@
 import type { Model, Subpart } from '$lib/ldraw/components';
 import { WebGLCompiler } from '$lib/ldraw/gl';
-import type { JointDefinition, PhysicsDefinition } from '$lib/physics/types';
+import * as m4 from '$lib/ldraw/m4';
+import {
+    buildTrimeshCollider,
+    fitModelColliders,
+    type ColliderFitOptions
+} from '$lib/physics/collider-fit';
+import type { JointDefinition, PhysicsDefinition, PhysicsVector } from '$lib/physics/types';
 import type { SceneObject, Vector } from '$lib/spike/scene';
 import bioglow45832 from '$lib/physics/model-sidecars/45832_01.physics.json';
 import bioglow45832_02 from '$lib/physics/model-sidecars/45832_02.physics.json';
@@ -46,8 +52,21 @@ export interface ModelPhysicsSidecar {
     mission?: string;
     mechanics?: string[];
     tuningStatus?: string;
+    /**
+     * Optional pre-placement of specific Studio submodels before segmentation.
+     * Used to assemble models whose official MPD is stored in an exploded
+     * layout. Translations are in the renderer's local millimetre frame.
+     */
+    assembly?: ModelAssemblyTransform[];
     segments: ModelPhysicsSegment[];
     joints: JointDefinition[];
+}
+
+export interface ModelAssemblyTransform {
+    /** Root submodel names to move (matched case-insensitively). */
+    modelNumbers: string[];
+    /** Shift in the renderer's compiled millimetre frame. */
+    translationMm: PhysicsVector;
 }
 
 export interface ArticulationPresetResult {
@@ -146,6 +165,35 @@ function explicitPhysicsForSegment(
         return body;
     }
 
+    if (body.autoCollider && body.autoColliderMode === 'trimesh') {
+        const trimesh = buildTrimeshCollider(segmentModel);
+        if (trimesh) {
+            return {
+                ...body,
+                autoCollider: false,
+                colliders: [trimesh]
+            };
+        }
+    }
+
+    if (body.autoCollider && body.autoColliderMode === 'compound') {
+        const fitOptions: ColliderFitOptions = {};
+        if (body.autoColliderMergeDistanceMm !== undefined) {
+            fitOptions.clusterDistanceMm = body.autoColliderMergeDistanceMm;
+        }
+        if (body.autoColliderMaxColliders !== undefined) {
+            fitOptions.maxColliders = body.autoColliderMaxColliders;
+        }
+        const fitted = fitModelColliders(segmentModel, fitOptions);
+        if (fitted.length > 0) {
+            return {
+                ...body,
+                autoCollider: false,
+                colliders: fitted
+            };
+        }
+    }
+
     const compiled = new WebGLCompiler().compileModel(segmentModel, {
         rescale: false,
         recenter: false
@@ -200,11 +248,41 @@ export function createExplicitModelPhysics(
     });
 }
 
+/**
+ * Pre-place root submodels per the sidecar's optional assembly rules. The
+ * translation is given in the renderer's compiled millimetre frame and is
+ * converted into the submodel's parent LDraw frame (0.4 mm/LDU, y/z flipped)
+ * before being pre-multiplied onto the submodel matrix.
+ */
+function applyAssemblyTransforms(
+    source: Model,
+    transforms: ModelAssemblyTransform[] | undefined
+): void {
+    if (!transforms || transforms.length === 0) {
+        return;
+    }
+    for (const transform of transforms) {
+        const names = transform.modelNumbers.map(normalizedModelNumber);
+        const translation = m4.translation(
+            transform.translationMm.x / 0.4,
+            -transform.translationMm.y / 0.4,
+            -transform.translationMm.z / 0.4
+        );
+        for (const subpart of source.subparts) {
+            if (!names.includes(normalizedModelNumber(subpart.modelNumber))) {
+                continue;
+            }
+            subpart.matrix = Array.from(m4.multiply(translation, subpart.matrix));
+        }
+    }
+}
+
 export function createModelPhysicsArticulation(
     source: Model,
     position: Vector,
     sidecar: ModelPhysicsSidecar
 ): ArticulationPresetResult {
+    applyAssemblyTransforms(source, sidecar.assembly);
     const groups = sidecar.segments.map(() => [] as Subpart[]);
     for (const subpart of source.subparts) {
         const index = sidecar.segments.findIndex((segment) => matches(subpart, segment));

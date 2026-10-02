@@ -5,12 +5,15 @@ import {
     loadModel,
     setStudioMode,
     type Model,
-    type Subpart
+    type Subpart,
+    type Triangle,
+    type Vertex
 } from '$lib/ldraw/components';
 import {
     createExplicitModelPhysics,
     createModelPhysicsArticulation,
-    findBundledModelPhysics
+    findBundledModelPhysics,
+    type ModelPhysicsSidecar
 } from '$lib/physics/articulation-presets';
 import { createMatDefinition } from '$lib/physics/bodies';
 import { PhysicsWorld } from '$lib/physics/world';
@@ -157,6 +160,107 @@ describe('model physics articulation', () => {
             sizeMm: { x: 40, y: 80, z: 120 },
             positionMm: { x: 20, y: -40, z: -60 }
         });
+    });
+
+    it('applies sidecar assembly transforms to matching root subparts', () => {
+        const model: Model = {
+            name: 'assembled.mpd',
+            subparts: [subpart(1, 0, 0), subpart(2, 100, 0)],
+            lines: [],
+            triangles: [],
+            quads: [],
+            optionalLines: []
+        };
+        const sidecar: ModelPhysicsSidecar = {
+            version: 1,
+            model: 'assembled.mpd',
+            assembly: [{ modelNumbers: ['group-1'], translationMm: { x: 40, y: 8, z: -4 } }],
+            segments: [
+                {
+                    id: 'segment',
+                    name: 'segment',
+                    selection: {},
+                    body: {
+                        bodyType: 'fixed',
+                        autoCollider: false,
+                        colliders: [{ shape: 'box', sizeMm: { x: 10, y: 10, z: 10 } }]
+                    }
+                }
+            ],
+            joints: []
+        };
+
+        const result = createModelPhysicsArticulation(model, { x: 0, y: 0, z: 0 }, sidecar);
+        const bricks = result.objects[0].bricks!;
+        const moved = bricks.subparts.find((item) => item.modelNumber === 'group-1')!;
+        // mm -> LDraw units: x/0.4, y and z negated.
+        expect(moved.matrix[12]).toBeCloseTo(40 / 0.4, 6);
+        expect(moved.matrix[13]).toBeCloseTo(-8 / 0.4, 6);
+        expect(moved.matrix[14]).toBeCloseTo(4 / 0.4, 6);
+        const untouched = bricks.subparts.find((item) => item.modelNumber === 'group-2')!;
+        expect(untouched.matrix[12]).toBeCloseTo(100, 6);
+    });
+
+    it('routes autoColliderMode compound through the geometry fitter', () => {
+        const colour = brickColour('16');
+        const point = (x: number, y: number, z: number): Vertex => ({ x, y, z });
+        const triangle = (p1: Vertex, p2: Vertex, p3: Vertex): Triangle => ({
+            colour,
+            p1,
+            p2,
+            p3
+        });
+        const model: Model = {
+            name: 'compound.ldr',
+            subparts: [],
+            lines: [],
+            quads: [],
+            optionalLines: [],
+            triangles: [
+                triangle(point(0, 0, 0), point(20, 0, 0), point(0, 20, 0)),
+                triangle(point(100, 0, 0), point(120, 0, 0), point(100, 20, 0))
+            ]
+        };
+
+        const aabb = createExplicitModelPhysics(model, { bodyType: 'fixed' });
+        expect(aabb.colliders).toHaveLength(1);
+
+        const compound = createExplicitModelPhysics(model, {
+            bodyType: 'fixed',
+            autoColliderMode: 'compound'
+        });
+        expect(compound.autoCollider).toBe(false);
+        expect(compound.colliders.length).toBe(2);
+    });
+
+    it('routes autoColliderMode trimesh through the exact mesh builder', () => {
+        const colour = brickColour('16');
+        const point = (x: number, y: number, z: number): Vertex => ({ x, y, z });
+        const triangle = (p1: Vertex, p2: Vertex, p3: Vertex): Triangle => ({
+            colour,
+            p1,
+            p2,
+            p3
+        });
+        const model: Model = {
+            name: 'trimesh.ldr',
+            subparts: [],
+            lines: [],
+            quads: [],
+            optionalLines: [],
+            triangles: [
+                triangle(point(0, 0, 0), point(20, 0, 0), point(0, 20, 0)),
+                triangle(point(100, 0, 0), point(120, 0, 0), point(100, 20, 0))
+            ]
+        };
+
+        const physics = createExplicitModelPhysics(model, {
+            bodyType: 'fixed',
+            autoColliderMode: 'trimesh'
+        });
+        expect(physics.autoCollider).toBe(false);
+        expect(physics.colliders).toHaveLength(1);
+        expect(physics.colliders[0].shape).toBe('trimesh');
     });
 
     it('registers physics sidecars for every BIOGLOW mission model', () => {

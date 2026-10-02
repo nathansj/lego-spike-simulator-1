@@ -60,7 +60,7 @@
 </script>
 
 <section
-    class="flex min-h-0 w-full flex-col rounded border border-gray-300 bg-white text-xs shadow-sm"
+    class="flex min-h-0 w-full flex-1 flex-col rounded border border-gray-300 bg-white text-xs shadow-sm"
     aria-labelledby="run-log-title"
 >
     <div class="flex items-center justify-between border-b border-gray-200 bg-gray-50 px-2 py-1">
@@ -136,7 +136,14 @@
         {/if}
     </div>
 
-    <details bind:open={showRawEvidence} class="border-b border-gray-200">
+    <details
+        bind:open={showRawEvidence}
+        class="border-b border-gray-200"
+        class:flex={showRawEvidence}
+        class:min-h-0={showRawEvidence}
+        class:flex-1={showRawEvidence}
+        class:flex-col={showRawEvidence}
+    >
         <summary class="cursor-pointer px-2 py-2 font-medium text-gray-700"
             >Inspect raw evidence ({filteredEntries.length})</summary
         >

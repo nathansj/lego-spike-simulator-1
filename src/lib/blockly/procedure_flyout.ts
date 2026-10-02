@@ -101,9 +101,7 @@ export function setupProtototypeBlock(
     }
 }
 
-function blockButtonClickHandler(button: Blockly.FlyoutButton) {
-    const workspace = button.getTargetWorkspace();
-
+export function createProcedureBlock(workspace: Blockly.WorkspaceSvg) {
     function onCreateProcedure(proc: ProcedureDefinition) {
         const newBlock = Blockly.serialization.blocks.append(
             {
@@ -137,6 +135,10 @@ function blockButtonClickHandler(button: Blockly.FlyoutButton) {
     if (procedureCreateDialog) {
         procedureCreateDialog(onCreateProcedure);
     }
+}
+
+function blockButtonClickHandler(button: Blockly.FlyoutButton) {
+    createProcedureBlock(button.getTargetWorkspace());
 }
 
 // Returns an array of objects.

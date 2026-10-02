@@ -11,8 +11,7 @@ export type VariableDialog = (type: string, callback: VariableCreateCallback) =>
 
 export let variableCreateDialog: VariableDialog | undefined;
 
-function numberButtonClickHandler(button: Blockly.FlyoutButton) {
-    const workspace = button.getTargetWorkspace();
+function createVariable(workspace: Blockly.WorkspaceSvg, type: string) {
     function onCreateVariable(v: VariableDefinition) {
         const existing = Blockly.Variables.nameUsedWithAnyType(v.name, workspace);
         if (!existing) {
@@ -32,33 +31,24 @@ function numberButtonClickHandler(button: Blockly.FlyoutButton) {
         return false;
     }
     if (variableCreateDialog) {
-        variableCreateDialog('String', onCreateVariable);
+        variableCreateDialog(type, onCreateVariable);
     }
 }
 
-function listButtonClickHandler(button: Blockly.FlyoutButton) {
-    const workspace = button.getTargetWorkspace();
-    function onCreateVariable(v: VariableDefinition) {
-        const existing = Blockly.Variables.nameUsedWithAnyType(v.name, workspace);
-        if (!existing) {
-            // No conflict
-            workspace.createVariable(v.name, v.type);
-            return true;
-        }
+export function createStringVariable(workspace: Blockly.WorkspaceSvg) {
+    createVariable(workspace, 'String');
+}
 
-        let msg;
-        if (existing.type === v.type) {
-            msg = Blockly.Msg['VARIABLE_ALREADY_EXISTS'].replace('%1', existing.name);
-        } else {
-            msg = Blockly.Msg['VARIABLE_ALREADY_EXISTS_FOR_ANOTHER_TYPE'];
-            msg = msg.replace('%1', existing.name).replace('%2', existing.type);
-        }
-        Blockly.dialog.alert(msg);
-        return false;
-    }
-    if (variableCreateDialog) {
-        variableCreateDialog('list', onCreateVariable);
-    }
+export function createListVariable(workspace: Blockly.WorkspaceSvg) {
+    createVariable(workspace, 'list');
+}
+
+function numberButtonClickHandler(button: Blockly.FlyoutButton) {
+    createStringVariable(button.getTargetWorkspace());
+}
+
+function listButtonClickHandler(button: Blockly.FlyoutButton) {
+    createListVariable(button.getTargetWorkspace());
 }
 
 // Returns an array of objects.

@@ -2,7 +2,8 @@
     import { boundaryStore } from '$lib/spike/scene';
     import { onDestroy, onMount } from 'svelte';
     import { WebGL, type MapTexture } from '$lib/ldraw/gl';
-    import { brickColour, type Line, type Quad } from '$lib/ldraw/components';
+    import { brickColour, type Line, type Quad, type Vertex } from '$lib/ldraw/components';
+    import { type ColliderDefinition } from '$lib/physics/types';
     import { type SceneStore, type SceneObject } from '$lib/spike/scene';
     import * as m4 from '$lib/ldraw/m4';
 
@@ -80,27 +81,124 @@
         }));
     }
 
+    function debugCircle(radius: number, y: number, segments: number): Vertex[] {
+        const points: Vertex[] = [];
+        for (let i = 0; i < segments; i++) {
+            const angle = (i / segments) * Math.PI * 2;
+            points.push({ x: Math.cos(angle) * radius, y, z: Math.sin(angle) * radius });
+        }
+        return points;
+    }
+
+    function debugRingLines(points: Vertex[]): Line[] {
+        const lines: Line[] = [];
+        for (let i = 0; i < points.length; i++) {
+            lines.push({
+                colour: physicsDebugColour,
+                p1: points[i],
+                p2: points[(i + 1) % points.length]
+            });
+        }
+        return lines;
+    }
+
+    function debugCylinderLines(radius: number, height: number, segments = 16): Line[] {
+        const half = height / 2;
+        const bottom = debugCircle(radius, -half, segments);
+        const top = debugCircle(radius, half, segments);
+        const lines = [...debugRingLines(bottom), ...debugRingLines(top)];
+        const step = Math.max(1, Math.floor(segments / 4));
+        for (let i = 0; i < segments; i += step) {
+            lines.push({ colour: physicsDebugColour, p1: bottom[i], p2: top[i] });
+        }
+        return lines;
+    }
+
+    function debugCapsuleLines(radius: number, height: number, segments = 16): Line[] {
+        const half = height / 2;
+        const latitudes = [
+            { y: -half - radius, r: 0 },
+            { y: -half - radius * Math.SQRT1_2, r: radius * Math.SQRT1_2 },
+            { y: -half, r: radius },
+            { y: half, r: radius },
+            { y: half + radius * Math.SQRT1_2, r: radius * Math.SQRT1_2 },
+            { y: half + radius, r: 0 }
+        ];
+        const rings = latitudes.map((latitude) =>
+            latitude.r === 0
+                ? [{ x: 0, y: latitude.y, z: 0 }]
+                : debugCircle(latitude.r, latitude.y, segments)
+        );
+        const lines: Line[] = [];
+        for (const ring of rings) {
+            if (ring.length > 1) {
+                lines.push(...debugRingLines(ring));
+            }
+        }
+        const step = Math.max(1, Math.floor(segments / 4));
+        for (let i = 0; i < segments; i += step) {
+            for (let k = 0; k < rings.length - 1; k++) {
+                const lower = rings[k];
+                const upper = rings[k + 1];
+                const from = lower.length === 1 ? lower[0] : lower[i % segments];
+                const to = upper.length === 1 ? upper[0] : upper[i % segments];
+                lines.push({ colour: physicsDebugColour, p1: from, p2: to });
+            }
+        }
+        return lines;
+    }
+
+    function debugTrimeshLines(
+        verticesMm: number[],
+        indices: number[],
+        maxTriangles = 3000
+    ): Line[] {
+        const lines: Line[] = [];
+        const triangleCount = Math.floor(indices.length / 3);
+        const limit = Math.min(triangleCount, maxTriangles);
+        const point = (index: number): Vertex => ({
+            x: verticesMm[index * 3],
+            y: verticesMm[index * 3 + 1],
+            z: verticesMm[index * 3 + 2]
+        });
+        for (let triangle = 0; triangle < limit; triangle++) {
+            const a = point(indices[triangle * 3]);
+            const b = point(indices[triangle * 3 + 1]);
+            const c = point(indices[triangle * 3 + 2]);
+            lines.push(
+                { colour: physicsDebugColour, p1: a, p2: b },
+                { colour: physicsDebugColour, p1: b, p2: c },
+                { colour: physicsDebugColour, p1: c, p2: a }
+            );
+        }
+        return lines;
+    }
+
+    function colliderDebugLines(collider: ColliderDefinition): Line[] {
+        switch (collider.shape) {
+            case 'box':
+                return debugBoxLines(collider.sizeMm.x, collider.sizeMm.y, collider.sizeMm.z);
+            case 'cylinder':
+                return debugCylinderLines(collider.radiusMm, collider.heightMm);
+            case 'capsule':
+                return debugCapsuleLines(collider.radiusMm, collider.heightMm);
+            case 'trimesh':
+                return debugTrimeshLines(collider.verticesMm, collider.indices);
+        }
+    }
+
     function drawPhysicsDebug(object: SceneObject) {
         if (!gl || (!$boundaryStore.debugPhysics && !showPhysicsDebug)) return;
         gl.setBrightness(1.0);
         gl.setDepthTest(false);
         gl.setLineWidth(3);
         for (const collider of object.physics?.colliders ?? []) {
-            const size =
-                collider.shape === 'box'
-                    ? collider.sizeMm
-                    : collider.shape === 'cylinder'
-                      ? { x: collider.radiusMm * 2, y: collider.heightMm, z: collider.radiusMm * 2 }
-                      : {
-                            x: collider.radiusMm * 2,
-                            y: collider.heightMm + collider.radiusMm * 2,
-                            z: collider.radiusMm * 2
-                        };
+            const lines = colliderDebugLines(collider);
             gl.pushMatrix();
             if (collider.positionMm)
                 gl.translate(collider.positionMm.x, collider.positionMm.y, collider.positionMm.z);
             if (collider.rotation) gl.rotateQuaternion(collider.rotation);
-            gl.drawLines(debugBoxLines(size.x, size.y, size.z));
+            gl.drawLines(lines);
             gl.popMatrix();
         }
         for (const joint of scene.joints ?? []) {

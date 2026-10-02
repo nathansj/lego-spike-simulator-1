@@ -47,6 +47,13 @@ function colliderDescriptor(collider: ColliderDefinition): RAPIER.ColliderDesc {
                 millimetresToMetres(collider.heightMm) / 2,
                 millimetresToMetres(collider.radiusMm)
             );
+        case 'trimesh': {
+            const vertices = new Float32Array(collider.verticesMm.length);
+            for (let i = 0; i < collider.verticesMm.length; i++) {
+                vertices[i] = millimetresToMetres(collider.verticesMm[i]);
+            }
+            return RAPIER.ColliderDesc.trimesh(vertices, new Uint32Array(collider.indices));
+        }
     }
 }
 
@@ -96,8 +103,12 @@ export function createRigidBody(
                 collisionGroups(physics.collisionGroup ?? 1, physics.collisionMask ?? -1)
             );
         }
-        if (physics.massKg !== undefined && physics.bodyType === 'dynamic') {
-            colliderDesc.setMass(physics.massKg / physics.colliders.length);
+        if (physics.bodyType === 'dynamic') {
+            if (collider.massKg !== undefined) {
+                colliderDesc.setMass(collider.massKg);
+            } else if (physics.massKg !== undefined) {
+                colliderDesc.setMass(physics.massKg / physics.colliders.length);
+            }
         }
         if (collider.positionMm) {
             const localPosition = vectorMmToMetres(collider.positionMm);

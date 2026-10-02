@@ -5,6 +5,12 @@ import JSZip from 'jszip';
 
 let studioMode = false;
 
+/** Build a URL for a bundled static asset, honouring the deploy base path. */
+export function assetUrl(path: string): string {
+    const base = import.meta.env?.BASE_URL ?? '/';
+    return `${base}${path.replace(/^\//, '')}`;
+}
+
 export function setStudioMode(mode: boolean) {
     studioMode = mode;
 }
@@ -200,7 +206,7 @@ export async function setRobotFromFile(file: File) {
 export async function fetchAndResolveParts() {
     try {
         // Try for individual parts first
-        let response = await fetch('ldraw/parts.lst');
+        let response = await fetch(assetUrl('ldraw/parts.lst'));
         if (response.ok) {
             const content = await response.text();
             if (content.startsWith('<!doctype html>')) {
@@ -213,7 +219,7 @@ export async function fetchAndResolveParts() {
         }
 
         // Try the zip file
-        response = await fetch('complete.zip');
+        response = await fetch(assetUrl('complete.zip'));
         if (response.ok) {
             const blob = await response.blob();
             await resolveFromZip(blob);
@@ -666,14 +672,14 @@ export async function resolveFromHttp(partList: string) {
             const unixPart = part.replace('\\', '/');
             let response: Response;
             if (availableParts.has(`parts/${unixPart}`)) {
-                response = await fetch(`ldraw/parts/${unixPart}`);
+                response = await fetch(assetUrl(`ldraw/parts/${unixPart}`));
                 if (!response.ok) {
                     console.log(`Missing ldraw/parts/${unixPart} from HTTP`);
                     failedParts.push(part);
                     continue;
                 }
             } else if (availableParts.has(`p/${unixPart}`)) {
-                response = await fetch(`ldraw/p/${unixPart}`);
+                response = await fetch(assetUrl(`ldraw/p/${unixPart}`));
                 if (!response.ok) {
                     console.log(`Missing ldraw/p/${unixPart} from HTTP`);
                     failedParts.push(part);

@@ -26,6 +26,12 @@
     import MenuDropdown from '$components/MenuDropdown.svelte';
     import { type MenuAction } from '$components/Menu.svelte';
     import SeasonSelection from '$components/SeasonSelection.svelte';
+    import {
+        addBundledMissionToScene,
+        loadBundledManifest,
+        practiceFieldLayout,
+        type BundledAssetManifest
+    } from '$lib/fll/bundled-assets';
     import SpikeSimulator from '$components/SpikeSimulator.svelte';
     import SaveSimulation from '$components/SaveSimulation.svelte';
     import SimulatorSettings from '$components/SimulatorSettings.svelte';
@@ -540,6 +546,49 @@
 
     function openSeasonSelection(): void {
         seasonSelectionOpen = true;
+        ensureBundledManifest().catch(() => {
+            bundledStatus = 'Bundled season assets are unavailable.';
+        });
+    }
+
+    let bundledManifest: BundledAssetManifest | undefined;
+    let bundledStatus = '';
+
+    async function ensureBundledManifest(): Promise<BundledAssetManifest> {
+        if (bundledManifest) {
+            return bundledManifest;
+        }
+        bundledManifest = await loadBundledManifest();
+        return bundledManifest;
+    }
+
+    async function handleBundledMissionLoad(event: CustomEvent<string>): Promise<void> {
+        try {
+            const manifest = await ensureBundledManifest();
+            const asset = manifest.models.find((entry) => entry.missionId === event.detail);
+            if (!asset) return;
+            await addBundledMissionToScene(asset);
+            bundledStatus = `Added ${asset.name}`;
+            markProjectChanged();
+        } catch (error) {
+            bundledStatus =
+                error instanceof Error ? error.message : 'Bundled model could not be loaded.';
+        }
+    }
+
+    async function handleBundledLoadAll(): Promise<void> {
+        try {
+            const manifest = await ensureBundledManifest();
+            const placements = practiceFieldLayout(manifest.models.length, manifest.field);
+            for (let index = 0; index < manifest.models.length; index++) {
+                await addBundledMissionToScene(manifest.models[index], placements[index]);
+            }
+            bundledStatus = `Added ${manifest.models.length} missions in a practice layout.`;
+            markProjectChanged();
+        } catch (error) {
+            bundledStatus =
+                error instanceof Error ? error.message : 'Bundled models could not be loaded.';
+        }
     }
 
     function handleSeasonSelect(event: CustomEvent<string>): void {
@@ -1118,7 +1167,11 @@
                         packages={listSeasonPackages()}
                         selectedId={selectedSeasonId}
                         selectedPackage={activeSeasonPackage}
+                        bundledModels={bundledManifest?.models ?? []}
+                        {bundledStatus}
                         on:select={handleSeasonSelect}
+                        on:loadMission={handleBundledMissionLoad}
+                        on:loadAll={handleBundledLoadAll}
                     />
                 {/if}
                 {#if m01ProfileFileName || m01ProfileError}

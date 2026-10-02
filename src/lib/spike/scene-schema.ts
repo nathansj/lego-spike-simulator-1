@@ -107,6 +107,18 @@ function readCollider(value: unknown): ColliderDefinition | undefined {
             heightMm: validPositive(collider.heightMm, 100)
         };
     }
+    if (collider.shape === 'trimesh') {
+        const verticesSource = Array.isArray(collider.verticesMm) ? collider.verticesMm : [];
+        const indicesSource = Array.isArray(collider.indices) ? collider.indices : [];
+        const verticesMm = verticesSource
+            .map((value) => finiteNumber(value, Number.NaN))
+            .filter((value) => Number.isFinite(value));
+        const indices = indicesSource
+            .map((value) => Math.floor(finiteNumber(value, Number.NaN)))
+            .filter((value) => Number.isFinite(value) && value >= 0);
+        if (verticesMm.length < 9 || indices.length < 3) return undefined;
+        return { ...common, shape: 'trimesh', verticesMm, indices };
+    }
     return undefined;
 }
 
@@ -386,7 +398,8 @@ export function parseSceneDefinition(value: unknown): Omit<SceneStore, 'map'> {
         physicsWorld: {
             gravityMps2: readVector(world.gravityMps2 ?? { x: 0, y: -9.81, z: 0 }),
             fixedTimeStep: validPositive(world.fixedTimeStep, 1 / 120),
-            encoderMode: world.encoderMode === 'physical' ? 'physical' : 'command'
+            encoderMode: world.encoderMode === 'physical' ? 'physical' : 'command',
+            robotColliderMode: world.robotColliderMode === 'chassis' ? 'chassis' : 'box'
         },
         joints
     };

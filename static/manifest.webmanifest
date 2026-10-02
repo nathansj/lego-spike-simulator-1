@@ -1,0 +1,18 @@
+{
+    "name": "LEGO SPIKE Simulator",
+    "short_name": "SPIKE Sim",
+    "description": "Browser simulator for LEGO SPIKE robots and FLL BIOGLOW missions.",
+    "start_url": ".",
+    "scope": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0f172a",
+    "icons": [
+        {
+            "src": "icons/SensorHub.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ]
+}

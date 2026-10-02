@@ -105,8 +105,8 @@
             wheels: hub.wheels.map((wheel) => ({
                 port: wheel.port,
                 componentId: wheel.id,
-                radiusMm: wheel.radius,
-                gearing: wheel.gearing,
+                radiusMm: Number(wheel.radius),
+                gearing: Number(wheel.gearing),
                 positionMm: { ...wheel.position },
                 direction: { ...wheel.direction }
             }))
